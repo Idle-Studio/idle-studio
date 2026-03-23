@@ -43,6 +43,7 @@ public struct AchievementsScreen: View {
                                 }
                             }
                             .padding(.horizontal, 20)
+                            .padding(.top, 24)
                             .padding(.bottom, 32)
                             .animation(reduceMotion ? nil : .easeInOut(duration: 0.2), value: selectedCategory)
                         } header: {
@@ -54,7 +55,6 @@ public struct AchievementsScreen: View {
             .navigationTitle(theme.copy.achievementsTabLabel)
             #if os(iOS)
             .toolbarBackground(theme.surfaceColor, for: .navigationBar)
-            .toolbarColorScheme(.dark, for: .navigationBar)
             #endif
             .task { await viewModel.load() }
         }

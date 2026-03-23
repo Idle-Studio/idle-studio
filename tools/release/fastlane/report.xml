@@ -5,22 +5,27 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: Switch to ios build lane" time="0.000275">
+      <testcase classname="fastlane.lanes" name="0: Switch to ios build lane" time="0.00051">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: increment_build_number" time="0.244479">
+      <testcase classname="fastlane.lanes" name="1: increment_build_number" time="0.271502">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="2: gym" time="35.742346">
+      <testcase classname="fastlane.lanes" name="2: gym" time="35.545382">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="3: xcrun altool --upload-app --type ios --file /tmp/idle-studio-builds/idle-civilizations/idle-civilizations.ipa --apiKey TMXM5W4D89 --apiIssuer 69a6de94-b56e-47e3-e053-5b8c7c11a4d1" time="47.97301">
+      <testcase classname="fastlane.lanes" name="3: xcrun altool --upload-app --type ios --file /tmp/idle-studio-builds/idle-civilizations/idle-civilizations.ipa --apiKey TMXM5W4D89 --apiIssuer 69a6de94-b56e-47e3-e053-5b8c7c11a4d1" time="66.492175">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="4: /Users/vm/Documents/GitHub/idle-studio/tools/release/.venv/bin/python3 /Users/vm/Documents/GitHub/idle-studio/tools/release/scripts/set_encryption.py --game idle-civilizations --build 202603231938" time="153.5852">
         
       </testcase>
     

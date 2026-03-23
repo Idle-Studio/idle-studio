@@ -4,7 +4,12 @@
 # The placeholder __REPO_ROOT__ is replaced with the actual repo path at install time.
 set -euo pipefail
 
-REPO_ROOT="__REPO_ROOT__"
+# Auto-detect repo root when run directly from the repo (before install)
+if [[ "__REPO_ROOT__" == "__REPO_ROOT__" ]]; then
+  REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../" && pwd)"
+else
+  REPO_ROOT="__REPO_ROOT__"
+fi
 RELEASE_DIR="$REPO_ROOT/tools/release"
 SCRIPTS_DIR="$RELEASE_DIR/scripts"
 CONFIG="$REPO_ROOT/config/games.yml"
@@ -14,6 +19,17 @@ export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
 
 # Use the project venv for Python scripts
 PYTHON="$RELEASE_DIR/.venv/bin/python3"
+
+# ── Auto-load ASC credentials from games.yml ───────────────────────────────────
+_asc_key_id=$(    "$PYTHON" -c "import yaml; c=yaml.safe_load(open('$CONFIG')); print(c['studio'].get('asc_key_id',''))" 2>/dev/null)
+_asc_issuer_id=$( "$PYTHON" -c "import yaml; c=yaml.safe_load(open('$CONFIG')); print(c['studio'].get('asc_issuer_id',''))" 2>/dev/null)
+export ASC_KEY_ID="${ASC_KEY_ID:-$_asc_key_id}"
+export ASC_ISSUER_ID="${ASC_ISSUER_ID:-$_asc_issuer_id}"
+# Default key path: ~/.appstoreconnect/private_keys/AuthKey_<KEY_ID>.p8
+if [[ -z "${ASC_KEY_PATH:-}" ]] && [[ -n "$ASC_KEY_ID" ]]; then
+  _default_key="$HOME/.appstoreconnect/private_keys/AuthKey_${ASC_KEY_ID}.p8"
+  [[ -f "$_default_key" ]] && export ASC_KEY_PATH="$_default_key"
+fi
 
 # ── Colour helpers ─────────────────────────────────────────────────────────────
 BOLD=$'\033[1m'; DIM=$'\033[2m'; CYAN=$'\033[36m'; GREEN=$'\033[32m'
@@ -49,7 +65,7 @@ parse_common_flags() {
 run_lane() {
   local lane="$1"; shift
   cd "$RELEASE_DIR"
-  bundle exec fastlane "$lane" game:"$GAME" "$@"
+  bundle exec fastlane ios "$lane" game:"$GAME" "$@"
 }
 
 # ── Commands ───────────────────────────────────────────────────────────────────

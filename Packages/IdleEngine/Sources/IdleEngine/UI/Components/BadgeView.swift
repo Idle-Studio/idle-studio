@@ -34,8 +34,8 @@ public struct BadgeView: View {
                     .font(Typography.caption.weight(.semibold))
                     .multilineTextAlignment(.center)
                     .lineLimit(2)
-                    .foregroundStyle(isEarned ? .white : .white.opacity(0.4))
-                    .frame(width: 80)
+                    .foregroundStyle(isEarned ? Color.primary : Color.primary.opacity(0.4))
+                    .frame(width: 80, height: 36, alignment: .top)
             }
         }
         .buttonStyle(.plain)
@@ -70,21 +70,19 @@ public struct BadgeView: View {
                     .shadow(color: primaryColor.opacity(0.6), radius: 8, y: 2)
             } else {
                 Circle()
-                    .fill(Color.white.opacity(0.08))
+                    .fill(Color(.systemFill))
             }
 
             // Icon
             Image(systemName: achievement.iconSymbol)
                 .font(.system(size: 28, weight: .semibold))
-                .foregroundStyle(isEarned ? .white : .white.opacity(0.25))
+                .foregroundStyle(isEarned ? .white : Color.secondary.opacity(0.5))
 
             // Lock overlay for unearned badges — provides non-color state indicator
             if !isEarned {
-                Circle()
-                    .fill(Color.black.opacity(0.3))
                 Image(systemName: "lock.fill")
                     .font(.system(size: 14, weight: .bold))
-                    .foregroundStyle(.white.opacity(0.4))
+                    .foregroundStyle(Color.secondary)
                     .offset(x: 20, y: 20)
             }
         }
@@ -126,13 +124,13 @@ struct BadgeDetailSheet: View {
                             .shadow(color: primaryColor.opacity(0.7), radius: 20)
                     } else {
                         Circle()
-                            .fill(Color.white.opacity(0.07))
+                            .fill(Color(.systemFill))
                             .frame(width: 110, height: 110)
                     }
 
                     Image(systemName: achievement.iconSymbol)
                         .font(.system(size: 48, weight: .semibold))
-                        .foregroundStyle(isEarned ? .white : .white.opacity(0.2))
+                        .foregroundStyle(isEarned ? .white : Color.secondary.opacity(0.4))
                 }
                 .padding(.top, 12)
                 .accessibilityHidden(true)
@@ -140,11 +138,11 @@ struct BadgeDetailSheet: View {
                 VStack(spacing: 8) {
                     Text(achievement.displayName)
                         .font(Typography.title)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.primary)
 
                     Text(achievement.description)
                         .font(Typography.body)
-                        .foregroundStyle(Color.white.opacity(0.6))
+                        .foregroundStyle(Color.secondary)
                         .multilineTextAlignment(.center)
                 }
                 .padding(.horizontal, 24)
@@ -158,21 +156,21 @@ struct BadgeDetailSheet: View {
                 .padding(.horizontal, 16)
                 .padding(.vertical, 8)
                 .background(
-                    Capsule().fill(isEarned ? primaryColor.opacity(0.3) : Color.white.opacity(0.1))
+                    Capsule().fill(isEarned ? primaryColor.opacity(0.2) : Color(.systemFill))
                 )
-                .foregroundStyle(isEarned ? primaryColor : Color.white.opacity(0.4))
+                .foregroundStyle(isEarned ? primaryColor : Color.secondary)
 
                 // Category label
                 Text(achievement.category.displayName.uppercased())
                     .font(Typography.caption)
-                    .foregroundStyle(Color.white.opacity(0.3))
+                    .foregroundStyle(Color.secondary.opacity(0.6))
                     .tracking(1.2)
 
                 Spacer()
 
                 Button("Close") { dismiss() }
                     .font(Typography.body)
-                    .foregroundStyle(Color.white.opacity(0.5))
+                    .foregroundStyle(Color.secondary)
                     .padding(.bottom, 24)
         }
         .presentationDetents([.medium])

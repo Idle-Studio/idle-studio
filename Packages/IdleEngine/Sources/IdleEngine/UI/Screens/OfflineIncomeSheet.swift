@@ -17,43 +17,41 @@ public struct OfflineIncomeSheet: View {
     }
 
     public var body: some View {
-        VStack(spacing: 24) {
-            // Handle
-            Capsule()
-                .fill(.secondary.opacity(0.4))
-                .frame(width: 36, height: 4)
-                .padding(.top, 12)
+        VStack(spacing: 0) {
+            // Central content
+            VStack(spacing: 20) {
+                // Icon
+                Image(systemName: "clock.arrow.circlepath")
+                    .font(.system(size: 52))
+                    .foregroundStyle(theme.goldAccentColor)
+                    .scaleEffect(appeared ? 1 : 0.5)
+                    .animation(.spring(response: 0.45, dampingFraction: 0.6), value: appeared)
 
-            // Icon
-            Image(systemName: "clock.arrow.circlepath")
-                .font(.system(size: 56))
-                .foregroundStyle(theme.goldAccentColor)
-                .scaleEffect(appeared ? 1 : 0.5)
-                .animation(.spring(response: 0.45, dampingFraction: 0.6), value: appeared)
+                // Headline + body
+                VStack(spacing: 6) {
+                    Text(theme.copy.offlineSheet.title)
+                        .font(Typography.title)
+                        .foregroundStyle(theme.textPrimaryColor)
+                        .multilineTextAlignment(.center)
 
-            // Headline + body (theme-supplied)
-            VStack(spacing: 8) {
-                Text(theme.copy.offlineSheet.title)
-                    .font(Typography.title)
-                    .foregroundStyle(theme.textPrimaryColor)
-                    .multilineTextAlignment(.center)
+                    Text(theme.copy.offlineSheet.body)
+                        .font(Typography.body)
+                        .foregroundStyle(theme.textSecondaryColor)
+                        .multilineTextAlignment(.center)
+                }
 
-                Text(theme.copy.offlineSheet.body)
-                    .font(Typography.body)
-                    .foregroundStyle(theme.textSecondaryColor)
-                    .multilineTextAlignment(.center)
+                // Amount earned
+                earnedAmounts
+
+                if result.wasCapped {
+                    Text(String(format: theme.copy.offlineSheet.capNote, Int(result.effectiveDuration / 3600)))
+                        .font(Typography.caption)
+                        .foregroundStyle(theme.textSecondaryColor)
+                }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
 
-            // Amount earned
-            earnedAmounts
-
-            if result.wasCapped {
-                Text(String(format: theme.copy.offlineSheet.capNote, Int(result.effectiveDuration / 3600)))
-                    .font(Typography.caption)
-                    .foregroundStyle(theme.textSecondaryColor)
-            }
-
-            // Buttons
+            // Buttons pinned to bottom
             VStack(spacing: 12) {
                 Button(action: onCollect) {
                     Text(theme.copy.offlineSheet.collectButton)
@@ -83,8 +81,9 @@ public struct OfflineIncomeSheet: View {
             .padding(.bottom, 8)
         }
         .padding(.horizontal, 24)
+        .padding(.vertical, 24)
         .presentationDetents([.medium])
-        .presentationDragIndicator(.hidden)
+        .presentationDragIndicator(.visible)
         .presentationBackground(.ultraThinMaterial)
         .onAppear { appeared = true }
     }

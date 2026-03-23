@@ -27,11 +27,11 @@ public struct AppTheme: Sendable {
 
     // MARK: - Computed SwiftUI Colors
 
-    public var backgroundColor:      Color { Color(hex: colors.background) }
-    public var surfaceColor:          Color { Color(hex: colors.surface) }
-    public var surfaceElevatedColor:  Color { Color(hex: colors.surfaceElevated) }
-    public var textPrimaryColor:      Color { Color(hex: colors.textPrimary) }
-    public var textSecondaryColor:    Color { Color(hex: colors.textSecondary) }
+    public var backgroundColor:      Color { Color(light: Color(hex: "#F2F2F7"), dark: Color(hex: colors.background)) }
+    public var surfaceColor:          Color { Color(light: Color(hex: "#FFFFFF"), dark: Color(hex: colors.surface)) }
+    public var surfaceElevatedColor:  Color { Color(light: Color(hex: "#E8E8F0"), dark: Color(hex: colors.surfaceElevated)) }
+    public var textPrimaryColor:      Color { Color(light: Color(hex: "#1C1C1E"), dark: Color(hex: colors.textPrimary)) }
+    public var textSecondaryColor:    Color { Color(light: Color(hex: "#6C6C80"), dark: Color(hex: colors.textSecondary)) }
     public var goldAccentColor:       Color { Color(hex: colors.goldAccent) }
 
     /// Returns the tint for a given level ID, falling back to `goldAccent`.
@@ -100,6 +100,18 @@ public struct AppTheme: Sendable {
 
 extension EnvironmentValues {
     @Entry public var theme: AppTheme = .placeholder
+}
+
+// MARK: - Color+Adaptive
+
+extension Color {
+    /// Returns a color that adapts to the current color scheme automatically.
+    /// Use this for structural chrome (backgrounds, surfaces, text) so light mode looks correct.
+    public init(light: Color, dark: Color) {
+        self.init(uiColor: UIColor { traits in
+            traits.userInterfaceStyle == .dark ? UIColor(dark) : UIColor(light)
+        })
+    }
 }
 
 // MARK: - Color+Hex

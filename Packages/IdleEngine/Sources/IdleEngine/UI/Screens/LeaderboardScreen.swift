@@ -42,7 +42,6 @@ public struct LeaderboardScreen: View {
             .navigationTitle(theme.copy.leaderboardTabLabel)
             #if os(iOS)
             .toolbarBackground(theme.surfaceColor, for: .navigationBar)
-            .toolbarColorScheme(.dark, for: .navigationBar)
             #endif
             .task { await viewModel.load() }
         }
@@ -145,6 +144,14 @@ final class LeaderboardViewModel {
             return
         }
         isGameCenterUnavailable = false
+
+        // Submit current scores so the local player always appears in the leaderboard.
+        if let state = await GameEngine.shared.currentState {
+            let goldScore = (min(state.totalLifetimeGold, Decimal(Int.max)) as NSDecimalNumber).intValue
+            try? await svc.submitScore(goldScore, to: theme.leaderboards.weeklyGold)
+            let tokenScore = Int(truncating: state.prestigeTokens as NSDecimalNumber)
+            try? await svc.submitScore(tokenScore, to: theme.leaderboards.globalTokens)
+        }
 
         let id = selectedScope == .global
             ? theme.leaderboards.globalTokens

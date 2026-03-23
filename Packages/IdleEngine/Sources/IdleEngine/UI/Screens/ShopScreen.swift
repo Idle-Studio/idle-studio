@@ -33,7 +33,6 @@ public struct ShopScreen: View {
             .navigationTitle(theme.copy.premiumPassName)
             #if os(iOS)
             .toolbarBackground(theme.surfaceColor, for: .navigationBar)
-            .toolbarColorScheme(.dark, for: .navigationBar)
             #endif
             .task { await viewModel.loadProducts() }
         }

@@ -24,7 +24,6 @@ public struct SocialScreen: View {
             .navigationTitle("Social")
             #if os(iOS)
             .toolbarBackground(theme.surfaceColor, for: .navigationBar)
-            .toolbarColorScheme(.dark, for: .navigationBar)
             #endif
             .task { await viewModel.load() }
         }
