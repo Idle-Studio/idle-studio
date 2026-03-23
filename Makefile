@@ -95,7 +95,7 @@ upload-metadata: ## Upload App Store text metadata for GAME (no screenshots)
 
 .PHONY: upload-screenshots
 upload-screenshots: ## Upload App Store screenshots for GAME
-	$(FASTLANE) ios upload_screenshots game:$(GAME)
+	$(PYTHON) $(RELEASE_DIR)/scripts/upload_screenshots.py --game $(GAME)
 
 # ── IAP & Game Center ──────────────────────────────────────────────────────────
 

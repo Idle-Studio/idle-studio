@@ -149,7 +149,7 @@ cmd_screenshots() {
 
 cmd_upload_screenshots() {
   info "Uploading screenshots for $GAME to App Store Connect..."
-  run_lane upload_screenshots
+  "$PYTHON" "$SCRIPTS_DIR/upload_screenshots.py" --game "$GAME"
   success "Screenshots uploaded."
 }
 
