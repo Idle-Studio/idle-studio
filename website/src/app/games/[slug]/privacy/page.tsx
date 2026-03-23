@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ALL_GAMES, getGameConfig } from '@/config/games'
-import { generatePrivacyMetadata } from '@/lib/metadata'
+import { generatePrivacyMetadata, breadcrumbJsonLd } from '@/lib/metadata'
 import { assetPath } from '@/lib/assetPath'
 
 export async function generateStaticParams() {
@@ -31,6 +31,14 @@ export default async function PrivacyPage({ params }: { params: Promise<{ slug: 
 
   return (
     <main className="min-h-screen" style={{ backgroundColor: game.backgroundColor }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd([
+          { name: 'Idle Studio', url: 'https://idlestudio.io/' },
+          { name: game.displayName, url: `https://idlestudio.io/games/${game.id}/` },
+          { name: 'Privacy Policy', url: `https://idlestudio.io/games/${game.id}/privacy/` },
+        ])) }}
+      />
       <div className="border-b border-white/10 py-6 px-6">
         <div className="max-w-3xl mx-auto flex items-center justify-between">
           <Link href={`/games/${game.id}`} className="flex items-center gap-3">

@@ -4,10 +4,15 @@ import { StudioHero } from '@/components/studio/StudioHero'
 import { GameCard } from '@/components/studio/GameCard'
 import { ALL_GAMES } from '@/config/games'
 import { ScrollReveal } from '@/components/ui/ScrollReveal'
+import { organizationJsonLd } from '@/lib/metadata'
 
 export default function HomePage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd()) }}
+      />
       <SiteHeader />
       <main>
         <StudioHero />

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { ALL_GAMES, getGameConfig } from '@/config/games'
-import { generateGameMetadata } from '@/lib/metadata'
+import { generateGameMetadata, gameJsonLd, breadcrumbJsonLd } from '@/lib/metadata'
 import { SiteHeader } from '@/components/layout/SiteHeader'
 import { SiteFooter } from '@/components/layout/SiteFooter'
 import { GameHero } from '@/components/game/GameHero'
@@ -31,6 +31,17 @@ export default async function GamePage({ params }: { params: Promise<{ slug: str
 
   return (
     <main style={{ backgroundColor: game.backgroundColor }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(gameJsonLd(game)) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd([
+          { name: 'Idle Studio', url: 'https://idlestudio.io/' },
+          { name: game.displayName, url: `https://idlestudio.io/games/${game.id}/` },
+        ])) }}
+      />
       <SiteHeader />
       <GameHero game={game} />
       <StatsBar game={game} />

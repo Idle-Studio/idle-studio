@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { ALL_GAMES, getGameConfig } from '@/config/games'
-import { generateSupportMetadata } from '@/lib/metadata'
+import { generateSupportMetadata, breadcrumbJsonLd } from '@/lib/metadata'
 import { SupportPageClient } from './SupportPageClient'
 
 export async function generateStaticParams() {
@@ -19,5 +19,17 @@ export default async function SupportPage({ params }: { params: Promise<{ slug: 
   const { slug } = await params
   const game = getGameConfig(slug)
   if (!game) notFound()
-  return <SupportPageClient game={game} />
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd([
+          { name: 'Idle Studio', url: 'https://idlestudio.io/' },
+          { name: game.displayName, url: `https://idlestudio.io/games/${game.id}/` },
+          { name: 'Support', url: `https://idlestudio.io/games/${game.id}/support/` },
+        ])) }}
+      />
+      <SupportPageClient game={game} />
+    </>
+  )
 }
