@@ -8,14 +8,16 @@ export async function generateStaticParams() {
   return ALL_GAMES.map(game => ({ slug: game.id }))
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const game = getGameConfig(params.slug)
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const game = getGameConfig(slug)
   if (!game) notFound()
   return generateSupportMetadata(game)
 }
 
-export default function SupportPage({ params }: { params: { slug: string } }) {
-  const game = getGameConfig(params.slug)
+export default async function SupportPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const game = getGameConfig(slug)
   if (!game) notFound()
   return <SupportPageClient game={game} />
 }

@@ -10,14 +10,16 @@ export async function generateStaticParams() {
   return ALL_GAMES.map(game => ({ slug: game.id }))
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const game = getGameConfig(params.slug)
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const game = getGameConfig(slug)
   if (!game) notFound()
   return generatePrivacyMetadata(game)
 }
 
-export default function PrivacyPage({ params }: { params: { slug: string } }) {
-  const game = getGameConfig(params.slug)
+export default async function PrivacyPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const game = getGameConfig(slug)
   if (!game) notFound()
 
   const iconSrc = assetPath(game.id, 'root', game.appIconAsset)

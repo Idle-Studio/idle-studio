@@ -1,6 +1,8 @@
 {
-  "/page": "app/page.js",
-  "/games/[slug]/support/page": "app/games/[slug]/support/page.js",
+  "/_global-error/page": "app/_global-error/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
   "/games/[slug]/page": "app/games/[slug]/page.js",
-  "/games/[slug]/privacy/page": "app/games/[slug]/privacy/page.js"
+  "/games/[slug]/privacy/page": "app/games/[slug]/privacy/page.js",
+  "/games/[slug]/support/page": "app/games/[slug]/support/page.js",
+  "/page": "app/page.js"
 }

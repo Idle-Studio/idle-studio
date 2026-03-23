@@ -4,7 +4,7 @@ import { useScroll, useTransform, type MotionValue } from 'framer-motion'
 import { useRef } from 'react'
 
 export function useParallax(speed: number = 0.3): {
-  ref: React.RefObject<HTMLDivElement>
+  ref: React.RefObject<HTMLDivElement | null>
   y: MotionValue<string>
 } {
   const ref = useRef<HTMLDivElement>(null)

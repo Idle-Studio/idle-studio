@@ -5,14 +5,15 @@ export async function generateStaticParams() {
   return ALL_GAMES.map(game => ({ slug: game.id }))
 }
 
-export default function GameLayout({
+export default async function GameLayout({
   children,
   params,
 }: {
   children: React.ReactNode
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }) {
-  const game = ALL_GAMES.find(g => g.id === params.slug)
+  const { slug } = await params
+  const game = ALL_GAMES.find(g => g.id === slug)
   if (!game) notFound()
 
   return (
