@@ -1,0 +1,10 @@
+# Credentials are injected via environment variables — never hardcoded here.
+# Required env vars:
+#   ASC_KEY_PATH    — path to .p8 private key file
+#   ASC_KEY_ID      — 10-char key ID
+#   ASC_ISSUER_ID   — UUID issuer ID
+#   APPLE_TEAM_ID   — 10-char team ID
+#   GAME_BUNDLE_ID  — set dynamically by each lane via ENV["GAME_BUNDLE_ID"]
+
+app_identifier ENV["GAME_BUNDLE_ID"]
+team_id        ENV["APPLE_TEAM_ID"]

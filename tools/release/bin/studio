@@ -1,0 +1,226 @@
+#!/usr/bin/env bash
+# studio — Idle Studio local release CLI
+# Installed to /usr/local/bin/studio by `make install-cli`.
+# The placeholder __REPO_ROOT__ is replaced with the actual repo path at install time.
+set -euo pipefail
+
+REPO_ROOT="__REPO_ROOT__"
+RELEASE_DIR="$REPO_ROOT/tools/release"
+SCRIPTS_DIR="$RELEASE_DIR/scripts"
+CONFIG="$REPO_ROOT/config/games.yml"
+
+# Prefer Homebrew Ruby over macOS system Ruby (system Ruby is read-only)
+export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
+
+# Use the project venv for Python scripts
+PYTHON="$RELEASE_DIR/.venv/bin/python3"
+
+# ── Colour helpers ─────────────────────────────────────────────────────────────
+BOLD=$'\033[1m'; DIM=$'\033[2m'; CYAN=$'\033[36m'; GREEN=$'\033[32m'
+YELLOW=$'\033[33m'; RED=$'\033[31m'; RESET=$'\033[0m'
+
+info()    { echo "${CYAN}→${RESET} $*"; }
+success() { echo "${GREEN}✓${RESET} $*"; }
+warn()    { echo "${YELLOW}⚠${RESET} $*"; }
+die()     { echo "${RED}✗${RESET} $*" >&2; exit 1; }
+
+# ── Defaults ───────────────────────────────────────────────────────────────────
+GAME="${STUDIO_GAME:-idle-civilizations}"
+NOTE=""
+DAYS=7
+DRY_RUN=""
+SKIP_MATCH="false"
+
+# ── Argument parsing ───────────────────────────────────────────────────────────
+parse_common_flags() {
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --game)       GAME="$2";        shift 2 ;;
+      --note)       NOTE="$2";        shift 2 ;;
+      --days)       DAYS="$2";        shift 2 ;;
+      --dry-run)    DRY_RUN="--dry-run"; shift ;;
+      --skip-match) SKIP_MATCH="true"; shift ;;
+      *)            shift ;;
+    esac
+  done
+}
+
+# ── Fastlane runner ────────────────────────────────────────────────────────────
+run_lane() {
+  local lane="$1"; shift
+  cd "$RELEASE_DIR"
+  bundle exec fastlane "$lane" game:"$GAME" "$@"
+}
+
+# ── Commands ───────────────────────────────────────────────────────────────────
+
+cmd_help() {
+  echo ""
+  echo "${BOLD}Idle Studio CLI${RESET}  —  manage releases from anywhere"
+  echo ""
+  echo "${BOLD}Usage:${RESET}  studio <command> [--game <id>] [options]"
+  echo ""
+  echo "${BOLD}Default game:${RESET} ${GAME}  (override with --game or \$STUDIO_GAME)"
+  echo ""
+  echo "${BOLD}Commands:${RESET}"
+  echo ""
+  echo "  ${CYAN}games${RESET}                         List all configured games"
+  echo "  ${CYAN}signing${RESET}  [--game]              Sync code signing certs via match"
+  echo ""
+  echo "  ${CYAN}build${RESET}    [--game] [--skip-match] Archive app and export .ipa"
+  echo "  ${CYAN}beta${RESET}     [--game] [--skip-match] --note '...' Build and upload to TestFlight"
+  echo "  ${CYAN}distribute${RESET} [--game]            Push latest TF build to external groups"
+  echo ""
+  echo "  ${CYAN}metadata${RESET}           [--game]    Upload App Store text metadata"
+  echo "  ${CYAN}screenshots${RESET}        [--game]    Generate App Store screenshots (HTML→PNG)"
+  echo "  ${CYAN}upload-screenshots${RESET} [--game]    Upload generated screenshots to ASC"
+  echo "  ${CYAN}verify-icon${RESET}        [--game]    Verify App Store icon (1024×1024, no alpha)"
+  echo ""
+  echo "  ${CYAN}sync-iap${RESET} [--game] [--dry-run]  Sync .storekit products → ASC"
+  echo "  ${CYAN}sync-gc${RESET}  [--game] [--dry-run]  Sync leaderboards/achievements → ASC"
+  echo "  ${CYAN}sync-all${RESET} [--game] [--dry-run]  sync-iap + sync-gc"
+  echo ""
+  echo "  ${CYAN}submit${RESET}   [--game]              Submit for App Store review"
+  echo "  ${CYAN}release${RESET}  [--game] --note '...' Full pipeline: build→TF→metadata→submit"
+  echo ""
+  echo "  ${CYAN}status${RESET}   [--game]              App Store review status + TF builds"
+  echo "  ${CYAN}reports${RESET}  [--game] [--days N]   Sales and download report (default: 7d)"
+  echo ""
+  echo "${BOLD}Examples:${RESET}"
+  echo "  studio beta --skip-match --note 'v1.1: Space Age unlocked'"
+  echo "  studio screenshots"
+  echo "  studio upload-screenshots"
+  echo "  studio verify-icon"
+  echo "  studio sync-iap --dry-run"
+  echo "  studio status"
+  echo "  studio reports --days 30"
+  echo "  studio release --game idle-civilizations --note 'v1.2 release'"
+  echo ""
+}
+
+cmd_games() {
+  "$PYTHON" -c "
+import yaml
+cfg = yaml.safe_load(open('$CONFIG'))
+print()
+for k, v in cfg['games'].items():
+    app_id = v.get('app_id') or '(app_id not set)'
+    print(f'  {k:<30s}  {v[\"display_name\"]:<30s}  {v[\"bundle_id\"]}  id={app_id}')
+print()
+"
+}
+
+cmd_signing() {
+  info "Syncing certificates for $GAME..."
+  run_lane setup_signing
+  success "Certificates synced."
+}
+
+cmd_build() {
+  info "Building $GAME${SKIP_MATCH:+ (auto-signing)}..."
+  run_lane build "skip_match:$SKIP_MATCH"
+  success "Build complete → /tmp/idle-studio-builds/$GAME/$GAME.ipa"
+}
+
+cmd_beta() {
+  [[ -z "$NOTE" ]] && die "Required: --note 'your changelog'"
+  info "Building and uploading $GAME to TestFlight${SKIP_MATCH:+ (auto-signing)}..."
+  run_lane beta "skip_match:$SKIP_MATCH" "changelog:$NOTE"
+  success "Uploaded to TestFlight (internal)."
+}
+
+cmd_distribute() {
+  info "Distributing $GAME to external TestFlight groups..."
+  run_lane distribute_beta
+  success "Distributed to external beta groups."
+}
+
+cmd_metadata() {
+  info "Uploading metadata for $GAME..."
+  run_lane upload_metadata
+  success "Metadata uploaded."
+}
+
+cmd_screenshots() {
+  info "Generating screenshots for $GAME via HTML+Playwright..."
+  "$PYTHON" "$REPO_ROOT/tools/generate_screenshots.py" --game "$GAME"
+  success "Screenshots saved to metadata/$GAME/screenshots/"
+}
+
+cmd_upload_screenshots() {
+  info "Uploading screenshots for $GAME to App Store Connect..."
+  run_lane upload_screenshots
+  success "Screenshots uploaded."
+}
+
+cmd_verify_icon() {
+  info "Verifying App Store icon for $GAME..."
+  "$PYTHON" "$SCRIPTS_DIR/verify_icon.py" --game "$GAME"
+}
+
+cmd_sync_iap() {
+  info "Syncing IAP products for $GAME${DRY_RUN:+ (dry run)}..."
+  "$PYTHON" "$SCRIPTS_DIR/sync_iap.py" --game "$GAME" $DRY_RUN
+}
+
+cmd_sync_gc() {
+  info "Syncing Game Center for $GAME${DRY_RUN:+ (dry run)}..."
+  "$PYTHON" "$SCRIPTS_DIR/sync_gamecenter.py" --game "$GAME" $DRY_RUN
+}
+
+cmd_sync_all() {
+  cmd_sync_iap
+  cmd_sync_gc
+}
+
+cmd_submit() {
+  info "Submitting $GAME for App Store review..."
+  run_lane submit
+  success "Submitted for review."
+}
+
+cmd_release() {
+  [[ -z "$NOTE" ]] && die "Required: --note 'your changelog'"
+  warn "Starting full release pipeline for $GAME..."
+  warn "This will: build → upload to TestFlight → push metadata → submit for review."
+  echo ""
+  read -rp "Continue? [y/N] " confirm
+  [[ "$confirm" =~ ^[Yy]$ ]] || { echo "Aborted."; exit 0; }
+  run_lane release "changelog:$NOTE"
+  success "Release pipeline complete."
+}
+
+cmd_status() {
+  "$PYTHON" "$SCRIPTS_DIR/check_review_status.py" --game "$GAME"
+}
+
+cmd_reports() {
+  "$PYTHON" "$SCRIPTS_DIR/fetch_reports.py" --game "$GAME" --days "$DAYS"
+}
+
+# ── Dispatch ───────────────────────────────────────────────────────────────────
+
+COMMAND="${1:-help}"
+shift 2>/dev/null || true
+parse_common_flags "$@"
+
+case "$COMMAND" in
+  help|-h|--help)    cmd_help ;;
+  games)             cmd_games ;;
+  signing)           cmd_signing ;;
+  build)             cmd_build ;;
+  beta)              cmd_beta ;;
+  distribute)        cmd_distribute ;;
+  metadata)          cmd_metadata ;;
+  screenshots)       cmd_screenshots ;;
+  upload-screenshots) cmd_upload_screenshots ;;
+  verify-icon)       cmd_verify_icon ;;
+  sync-iap)          cmd_sync_iap ;;
+  sync-gc)           cmd_sync_gc ;;
+  sync-all)          cmd_sync_all ;;
+  submit)            cmd_submit ;;
+  release)           cmd_release ;;
+  status)            cmd_status ;;
+  reports)           cmd_reports ;;
+  *)                 die "Unknown command '$COMMAND'. Run 'studio help' for usage." ;;
+esac

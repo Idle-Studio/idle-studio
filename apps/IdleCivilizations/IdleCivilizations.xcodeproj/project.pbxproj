@@ -1,0 +1,446 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 63;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1F6315158F1AD4104125997C /* IdleCivilizations.storekit in Resources */ = {isa = PBXBuildFile; fileRef = D60F46E55FD705E7C10DCA75 /* IdleCivilizations.storekit */; };
+		23CC0047F4993F8FFEAF1895 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A09DC0A681FB69F28F3F5066 /* Assets.xcassets */; };
+		2786C36AE68D0A21777CC659 /* IdleEngine in Frameworks */ = {isa = PBXBuildFile; productRef = F4DEAA2A47120DB0E5AEF99A /* IdleEngine */; };
+		29EE4386A67E3ADE048D83CD /* IdleCivilizationsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 748B70A69AC9C2A4F6746105 /* IdleCivilizationsApp.swift */; };
+		3E8723E6CF437CA81F20500E /* ambient_space_age.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 995D44BF687D133B257DE8C9 /* ambient_space_age.mp3 */; };
+		43D95730A9D54D24DF29E2B1 /* ambient_classical_world.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = B8519172A7318C1E1E13AF6D /* ambient_classical_world.mp3 */; };
+		55E9AF3738243CA6D833425F /* ambient_stone_age.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = B1300B11B702EF5B5AE62085 /* ambient_stone_age.mp3 */; };
+		5C2527BFCD08B56A95DDB5F7 /* icon.json in Resources */ = {isa = PBXBuildFile; fileRef = 7AE3E605AA7AC16F063BA588 /* icon.json */; };
+		6ABAF12C47487BD42FC9009E /* ambient_industrial_revolution.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DAA83546FEE45CA9B9BDC160 /* ambient_industrial_revolution.mp3 */; };
+		7CD5A255D53BE287F5C32172 /* 44D2026C-A19A-415D-B060-74AAA47C13F2.png in Resources */ = {isa = PBXBuildFile; fileRef = AAF70E2E1CC1C2C8554D3FB9 /* 44D2026C-A19A-415D-B060-74AAA47C13F2.png */; };
+		9AF2BD1471F01F7B8726193A /* ambient_ancient_empires.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 25404DCBDA77AB4643CFE80E /* ambient_ancient_empires.mp3 */; };
+		B360A1CE91B8E9A9ED11821C /* ambient_renaissance.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 623E86E258F96481D8683612 /* ambient_renaissance.mp3 */; };
+		B65B8B744795D6E52E7E3190 /* A4D15D4B-07E6-4C50-8930-509B7A5FA5F7.png in Resources */ = {isa = PBXBuildFile; fileRef = 2EB1A3FCA982F1134F2F60D2 /* A4D15D4B-07E6-4C50-8930-509B7A5FA5F7.png */; };
+		BD608BA1903DDD6C500BB31C /* ambient_bronze_age.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8E59F0BEE9744AE118B0FA62 /* ambient_bronze_age.mp3 */; };
+		C10EBAE49DF0FFAD6FE103AC /* idle-civilizations.json in Resources */ = {isa = PBXBuildFile; fileRef = 8711AA2717BFD75224C113D5 /* idle-civilizations.json */; };
+		E2D1E7F50566355FEA0DEE93 /* ambient_medieval_era.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = E64271D57008C62097BC6205 /* ambient_medieval_era.mp3 */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		25404DCBDA77AB4643CFE80E /* ambient_ancient_empires.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ambient_ancient_empires.mp3; sourceTree = "<group>"; };
+		2EB1A3FCA982F1134F2F60D2 /* A4D15D4B-07E6-4C50-8930-509B7A5FA5F7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "A4D15D4B-07E6-4C50-8930-509B7A5FA5F7.png"; sourceTree = "<group>"; };
+		4B4B3E91FB5EE05FBBAFAEDC /* IdleCivilizations.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IdleCivilizations.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		623E86E258F96481D8683612 /* ambient_renaissance.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ambient_renaissance.mp3; sourceTree = "<group>"; };
+		748B70A69AC9C2A4F6746105 /* IdleCivilizationsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdleCivilizationsApp.swift; sourceTree = "<group>"; };
+		7AE3E605AA7AC16F063BA588 /* icon.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = icon.json; sourceTree = "<group>"; };
+		8711AA2717BFD75224C113D5 /* idle-civilizations.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "idle-civilizations.json"; sourceTree = "<group>"; };
+		8E59F0BEE9744AE118B0FA62 /* ambient_bronze_age.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ambient_bronze_age.mp3; sourceTree = "<group>"; };
+		995D44BF687D133B257DE8C9 /* ambient_space_age.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ambient_space_age.mp3; sourceTree = "<group>"; };
+		A09DC0A681FB69F28F3F5066 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A1D5C96EBF200E53F9044E20 /* IdleCivilizations.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = IdleCivilizations.entitlements; sourceTree = "<group>"; };
+		AAE3E6564A7CA8BEDC9BDF40 /* IdleEngine */ = {isa = PBXFileReference; lastKnownFileType = folder; name = IdleEngine; path = ../../Packages/IdleEngine; sourceTree = SOURCE_ROOT; };
+		AAF70E2E1CC1C2C8554D3FB9 /* 44D2026C-A19A-415D-B060-74AAA47C13F2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "44D2026C-A19A-415D-B060-74AAA47C13F2.png"; sourceTree = "<group>"; };
+		B1300B11B702EF5B5AE62085 /* ambient_stone_age.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ambient_stone_age.mp3; sourceTree = "<group>"; };
+		B8519172A7318C1E1E13AF6D /* ambient_classical_world.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ambient_classical_world.mp3; sourceTree = "<group>"; };
+		D60F46E55FD705E7C10DCA75 /* IdleCivilizations.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = IdleCivilizations.storekit; sourceTree = "<group>"; };
+		DAA83546FEE45CA9B9BDC160 /* ambient_industrial_revolution.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ambient_industrial_revolution.mp3; sourceTree = "<group>"; };
+		E64271D57008C62097BC6205 /* ambient_medieval_era.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ambient_medieval_era.mp3; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		711BC0BFE230D52D912D3ED6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2786C36AE68D0A21777CC659 /* IdleEngine in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		314084E5672B10318393C519 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4B4B3E91FB5EE05FBBAFAEDC /* IdleCivilizations.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6A9D72C6F0158BF41F295F94 /* IdleCivilizations.icon */ = {
+			isa = PBXGroup;
+			children = (
+				7AE3E605AA7AC16F063BA588 /* icon.json */,
+				BD1641C6790E362E2ACAAB55 /* Assets */,
+			);
+			path = IdleCivilizations.icon;
+			sourceTree = "<group>";
+		};
+		8A5FA9B5A4BF54D4D69727F5 = {
+			isa = PBXGroup;
+			children = (
+				D3EDC2D2E9C3375007720AB0 /* Packages */,
+				FB13A6EA8DD0234A1000088E /* Resources */,
+				C66E5B47C2F4586E22537DF3 /* Sources */,
+				314084E5672B10318393C519 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		BD1641C6790E362E2ACAAB55 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				AAF70E2E1CC1C2C8554D3FB9 /* 44D2026C-A19A-415D-B060-74AAA47C13F2.png */,
+				2EB1A3FCA982F1134F2F60D2 /* A4D15D4B-07E6-4C50-8930-509B7A5FA5F7.png */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
+		C66E5B47C2F4586E22537DF3 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				748B70A69AC9C2A4F6746105 /* IdleCivilizationsApp.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		D3EDC2D2E9C3375007720AB0 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				AAE3E6564A7CA8BEDC9BDF40 /* IdleEngine */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		FB13A6EA8DD0234A1000088E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				25404DCBDA77AB4643CFE80E /* ambient_ancient_empires.mp3 */,
+				8E59F0BEE9744AE118B0FA62 /* ambient_bronze_age.mp3 */,
+				B8519172A7318C1E1E13AF6D /* ambient_classical_world.mp3 */,
+				DAA83546FEE45CA9B9BDC160 /* ambient_industrial_revolution.mp3 */,
+				E64271D57008C62097BC6205 /* ambient_medieval_era.mp3 */,
+				623E86E258F96481D8683612 /* ambient_renaissance.mp3 */,
+				995D44BF687D133B257DE8C9 /* ambient_space_age.mp3 */,
+				B1300B11B702EF5B5AE62085 /* ambient_stone_age.mp3 */,
+				A09DC0A681FB69F28F3F5066 /* Assets.xcassets */,
+				8711AA2717BFD75224C113D5 /* idle-civilizations.json */,
+				A1D5C96EBF200E53F9044E20 /* IdleCivilizations.entitlements */,
+				D60F46E55FD705E7C10DCA75 /* IdleCivilizations.storekit */,
+				6A9D72C6F0158BF41F295F94 /* IdleCivilizations.icon */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		DED91C0F96D627984830D655 /* IdleCivilizations */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FC4394A7611A3D9689160966 /* Build configuration list for PBXNativeTarget "IdleCivilizations" */;
+			buildPhases = (
+				1FCC5C65EB3A047D97E87413 /* Sources */,
+				2BDDAE2E87392724203E6D0F /* Resources */,
+				711BC0BFE230D52D912D3ED6 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = IdleCivilizations;
+			packageProductDependencies = (
+				F4DEAA2A47120DB0E5AEF99A /* IdleEngine */,
+			);
+			productName = IdleCivilizations;
+			productReference = 4B4B3E91FB5EE05FBBAFAEDC /* IdleCivilizations.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		8C74211A7245824FC160D82B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 2630;
+				TargetAttributes = {
+					DED91C0F96D627984830D655 = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 91A761959E229DD711229ED2 /* Build configuration list for PBXProject "IdleCivilizations" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 8A5FA9B5A4BF54D4D69727F5;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				D20738215C5BBD3F1AC4D366 /* XCLocalSwiftPackageReference "../../Packages/IdleEngine" */,
+			);
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DED91C0F96D627984830D655 /* IdleCivilizations */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2BDDAE2E87392724203E6D0F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7CD5A255D53BE287F5C32172 /* 44D2026C-A19A-415D-B060-74AAA47C13F2.png in Resources */,
+				B65B8B744795D6E52E7E3190 /* A4D15D4B-07E6-4C50-8930-509B7A5FA5F7.png in Resources */,
+				23CC0047F4993F8FFEAF1895 /* Assets.xcassets in Resources */,
+				1F6315158F1AD4104125997C /* IdleCivilizations.storekit in Resources */,
+				9AF2BD1471F01F7B8726193A /* ambient_ancient_empires.mp3 in Resources */,
+				BD608BA1903DDD6C500BB31C /* ambient_bronze_age.mp3 in Resources */,
+				43D95730A9D54D24DF29E2B1 /* ambient_classical_world.mp3 in Resources */,
+				6ABAF12C47487BD42FC9009E /* ambient_industrial_revolution.mp3 in Resources */,
+				E2D1E7F50566355FEA0DEE93 /* ambient_medieval_era.mp3 in Resources */,
+				B360A1CE91B8E9A9ED11821C /* ambient_renaissance.mp3 in Resources */,
+				3E8723E6CF437CA81F20500E /* ambient_space_age.mp3 in Resources */,
+				55E9AF3738243CA6D833425F /* ambient_stone_age.mp3 in Resources */,
+				5C2527BFCD08B56A95DDB5F7 /* icon.json in Resources */,
+				C10EBAE49DF0FFAD6FE103AC /* idle-civilizations.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1FCC5C65EB3A047D97E87413 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				29EE4386A67E3ADE048D83CD /* IdleCivilizationsApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5BD469C7E0FD91AF9CB00111 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = JL84E9GK95;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		634367269548566901525803 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = IdleCivilizations;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = Resources/IdleCivilizations.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Idle Civilizations";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.idlestudio.idleciv;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		97BA44BC99E158FEC3465724 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = IdleCivilizations;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = Resources/IdleCivilizations.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Idle Civilizations";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.idlestudio.idleciv;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		C38C6D8D7221C7086B5BB276 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = JL84E9GK95;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		91A761959E229DD711229ED2 /* Build configuration list for PBXProject "IdleCivilizations" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5BD469C7E0FD91AF9CB00111 /* Debug */,
+				C38C6D8D7221C7086B5BB276 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		FC4394A7611A3D9689160966 /* Build configuration list for PBXNativeTarget "IdleCivilizations" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				634367269548566901525803 /* Debug */,
+				97BA44BC99E158FEC3465724 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		D20738215C5BBD3F1AC4D366 /* XCLocalSwiftPackageReference "../../Packages/IdleEngine" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../Packages/IdleEngine;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F4DEAA2A47120DB0E5AEF99A /* IdleEngine */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = IdleEngine;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 8C74211A7245824FC160D82B /* Project object */;
+}

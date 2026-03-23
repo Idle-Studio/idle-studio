@@ -1,0 +1,68 @@
+# Xcode
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+*.xcworkspace/xcshareddata/
+*.xccheckout
+*.xcscmblueprint
+DerivedData/
+build/
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# Secrets — never commit these
+GoogleService-Info.plist
+*.p8
+*.p12
+*.mobileprovision
+Secrets.swift
+secrets.json
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# CocoaPods (we use SPM, but just in case)
+Pods/
+Podfile.lock
+
+# Carthage
+Carthage/Build/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# Coverage reports
+*.gcda
+*.gcno
+
+# TestFlight / App Store
+ExportOptions.plist
+
+# Release automation
+tools/release/vendor/
+tools/release/.bundle/
+tools/release/.venv/
+/tmp/idle-studio-builds/
+reports/
+
+# Website
+website/node_modules/
+website/.next/
+website/out/
+website/.env.local

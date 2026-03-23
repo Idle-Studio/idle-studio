@@ -1,0 +1,1629 @@
+{
+  "schemaVersion": "1.0",
+  "gameID": "idle-civilizations",
+  "displayName": "Idle Civilizations",
+  "bundleID": "com.idlestudio.idleciv",
+  "primaryCurrency": "gold",
+  "primaryCurrencyIcon": "dollarsign.circle.fill",
+  "theme": {
+    "colors": {
+      "background": "#0D0D0F",
+      "surface": "#1A1A20",
+      "surfaceElevated": "#252530",
+      "textPrimary": "#F5F5F5",
+      "textSecondary": "#A0A0B0",
+      "goldAccent": "#FFD700"
+    },
+    "levelColors": [
+      { "levelID": "stone_age",             "primary": "#8B7355", "secondary": "#6B5335" },
+      { "levelID": "bronze_age",            "primary": "#CD7F32", "secondary": "#A0522D" },
+      { "levelID": "ancient_empires",       "primary": "#C4A44D", "secondary": "#8B6914" },
+      { "levelID": "classical_world",       "primary": "#5B8DB8", "secondary": "#3A6B96" },
+      { "levelID": "medieval_era",          "primary": "#6B4F7C", "secondary": "#4E3660" },
+      { "levelID": "renaissance",           "primary": "#C44B24", "secondary": "#943620" },
+      { "levelID": "industrial_revolution", "primary": "#607080", "secondary": "#455060" },
+      { "levelID": "space_age",             "primary": "#1E4A7E", "secondary": "#0E2A4E" }
+    ]
+  },
+  "levels": [
+    {
+      "id": "stone_age",
+      "displayName": "Stone Age",
+      "order": 1,
+      "flavorText": "From spark to civilization — every empire begins with fire.",
+      "artworkAsset": "era_stone_age",
+      "soundAsset": "ambient_stone_age",
+      "advanceRequirement": { "gold": 3000000 },
+      "levelResources": [],
+      "units": [
+        {
+          "id": "campfire",
+          "displayName": "Campfire",
+          "description": "A simple fire that warms your tribe and keeps beasts at bay.",
+          "iconAsset": "unit_campfire",
+          "baseCost": { "gold": 10 },
+          "costMultiplier": 1.15,
+          "baseProductionPerSecond": { "gold": 0.1 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "berry_gatherer",
+          "displayName": "Berry Gatherer",
+          "description": "Resourceful foragers who trade berries for gold.",
+          "iconAsset": "unit_berry_gatherer",
+          "baseCost": { "gold": 60 },
+          "costMultiplier": 1.15,
+          "baseProductionPerSecond": { "gold": 0.5 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "fishing_spot",
+          "displayName": "Fishing Spot",
+          "description": "The river provides. Cast your nets and watch wealth flow.",
+          "iconAsset": "unit_fishing_spot",
+          "baseCost": { "gold": 360 },
+          "costMultiplier": 1.15,
+          "baseProductionPerSecond": { "gold": 2.5 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "hunting_lodge",
+          "displayName": "Hunting Lodge",
+          "description": "Skilled hunters bring back game worth more than its weight in gold.",
+          "iconAsset": "unit_hunting_lodge",
+          "baseCost": { "gold": 2160 },
+          "costMultiplier": 1.15,
+          "baseProductionPerSecond": { "gold": 15 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "tribal_elder",
+          "displayName": "Tribal Elder",
+          "description": "Ancient wisdom turned into tribal trade routes and lasting prosperity.",
+          "iconAsset": "unit_tribal_elder",
+          "baseCost": { "gold": 13000 },
+          "costMultiplier": 1.15,
+          "baseProductionPerSecond": { "gold": 85 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        }
+      ],
+      "milestones": [
+        {
+          "id": "lascaux_cave",
+          "displayName": "Lascaux Cave",
+          "description": "Immortalize your tribe's story in sacred cave paintings that inspire generations.",
+          "artworkAsset": "ms_lascaux_cave",
+          "requirements": { "gold": 500 },
+          "constructionSeconds": 1800,
+          "skipCostCoins": 50,
+          "canSkipWithAd": true,
+          "bonuses": [
+            { "type": "multiply", "scope": "level", "resource": "gold", "value": 1.75 }
+          ],
+          "isPermanentBonus": false
+        }
+      ]
+    },
+    {
+      "id": "bronze_age",
+      "displayName": "Bronze Age",
+      "order": 2,
+      "flavorText": "The hammer rings on bronze. An age of tools, trade, and empire begins.",
+      "artworkAsset": "era_bronze_age",
+      "soundAsset": "ambient_bronze_age",
+      "advanceRequirement": { "gold": 500000000 },
+      "levelResources": ["bronze"],
+      "units": [
+        {
+          "id": "mine",
+          "displayName": "Mine",
+          "description": "Dig deep into the earth to unearth precious copper and tin ores.",
+          "iconAsset": "unit_mine",
+          "baseCost": { "gold": 100 },
+          "costMultiplier": 1.15,
+          "baseProductionPerSecond": { "gold": 0.7 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "smelter",
+          "displayName": "Smelter",
+          "description": "Transform raw ore into gleaming bronze, the metal of civilization.",
+          "iconAsset": "unit_smelter",
+          "baseCost": { "gold": 600 },
+          "costMultiplier": 1.15,
+          "baseProductionPerSecond": { "gold": 4 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "marketplace",
+          "displayName": "Marketplace",
+          "description": "A bustling hub of trade where bronze tools fetch handsome prices.",
+          "iconAsset": "unit_marketplace",
+          "baseCost": { "gold": 3600 },
+          "costMultiplier": 1.15,
+          "baseProductionPerSecond": { "gold": 24, "bronze": 0.1 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "warship",
+          "displayName": "Warship",
+          "description": "Bronze-hulled ships dominate trade routes, bringing wealth from distant lands.",
+          "iconAsset": "unit_warship",
+          "baseCost": { "gold": 21600 },
+          "costMultiplier": 1.15,
+          "baseProductionPerSecond": { "gold": 144, "bronze": 0.5 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "bronze_palace",
+          "displayName": "Bronze Palace",
+          "description": "A gleaming seat of power that draws tribute from across the known world.",
+          "iconAsset": "unit_bronze_palace",
+          "baseCost": { "gold": 130000 },
+          "costMultiplier": 1.15,
+          "baseProductionPerSecond": { "gold": 850, "bronze": 2.0 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        }
+      ],
+      "milestones": [
+        {
+          "id": "stonehenge",
+          "displayName": "Stonehenge",
+          "description": "Raise the great stones. A monument to the cosmos and your people's endurance.",
+          "artworkAsset": "ms_stonehenge",
+          "requirements": { "gold": 25000, "bronze": 300 },
+          "constructionSeconds": 3600,
+          "skipCostCoins": 100,
+          "canSkipWithAd": true,
+          "bonuses": [
+            { "type": "multiply", "scope": "level", "resource": "gold", "value": 2.0 }
+          ],
+          "isPermanentBonus": false
+        }
+      ],
+      "eraUpgrades": [
+        {
+          "id": "bronze_tools",
+          "displayName": "Bronze Tools",
+          "description": "Forge stronger tools. All production ×1.5 this era.",
+          "cost": { "bronze": 500 },
+          "productionMultiplier": 1.5,
+          "costDiscountFraction": 0.0,
+          "offlineMultiplier": 1.0
+        },
+        {
+          "id": "trade_routes",
+          "displayName": "Trade Routes",
+          "description": "Establish trade networks. All buildings 15% cheaper.",
+          "cost": { "bronze": 2000 },
+          "productionMultiplier": 1.0,
+          "costDiscountFraction": 0.15,
+          "offlineMultiplier": 1.0
+        },
+        {
+          "id": "warlords_army",
+          "displayName": "Warlord's Army",
+          "description": "Unite the clans under one banner. All production ×2.0 this era.",
+          "cost": { "bronze": 10000 },
+          "productionMultiplier": 2.0,
+          "costDiscountFraction": 0.0,
+          "offlineMultiplier": 1.25
+        }
+      ]
+    },
+    {
+      "id": "ancient_empires",
+      "displayName": "Ancient Empires",
+      "order": 3,
+      "flavorText": "Pyramids pierce the sky. Your name will be written in stone for eternity.",
+      "artworkAsset": "era_ancient_empires",
+      "soundAsset": "ambient_ancient_empires",
+      "advanceRequirement": { "gold": 50000000000 },
+      "levelResources": ["culture"],
+      "units": [
+        {
+          "id": "grain_farm",
+          "displayName": "Grain Farm",
+          "description": "Fertile river deltas yield abundant grain, the foundation of empire.",
+          "iconAsset": "unit_grain_farm",
+          "baseCost": { "gold": 5000 },
+          "costMultiplier": 1.14,
+          "baseProductionPerSecond": { "gold": 33 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "aqueduct",
+          "displayName": "Aqueduct",
+          "description": "Engineering marvel channeling the lifeblood of civilization across vast distances.",
+          "iconAsset": "unit_aqueduct",
+          "baseCost": { "gold": 30000 },
+          "costMultiplier": 1.14,
+          "baseProductionPerSecond": { "gold": 200 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "amphitheatre",
+          "displayName": "Amphitheatre",
+          "description": "Great stages where culture flourishes and crowds spend gold on spectacle.",
+          "iconAsset": "unit_amphitheatre",
+          "baseCost": { "gold": 180000 },
+          "costMultiplier": 1.14,
+          "baseProductionPerSecond": { "gold": 1200, "culture": 0.1 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "army_barracks",
+          "displayName": "Army Barracks",
+          "description": "Disciplined legions enforce trade agreements at sword point.",
+          "iconAsset": "unit_army_barracks",
+          "baseCost": { "gold": 1080000 },
+          "costMultiplier": 1.14,
+          "baseProductionPerSecond": { "gold": 7200 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "great_pyramid",
+          "displayName": "Great Pyramid",
+          "description": "A monument for eternity. Workers from all lands flock to its shadow.",
+          "iconAsset": "unit_great_pyramid",
+          "baseCost": { "gold": 6500000 },
+          "costMultiplier": 1.14,
+          "baseProductionPerSecond": { "gold": 43000, "culture": 0.5 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        }
+      ],
+      "milestones": [
+        {
+          "id": "great_library",
+          "displayName": "Great Library",
+          "description": "The world's knowledge gathered under one roof. Wisdom becomes wealth.",
+          "artworkAsset": "ms_great_library",
+          "requirements": { "gold": 2000000, "culture": 500 },
+          "constructionSeconds": 7200,
+          "skipCostCoins": 200,
+          "canSkipWithAd": false,
+          "bonuses": [
+            { "type": "multiply", "scope": "level", "resource": "gold", "value": 2.5 }
+          ],
+          "isPermanentBonus": false
+        }
+      ],
+      "eraUpgrades": [
+        {
+          "id": "city_festivals",
+          "displayName": "City Festivals",
+          "description": "Fill the plazas with song and ceremony. All production ×1.5 this era.",
+          "cost": { "culture": 500 },
+          "productionMultiplier": 1.5,
+          "costDiscountFraction": 0.0,
+          "offlineMultiplier": 1.0
+        },
+        {
+          "id": "diplomatic_ties",
+          "displayName": "Diplomatic Ties",
+          "description": "Open embassies across the ancient world. All buildings 15% cheaper.",
+          "cost": { "culture": 2000 },
+          "productionMultiplier": 1.0,
+          "costDiscountFraction": 0.15,
+          "offlineMultiplier": 1.0
+        },
+        {
+          "id": "golden_age",
+          "displayName": "Golden Age",
+          "description": "Prosperity reigns from the Nile to the Indus. All production ×2.0 this era.",
+          "cost": { "culture": 10000 },
+          "productionMultiplier": 2.0,
+          "costDiscountFraction": 0.0,
+          "offlineMultiplier": 1.25
+        }
+      ]
+    },
+    {
+      "id": "classical_world",
+      "displayName": "Classical World",
+      "order": 4,
+      "flavorText": "Rome wasn't built in a day. But with enough gold, it can be yours.",
+      "artworkAsset": "era_classical_world",
+      "soundAsset": "ambient_classical_world",
+      "advanceRequirement": { "gold": 8000000000000 },
+      "levelResources": ["faith"],
+      "units": [
+        {
+          "id": "forum",
+          "displayName": "Forum",
+          "description": "The beating heart of Roman commerce, politics, and social life.",
+          "iconAsset": "unit_forum",
+          "baseCost": { "gold": 500000 },
+          "costMultiplier": 1.14,
+          "baseProductionPerSecond": { "gold": 3300 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "colosseum",
+          "displayName": "Colosseum",
+          "description": "Spectacular games draw crowds from all corners of the empire.",
+          "iconAsset": "unit_colosseum",
+          "baseCost": { "gold": 3000000 },
+          "costMultiplier": 1.13,
+          "baseProductionPerSecond": { "gold": 20000 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "temple",
+          "displayName": "Temple",
+          "description": "Where citizens seek divine favor, tithes flow into the treasury.",
+          "iconAsset": "unit_temple",
+          "baseCost": { "gold": 18000000 },
+          "costMultiplier": 1.13,
+          "baseProductionPerSecond": { "gold": 120000, "faith": 0.2 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "silk_road_bazaar",
+          "displayName": "Silk Road Bazaar",
+          "description": "Ancient trade routes connect East and West in a web of profitable exchange.",
+          "iconAsset": "unit_silk_road_bazaar",
+          "baseCost": { "gold": 108000000 },
+          "costMultiplier": 1.13,
+          "baseProductionPerSecond": { "gold": 720000 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "roman_legions",
+          "displayName": "Roman Legions",
+          "description": "The unstoppable war machine of Rome. All roads lead to your treasury.",
+          "iconAsset": "unit_roman_legions",
+          "baseCost": { "gold": 650000000 },
+          "costMultiplier": 1.13,
+          "baseProductionPerSecond": { "gold": 4300000, "faith": 1.0 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        }
+      ],
+      "milestones": [
+        {
+          "id": "parthenon",
+          "displayName": "Parthenon",
+          "description": "Crown the Acropolis with marble perfection. The gods themselves take notice.",
+          "artworkAsset": "ms_parthenon",
+          "requirements": { "gold": 40000000, "faith": 400 },
+          "constructionSeconds": 14400,
+          "skipCostCoins": 400,
+          "canSkipWithAd": false,
+          "bonuses": [
+            { "type": "multiply", "scope": "level", "resource": "gold", "value": 2.0 }
+          ],
+          "isPermanentBonus": false
+        }
+      ],
+      "eraUpgrades": [
+        {
+          "id": "holy_crusade",
+          "displayName": "Holy Crusade",
+          "description": "March under the sacred banner. All production ×1.5 this era.",
+          "cost": { "faith": 500 },
+          "productionMultiplier": 1.5,
+          "costDiscountFraction": 0.0,
+          "offlineMultiplier": 1.0
+        },
+        {
+          "id": "cathedral_network",
+          "displayName": "Cathedral Network",
+          "description": "Connect your cities through a web of cathedrals. All buildings 15% cheaper.",
+          "cost": { "faith": 2000 },
+          "productionMultiplier": 1.0,
+          "costDiscountFraction": 0.15,
+          "offlineMultiplier": 1.0
+        },
+        {
+          "id": "divine_mandate",
+          "displayName": "Divine Mandate",
+          "description": "Rule by heavenly decree. All production ×2.5 this era.",
+          "cost": { "faith": 10000 },
+          "productionMultiplier": 2.5,
+          "costDiscountFraction": 0.0,
+          "offlineMultiplier": 1.50
+        }
+      ]
+    },
+    {
+      "id": "medieval_era",
+      "displayName": "Medieval Era",
+      "order": 5,
+      "flavorText": "Castles rise, knights ride, and crusades reshape the world. Your kingdom awaits.",
+      "artworkAsset": "era_medieval_era",
+      "soundAsset": "ambient_medieval_era",
+      "advanceRequirement": { "gold": 250000000000000 },
+      "levelResources": ["faith"],
+      "units": [
+        {
+          "id": "mill",
+          "displayName": "Mill",
+          "description": "Grinding grain into flour that feeds armies and fills coffers.",
+          "iconAsset": "unit_mill",
+          "baseCost": { "gold": 10000000 },
+          "costMultiplier": 1.13,
+          "baseProductionPerSecond": { "gold": 65000 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "castle",
+          "displayName": "Castle",
+          "description": "An impregnable fortress from which you levy taxes on all who pass.",
+          "iconAsset": "unit_castle",
+          "baseCost": { "gold": 60000000 },
+          "costMultiplier": 1.13,
+          "baseProductionPerSecond": { "gold": 400000 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "cathedral",
+          "displayName": "Cathedral",
+          "description": "Soaring spires draw pilgrims whose donations fill the vault.",
+          "iconAsset": "unit_cathedral",
+          "baseCost": { "gold": 360000000 },
+          "costMultiplier": 1.13,
+          "baseProductionPerSecond": { "gold": 2400000, "faith": 0.5 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "knights_order",
+          "displayName": "Knights Order",
+          "description": "Holy warriors whose crusades bring back unimaginable riches.",
+          "iconAsset": "unit_knights_order",
+          "baseCost": { "gold": 2160000000 },
+          "costMultiplier": 1.12,
+          "baseProductionPerSecond": { "gold": 14400000 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "black_prince",
+          "displayName": "Black Prince",
+          "description": "The fearsome warrior-prince demands tribute from kingdoms far and wide.",
+          "iconAsset": "unit_black_prince",
+          "baseCost": { "gold": 13000000000 },
+          "costMultiplier": 1.12,
+          "baseProductionPerSecond": { "gold": 85000000, "faith": 2.0 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        }
+      ],
+      "milestones": [
+        {
+          "id": "notre_dame",
+          "displayName": "Notre-Dame",
+          "description": "Build the crown jewel of Gothic architecture. Faith and gold flow freely.",
+          "artworkAsset": "ms_notre_dame",
+          "requirements": { "gold": 800000000, "faith": 800 },
+          "constructionSeconds": 21600,
+          "skipCostCoins": 600,
+          "canSkipWithAd": false,
+          "bonuses": [
+            { "type": "multiply", "scope": "level", "resource": "gold", "value": 2.5 }
+          ],
+          "isPermanentBonus": false
+        }
+      ],
+      "eraUpgrades": [
+        {
+          "id": "monastic_order",
+          "displayName": "Monastic Order",
+          "description": "Monks preserve and spread knowledge. All production ×1.5 this era.",
+          "cost": { "faith": 1000 },
+          "productionMultiplier": 1.5,
+          "costDiscountFraction": 0.0,
+          "offlineMultiplier": 1.0
+        },
+        {
+          "id": "crusade_rally",
+          "displayName": "Crusade Rally",
+          "description": "Mobilize your vassals for the holy cause. All buildings 20% cheaper.",
+          "cost": { "faith": 4000 },
+          "productionMultiplier": 1.0,
+          "costDiscountFraction": 0.20,
+          "offlineMultiplier": 1.0
+        },
+        {
+          "id": "sacred_relic",
+          "displayName": "Sacred Relic",
+          "description": "The relic grants your kingdom divine favor. All production ×2.0 this era.",
+          "cost": { "faith": 20000 },
+          "productionMultiplier": 2.0,
+          "costDiscountFraction": 0.0,
+          "offlineMultiplier": 1.50
+        }
+      ]
+    },
+    {
+      "id": "renaissance",
+      "displayName": "Renaissance",
+      "order": 6,
+      "flavorText": "Art, science, and exploration converge. A new world is waiting to be discovered.",
+      "artworkAsset": "era_renaissance",
+      "soundAsset": "ambient_renaissance",
+      "advanceRequirement": { "gold": 7000000000000000 },
+      "levelResources": ["science"],
+      "units": [
+        {
+          "id": "printing_press",
+          "displayName": "Printing Press",
+          "description": "Gutenberg's invention spreads knowledge and commerce across the continent.",
+          "iconAsset": "unit_printing_press",
+          "baseCost": { "gold": 200000000 },
+          "costMultiplier": 1.13,
+          "baseProductionPerSecond": { "gold": 1300000 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "university",
+          "displayName": "University",
+          "description": "Scholars debate, discover, and drive economic transformation.",
+          "iconAsset": "unit_university",
+          "baseCost": { "gold": 1200000000 },
+          "costMultiplier": 1.12,
+          "baseProductionPerSecond": { "gold": 8000000 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "art_studio",
+          "displayName": "Art Studio",
+          "description": "Renaissance masters produce works that patrons pay fortunes to own.",
+          "iconAsset": "unit_art_studio",
+          "baseCost": { "gold": 7200000000 },
+          "costMultiplier": 1.12,
+          "baseProductionPerSecond": { "gold": 48000000, "science": 0.2 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "shipyard",
+          "displayName": "Shipyard",
+          "description": "Caravels built here sail to new worlds, returning laden with treasure.",
+          "iconAsset": "unit_shipyard",
+          "baseCost": { "gold": 43200000000 },
+          "costMultiplier": 1.12,
+          "baseProductionPerSecond": { "gold": 288000000 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "da_vinci_workshop",
+          "displayName": "Da Vinci Workshop",
+          "description": "The master's workshop churns out inventions centuries ahead of their time.",
+          "iconAsset": "unit_da_vinci_workshop",
+          "baseCost": { "gold": 260000000000 },
+          "costMultiplier": 1.12,
+          "baseProductionPerSecond": { "gold": 1700000000, "science": 1.5 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        }
+      ],
+      "milestones": [
+        {
+          "id": "sistine_chapel",
+          "displayName": "Sistine Chapel",
+          "description": "Commission Michelangelo's greatest work. The ceiling of creation itself.",
+          "artworkAsset": "ms_sistine_chapel",
+          "requirements": { "gold": 15000000000, "science": 600 },
+          "constructionSeconds": 36000,
+          "skipCostCoins": 1000,
+          "canSkipWithAd": false,
+          "bonuses": [
+            { "type": "multiply", "scope": "level", "resource": "gold", "value": 3.0 }
+          ],
+          "isPermanentBonus": false
+        }
+      ],
+      "eraUpgrades": [
+        {
+          "id": "gutenberg_press",
+          "displayName": "Gutenberg Press",
+          "description": "Spread ideas at the speed of ink. All production ×1.5 this era.",
+          "cost": { "science": 500 },
+          "productionMultiplier": 1.5,
+          "costDiscountFraction": 0.0,
+          "offlineMultiplier": 1.0
+        },
+        {
+          "id": "royal_academy",
+          "displayName": "Royal Academy",
+          "description": "Crown-funded scholars optimise everything. All buildings 20% cheaper.",
+          "cost": { "science": 2000 },
+          "productionMultiplier": 1.0,
+          "costDiscountFraction": 0.20,
+          "offlineMultiplier": 1.0
+        },
+        {
+          "id": "scientific_revolution",
+          "displayName": "Scientific Revolution",
+          "description": "Newton, Copernicus, Galileo — they all worked for you. All production ×2.5.",
+          "cost": { "science": 10000 },
+          "productionMultiplier": 2.5,
+          "costDiscountFraction": 0.0,
+          "offlineMultiplier": 1.75
+        }
+      ]
+    },
+    {
+      "id": "industrial_revolution",
+      "displayName": "Industrial Revolution",
+      "order": 7,
+      "flavorText": "Steam, steel, and smoke. The machine age reshapes civilization overnight.",
+      "artworkAsset": "era_industrial_revolution",
+      "soundAsset": "ambient_industrial_revolution",
+      "advanceRequirement": { "gold": 260000000000000000 },
+      "levelResources": ["coal"],
+      "units": [
+        {
+          "id": "coal_mine",
+          "displayName": "Coal Mine",
+          "description": "Black gold powers the engines of industry. Dig deep and reap the rewards.",
+          "iconAsset": "unit_coal_mine",
+          "baseCost": { "gold": 5000000000 },
+          "costMultiplier": 1.12,
+          "baseProductionPerSecond": { "gold": 33000000, "coal": 0.5 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "steam_engine",
+          "displayName": "Steam Engine",
+          "description": "Watt's revolution multiplies the productivity of every worker tenfold.",
+          "iconAsset": "unit_steam_engine",
+          "baseCost": { "gold": 30000000000 },
+          "costMultiplier": 1.11,
+          "baseProductionPerSecond": { "gold": 200000000 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "railway_line",
+          "displayName": "Railway Line",
+          "description": "Iron rails connect distant markets in a vast network of commerce.",
+          "iconAsset": "unit_railway_line",
+          "baseCost": { "gold": 180000000000 },
+          "costMultiplier": 1.11,
+          "baseProductionPerSecond": { "gold": 1200000000 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "factory",
+          "displayName": "Factory",
+          "description": "Mass production transforms raw materials into rivers of gold.",
+          "iconAsset": "unit_factory",
+          "baseCost": { "gold": 1080000000000 },
+          "costMultiplier": 1.11,
+          "baseProductionPerSecond": { "gold": 7200000000, "coal": 2.0 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "power_station",
+          "displayName": "Power Station",
+          "description": "Edison's dream made real. Electric light and industry power a new era.",
+          "iconAsset": "unit_power_station",
+          "baseCost": { "gold": 6500000000000 },
+          "costMultiplier": 1.11,
+          "baseProductionPerSecond": { "gold": 43000000000 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        }
+      ],
+      "milestones": [
+        {
+          "id": "crystal_palace",
+          "displayName": "Crystal Palace",
+          "description": "The Great Exhibition showcases your empire's industrial supremacy to the world.",
+          "artworkAsset": "ms_crystal_palace",
+          "requirements": { "gold": 300000000000, "coal": 300 },
+          "constructionSeconds": 50400,
+          "skipCostCoins": 1400,
+          "canSkipWithAd": false,
+          "bonuses": [
+            { "type": "multiply", "scope": "level", "resource": "gold", "value": 3.0 }
+          ],
+          "isPermanentBonus": false
+        }
+      ],
+      "eraUpgrades": [
+        {
+          "id": "steam_economy",
+          "displayName": "Steam Economy",
+          "description": "Harness the power of steam across every industry. All production ×1.5 this era.",
+          "cost": { "coal": 1000 },
+          "productionMultiplier": 1.5,
+          "costDiscountFraction": 0.0,
+          "offlineMultiplier": 1.0
+        },
+        {
+          "id": "coal_monopoly",
+          "displayName": "Coal Monopoly",
+          "description": "Control the fuel supply, control the economy. All buildings 20% cheaper.",
+          "cost": { "coal": 4000 },
+          "productionMultiplier": 1.0,
+          "costDiscountFraction": 0.20,
+          "offlineMultiplier": 1.0
+        },
+        {
+          "id": "industrial_empire",
+          "displayName": "Industrial Empire",
+          "description": "Factory towns span the continent. All production ×2.0 this era.",
+          "cost": { "coal": 20000 },
+          "productionMultiplier": 2.0,
+          "costDiscountFraction": 0.0,
+          "offlineMultiplier": 2.0
+        }
+      ]
+    },
+    {
+      "id": "space_age",
+      "displayName": "Space Age",
+      "order": 8,
+      "flavorText": "One small step. One civilization's giant leap into the stars.",
+      "artworkAsset": "era_space_age",
+      "soundAsset": "ambient_space_age",
+      "advanceRequirement": { "gold": 8000000000000000000 },
+      "levelResources": ["energy"],
+      "units": [
+        {
+          "id": "radio_tower",
+          "displayName": "Radio Tower",
+          "description": "Broadcast innovation to the world, turning signals into gold.",
+          "iconAsset": "unit_radio_tower",
+          "baseCost": { "gold": 100000000000 },
+          "costMultiplier": 1.11,
+          "baseProductionPerSecond": { "gold": 650000000 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "computer_lab",
+          "displayName": "Computer Lab",
+          "description": "Algorithms optimize every aspect of production in the digital revolution.",
+          "iconAsset": "unit_computer_lab",
+          "baseCost": { "gold": 600000000000 },
+          "costMultiplier": 1.11,
+          "baseProductionPerSecond": { "gold": 4000000000 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "satellite",
+          "displayName": "Satellite",
+          "description": "Eyes in the sky open global communications and untapped energy markets.",
+          "iconAsset": "unit_satellite",
+          "baseCost": { "gold": 3600000000000 },
+          "costMultiplier": 1.10,
+          "baseProductionPerSecond": { "gold": 24000000000, "energy": 0.5 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "space_rocket",
+          "displayName": "Space Rocket",
+          "description": "Manned missions bring back knowledge and resources from beyond Earth.",
+          "iconAsset": "unit_space_rocket",
+          "baseCost": { "gold": 21600000000000 },
+          "costMultiplier": 1.10,
+          "baseProductionPerSecond": { "gold": 144000000000 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "lunar_base",
+          "displayName": "Lunar Base",
+          "description": "Humanity's first permanent home beyond Earth, mining resources from the moon.",
+          "iconAsset": "unit_lunar_base",
+          "baseCost": { "gold": 130000000000000 },
+          "costMultiplier": 1.10,
+          "baseProductionPerSecond": { "gold": 860000000000, "energy": 3.0 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        }
+      ],
+      "milestones": [
+        {
+          "id": "international_space_station",
+          "displayName": "International Space Station",
+          "description": "Unite the nations of Earth in a permanent orbital platform for all humanity.",
+          "artworkAsset": "ms_international_space_station",
+          "requirements": { "gold": 5000000000000, "energy": 500 },
+          "constructionSeconds": 72000,
+          "skipCostCoins": 2000,
+          "canSkipWithAd": false,
+          "bonuses": [
+            { "type": "multiply", "scope": "global", "resource": "gold", "value": 2.0 }
+          ],
+          "isPermanentBonus": true
+        }
+      ],
+      "eraUpgrades": [
+        {
+          "id": "clean_energy",
+          "displayName": "Clean Energy",
+          "description": "Fusion power makes everything run faster. All production ×1.5 this era.",
+          "cost": { "energy": 500 },
+          "productionMultiplier": 1.5,
+          "costDiscountFraction": 0.0,
+          "offlineMultiplier": 1.0
+        },
+        {
+          "id": "digital_network",
+          "displayName": "Digital Network",
+          "description": "The internet optimises every supply chain. All buildings 15% cheaper.",
+          "cost": { "energy": 2000 },
+          "productionMultiplier": 1.0,
+          "costDiscountFraction": 0.15,
+          "offlineMultiplier": 1.0
+        },
+        {
+          "id": "space_economy",
+          "displayName": "Space Economy",
+          "description": "Asteroid mining and orbital platforms. All production ×2.5 this era.",
+          "cost": { "energy": 10000 },
+          "productionMultiplier": 2.5,
+          "costDiscountFraction": 0.0,
+          "offlineMultiplier": 2.5
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "id": "olympic_games",
+      "displayName": "Olympic Games",
+      "type": "weekly",
+      "durationSeconds": 604800,
+      "eligibleFromLevelOrder": 4,
+      "bonuses": [
+        { "resource": "faith", "multiplier": 3.0 }
+      ],
+      "leaderboardMetric": "faith_earned",
+      "rewards": {
+        "top25pct": { "type": "coins", "id": "coins_100" },
+        "top10pct": { "type": "coins", "id": "coins_500" },
+        "top1pct":  { "type": "coins", "id": "coins_2000" }
+      }
+    },
+    {
+      "id": "industrial_exhibition",
+      "displayName": "Industrial Exhibition",
+      "type": "seasonal",
+      "durationSeconds": 259200,
+      "eligibleFromLevelOrder": 7,
+      "bonuses": [
+        { "resource": "gold", "multiplier": 2.0 }
+      ],
+      "leaderboardMetric": "gold_earned",
+      "rewards": {
+        "top25pct": { "type": "coins", "id": "coins_200" },
+        "top10pct": { "type": "coins", "id": "coins_1000" },
+        "top1pct":  { "type": "coins", "id": "coins_5000" }
+      }
+    },
+    {
+      "id": "space_race",
+      "displayName": "Space Race",
+      "type": "seasonal",
+      "durationSeconds": 259200,
+      "eligibleFromLevelOrder": 8,
+      "bonuses": [
+        { "resource": "energy", "multiplier": 5.0 }
+      ],
+      "leaderboardMetric": "energy_earned",
+      "rewards": {
+        "top25pct": { "type": "coins", "id": "coins_300" },
+        "top10pct": { "type": "coins", "id": "coins_1500" },
+        "top1pct":  { "type": "coins", "id": "coins_8000" }
+      }
+    }
+  ],
+  "characters": [
+    {
+      "id": "og_the_elder",
+      "displayName": "Og the Elder",
+      "portraitAsset": "char_og_the_elder",
+      "unlockCondition": { "type": "reachLevel", "levelID": "stone_age" },
+      "bonuses": [
+        { "unitID": "campfire", "multiplier": 1.10 }
+      ],
+      "quote": "Fire is the first gift we gave ourselves."
+    },
+    {
+      "id": "hammurabi",
+      "displayName": "Hammurabi",
+      "portraitAsset": "char_hammurabi",
+      "unlockCondition": { "type": "reachLevel", "levelID": "bronze_age" },
+      "bonuses": [
+        { "unitID": "marketplace", "multiplier": 1.20 },
+        { "unitID": "mine", "multiplier": 1.15 }
+      ],
+      "quote": "An eye for an eye, a trade for a trade."
+    },
+    {
+      "id": "julius_caesar",
+      "displayName": "Julius Caesar",
+      "portraitAsset": "char_julius_caesar",
+      "unlockCondition": { "type": "reachLevel", "levelID": "classical_world" },
+      "bonuses": [
+        { "unitID": "roman_legions", "multiplier": 1.25 },
+        { "unitID": "forum", "multiplier": 1.15 }
+      ],
+      "quote": "Veni, vidi, vici — and I invested wisely."
+    },
+    {
+      "id": "da_vinci",
+      "displayName": "Leonardo da Vinci",
+      "portraitAsset": "char_da_vinci",
+      "unlockCondition": { "type": "reachLevel", "levelID": "renaissance" },
+      "bonuses": [
+        { "unitID": "da_vinci_workshop", "multiplier": 1.30 },
+        { "unitID": "art_studio", "multiplier": 1.15 }
+      ],
+      "quote": "Simplicity is the ultimate sophistication."
+    },
+    {
+      "id": "nikola_tesla",
+      "displayName": "Nikola Tesla",
+      "portraitAsset": "char_nikola_tesla",
+      "unlockCondition": { "type": "reachLevel", "levelID": "industrial_revolution" },
+      "bonuses": [
+        { "unitID": "power_station", "multiplier": 1.25 },
+        { "unitID": "steam_engine", "multiplier": 1.15 }
+      ],
+      "quote": "The present is theirs; the future, for which I worked, is mine."
+    }
+  ],
+  "iapProducts": {
+    "starterPack": "com.idlestudio.idleciv.starter_pack",
+    "removeAds": "com.idlestudio.idleciv.remove_ads",
+    "premiumPass": "com.idlestudio.idleciv.civ_pass.monthly",
+    "premiumPassAnnual": "com.idlestudio.idleciv.civ_pass.annual",
+    "coins1000": "com.idlestudio.idleciv.coins.1000",
+    "coins5000": "com.idlestudio.idleciv.coins.5000",
+    "coins15000": "com.idlestudio.idleciv.coins.15000",
+    "coins30000": "com.idlestudio.idleciv.coins.30000",
+    "coins75000": "com.idlestudio.idleciv.coins.75000",
+    "lifetimePack": "com.idlestudio.idleciv.patron_lifetime",
+    "levelBundles": {
+      "stone_age":             "com.idlestudio.idleciv.bundle.stone_age",
+      "bronze_age":            "com.idlestudio.idleciv.bundle.bronze_age",
+      "ancient_empires":       "com.idlestudio.idleciv.bundle.ancient_empires",
+      "classical_world":       "com.idlestudio.idleciv.bundle.classical_world",
+      "medieval_era":          "com.idlestudio.idleciv.bundle.medieval_era",
+      "renaissance":           "com.idlestudio.idleciv.bundle.renaissance",
+      "industrial_revolution": "com.idlestudio.idleciv.bundle.industrial_revolution",
+      "space_age":             "com.idlestudio.idleciv.bundle.space_age"
+    }
+  },
+  "leaderboards": {
+    "globalTokens": "com.idlestudio.idleciv.lb.global_tokens",
+    "weeklyGold":   "com.idlestudio.idleciv.lb.weekly_gold",
+    "countryTokens": "com.idlestudio.idleciv.lb.country_tokens"
+  },
+  "copy": {
+    "unitNoun": "Building",
+    "unitNounPlural": "Buildings",
+    "levelNoun": "Era",
+    "milestoneNoun": "Wonder",
+    "characterNoun": "Leader",
+    "characterNounPlural": "Leaders",
+    "premiumPassName": "Civ Pass",
+    "advanceVerb": "Advance Era",
+    "prestigeTitle": "Found New Empire",
+    "startMilestoneButton": "Build Wonder",
+    "continueButton": "Continue",
+    "levelCompleteSubtitle": "Era Complete!",
+    "leaderboardEmptyState": "No civilizations ranked yet",
+    "studioPointsTitle": "Legacy Points",
+    "studioPointsTagline": "Earn points across all Idle Studio games",
+    "crossPromoTitle": "New Game Available",
+    "crossPromoAvailableLabel": "Available now on the App Store",
+    "leaderboardTabLabel": "Rankings",
+    "socialTabLabel": "Alliances",
+    "achievementsTabLabel": "Achievements",
+    "settingsTabLabel": "Settings",
+    "prestigeSheet": {
+      "title": "Found New Empire",
+      "subtitle": "A new age of civilization begins",
+      "description": "Your buildings, resources, and era upgrades will be lost. Your civilization restarts from the Stone Age.",
+      "persistsNote": "Permanent Wonders and Legacy Tokens carry over.",
+      "tokensLabel": "Legacy Tokens Earned",
+      "multiplierLabel": "New Production Bonus",
+      "confirmButton": "Reset & Ascend",
+      "cancelButton": "Not Yet",
+      "lockedHint": "Complete %@ to unlock"
+    },
+    "offlineSheet": {
+      "title": "Your Empire Grew!",
+      "body": "Your citizens kept working while you were away.",
+      "collectButton": "Collect Gold",
+      "doubleButton": "Watch Ad to Double",
+      "capNote": "Income was capped at %dh"
+    },
+    "notifications": {
+      "offlineCapTitle": "🏺 Treasury Overflowing!",
+      "offlineCapBody": "Your builders have been hard at work — collect before the coffers are lost!",
+      "dailyQuestTitle": "📜 New Daily Challenge!",
+      "dailyQuestBody": "Complete today's quest for bonus coins and boosts.",
+      "weeklyEventTitle": "🏛️ A Historic Event Begins!",
+      "levelReadyTitle": "⚔️ Your Civilization Is Ready!",
+      "levelReadyBody": "You have enough Gold to advance to the next era. History awaits!",
+      "wonderCompleteTitle": "🏺 Wonder of the World!",
+      "wonderCompleteBody": "Your wonder stands complete. Come witness the glory of your civilization!"
+    },
+    "notificationPermission": {
+      "title": "Stay Ahead of History",
+      "body": "Never miss a key moment in your civilization's story.",
+      "bulletPoints": [
+        "🏺 Know when your treasury is full",
+        "⚔️ Get alerted when a new Era is ready",
+        "🏛️ See when your Wonder is complete",
+        "📜 Be reminded when daily quests reset"
+      ],
+      "enableButton": "Enable Notifications",
+      "laterButton": "Maybe Later"
+    },
+    "onboarding": [
+      {
+        "step": 1,
+        "title": "Welcome, Great Leader",
+        "body": "Build your civilization from a campfire to a spacefaring empire.",
+        "highlightTarget": "first_unit"
+      },
+      {
+        "step": 2,
+        "title": "Tap to Earn Gold",
+        "body": "Tap the screen to collect gold from your buildings.",
+        "highlightTarget": "tap_area"
+      },
+      {
+        "step": 3,
+        "title": "Buy More Buildings",
+        "body": "More buildings mean more gold per second — even while you sleep!",
+        "highlightTarget": "unit_list"
+      },
+      {
+        "step": 4,
+        "title": "Build Your Wonder",
+        "body": "Complete the Lascaux Cave Wonder to unlock powerful bonuses.",
+        "highlightTarget": "milestone_card"
+      },
+      {
+        "step": 5,
+        "title": "Advance Your Era",
+        "body": "Collect enough gold to advance to the Bronze Age.",
+        "highlightTarget": "advance_button"
+      }
+    ]
+  },
+  "prestigeRequirementMilestoneID": "international_space_station",
+  "achievements": [
+    {
+      "id": "reach_bronze",
+      "displayName": "Bronze Age",
+      "description": "Advance your civilization to the Bronze Age.",
+      "category": "progression",
+      "iconSymbol": "shield.fill",
+      "badgeColors": ["#CD7F32", "#8B5513"],
+      "condition": { "type": "reachLevel", "levelOrder": 2 },
+      "isSecret": false
+    },
+    {
+      "id": "reach_classical",
+      "displayName": "Classical World",
+      "description": "Lead your people into the Classical era.",
+      "category": "progression",
+      "iconSymbol": "building.columns.fill",
+      "badgeColors": ["#5B8DB8", "#2A5A8A"],
+      "condition": { "type": "reachLevel", "levelOrder": 4 },
+      "isSecret": false
+    },
+    {
+      "id": "reach_renaissance",
+      "displayName": "Renaissance",
+      "description": "Usher in an age of art, science, and exploration.",
+      "category": "progression",
+      "iconSymbol": "paintpalette.fill",
+      "badgeColors": ["#C44B24", "#8B3018"],
+      "condition": { "type": "reachLevel", "levelOrder": 6 },
+      "isSecret": false
+    },
+    {
+      "id": "reach_industrial",
+      "displayName": "Industrial Age",
+      "description": "Power your empire with steam and iron.",
+      "category": "progression",
+      "iconSymbol": "gear.badge.checkmark",
+      "badgeColors": ["#607080", "#3A4A58"],
+      "condition": { "type": "reachLevel", "levelOrder": 7 },
+      "isSecret": false
+    },
+    {
+      "id": "reach_space",
+      "displayName": "Space Pioneer",
+      "description": "Reach the Space Age — humanity's final frontier.",
+      "category": "progression",
+      "iconSymbol": "sparkles",
+      "badgeColors": ["#1E4A7E", "#0A1F40"],
+      "condition": { "type": "reachLevel", "levelOrder": 8 },
+      "isSecret": false
+    },
+    {
+      "id": "gold_1m",
+      "displayName": "First Fortune",
+      "description": "Earn 1 million gold across your civilization.",
+      "category": "economy",
+      "iconSymbol": "dollarsign.circle.fill",
+      "badgeColors": ["#FFD700", "#C8A400"],
+      "condition": { "type": "earnLifetimeGold", "goldAmount": 1000000 },
+      "isSecret": false
+    },
+    {
+      "id": "gold_1b",
+      "displayName": "Gold Rush",
+      "description": "Accumulate 1 billion gold in your treasury.",
+      "category": "economy",
+      "iconSymbol": "banknote.fill",
+      "badgeColors": ["#FFA500", "#C27800"],
+      "condition": { "type": "earnLifetimeGold", "goldAmount": 1000000000 },
+      "isSecret": false
+    },
+    {
+      "id": "gold_1t",
+      "displayName": "Trillionaire",
+      "description": "Earn 1 trillion gold. Rome wasn't built in a day.",
+      "category": "economy",
+      "iconSymbol": "chart.line.uptrend.xyaxis",
+      "badgeColors": ["#FF8C00", "#B05000"],
+      "condition": { "type": "earnLifetimeGold", "goldAmount": 1000000000000 },
+      "isSecret": false
+    },
+    {
+      "id": "gold_1q",
+      "displayName": "Quadrillionaire",
+      "description": "1 quadrillion gold earned. Economists weep.",
+      "category": "economy",
+      "iconSymbol": "crown.fill",
+      "badgeColors": ["#FF6B35", "#C04010"],
+      "condition": { "type": "earnLifetimeGold", "goldAmount": 1000000000000000 },
+      "isSecret": false
+    },
+    {
+      "id": "gold_1qt",
+      "displayName": "Gold God",
+      "description": "1 quintillion gold. You have transcended economics.",
+      "category": "economy",
+      "iconSymbol": "infinity",
+      "badgeColors": ["#FF4500", "#A02000"],
+      "condition": { "type": "earnLifetimeGold", "goldAmount": 1000000000000000000 },
+      "isSecret": true
+    },
+    {
+      "id": "prestige_1",
+      "displayName": "New Beginnings",
+      "description": "Found your first new empire. The cycle of history begins.",
+      "category": "prestige",
+      "iconSymbol": "arrow.clockwise.circle.fill",
+      "badgeColors": ["#9B59B6", "#6C3483"],
+      "condition": { "type": "prestigeCount", "count": 1 },
+      "isSecret": false
+    },
+    {
+      "id": "prestige_5",
+      "displayName": "Seasoned Founder",
+      "description": "Five empires risen and fallen by your hand.",
+      "category": "prestige",
+      "iconSymbol": "star.circle.fill",
+      "badgeColors": ["#8E44AD", "#5B2C6F"],
+      "condition": { "type": "prestigeCount", "count": 5 },
+      "isSecret": false
+    },
+    {
+      "id": "prestige_10",
+      "displayName": "Empire Builder",
+      "description": "Ten civilizations. History bends to your will.",
+      "category": "prestige",
+      "iconSymbol": "building.2.fill",
+      "badgeColors": ["#7D3C98", "#4A235A"],
+      "condition": { "type": "prestigeCount", "count": 10 },
+      "isSecret": false
+    },
+    {
+      "id": "prestige_25",
+      "displayName": "Legendary Ruler",
+      "description": "25 empires — your legacy is written in the stars.",
+      "category": "prestige",
+      "iconSymbol": "crown",
+      "badgeColors": ["#6C3483", "#3B1A4A"],
+      "condition": { "type": "prestigeCount", "count": 25 },
+      "isSecret": false
+    },
+    {
+      "id": "prestige_50",
+      "displayName": "Eternal Civilization",
+      "description": "50 resets. Time itself is your empire.",
+      "category": "prestige",
+      "iconSymbol": "infinity.circle.fill",
+      "badgeColors": ["#5B2C6F", "#2E1447"],
+      "condition": { "type": "prestigeCount", "count": 50 },
+      "isSecret": true
+    },
+    {
+      "id": "wonder_first",
+      "displayName": "First Wonder",
+      "description": "Complete your first Wonder of the ancient world.",
+      "category": "wonders",
+      "iconSymbol": "pyramid.fill",
+      "badgeColors": ["#2E86AB", "#1A5276"],
+      "condition": { "type": "completeMilestoneCount", "count": 1 },
+      "isSecret": false
+    },
+    {
+      "id": "wonder_three",
+      "displayName": "Wonder Builder",
+      "description": "Three Wonders completed. The world stands in awe.",
+      "category": "wonders",
+      "iconSymbol": "building.columns.fill",
+      "badgeColors": ["#1A6B8A", "#0D3A50"],
+      "condition": { "type": "completeMilestoneCount", "count": 3 },
+      "isSecret": false
+    },
+    {
+      "id": "wonder_five",
+      "displayName": "Wonder Master",
+      "description": "Five Wonders — your civilization echoes through history.",
+      "category": "wonders",
+      "iconSymbol": "star.square.on.square.fill",
+      "badgeColors": ["#117A8B", "#0A4A57"],
+      "condition": { "type": "completeMilestoneCount", "count": 5 },
+      "isSecret": false
+    },
+    {
+      "id": "wonder_all",
+      "displayName": "Legendary Builder",
+      "description": "All eight Wonders stand. You are the greatest builder ever known.",
+      "category": "wonders",
+      "iconSymbol": "globe.badge.chevron.backward",
+      "badgeColors": ["#0E6655", "#073B2E"],
+      "condition": { "type": "completeMilestoneCount", "count": 8 },
+      "isSecret": false
+    },
+    {
+      "id": "wonder_iss",
+      "displayName": "Among the Stars",
+      "description": "Complete the International Space Station. Humanity reaches the stars.",
+      "category": "wonders",
+      "iconSymbol": "antenna.radiowaves.left.and.right",
+      "badgeColors": ["#1E4A7E", "#0A1F40"],
+      "condition": { "type": "completeMilestone", "milestoneID": "international_space_station" },
+      "isSecret": false
+    },
+    {
+      "id": "units_10",
+      "displayName": "First Builder",
+      "description": "Own 10 buildings total. Every empire starts small.",
+      "category": "collector",
+      "iconSymbol": "hammer.fill",
+      "badgeColors": ["#27AE60", "#1A7A42"],
+      "condition": { "type": "ownUnitsTotal", "count": 10 },
+      "isSecret": false
+    },
+    {
+      "id": "units_50",
+      "displayName": "Growing Empire",
+      "description": "50 buildings — your skyline is taking shape.",
+      "category": "collector",
+      "iconSymbol": "building.fill",
+      "badgeColors": ["#229954", "#156337"],
+      "condition": { "type": "ownUnitsTotal", "count": 50 },
+      "isSecret": false
+    },
+    {
+      "id": "units_200",
+      "displayName": "City Planner",
+      "description": "200 buildings — a proper civilization takes form.",
+      "category": "collector",
+      "iconSymbol": "map.fill",
+      "badgeColors": ["#1E8449", "#125230"],
+      "condition": { "type": "ownUnitsTotal", "count": 200 },
+      "isSecret": false
+    },
+    {
+      "id": "units_500",
+      "displayName": "Megalopolis",
+      "description": "500 buildings — a city of epic proportions.",
+      "category": "collector",
+      "iconSymbol": "building.2.crop.circle.fill",
+      "badgeColors": ["#196F3D", "#0D3D22"],
+      "condition": { "type": "ownUnitsTotal", "count": 500 },
+      "isSecret": false
+    },
+    {
+      "id": "units_1000",
+      "displayName": "Master Architect",
+      "description": "1,000 buildings. You don't need a map — you are the map.",
+      "category": "collector",
+      "iconSymbol": "square.grid.3x3.fill",
+      "badgeColors": ["#145A32", "#082A17"],
+      "condition": { "type": "ownUnitsTotal", "count": 1000 },
+      "isSecret": true
+    },
+    {
+      "id": "time_1h",
+      "displayName": "Explorer",
+      "description": "Play for 1 real hour. Your journey begins.",
+      "category": "dedication",
+      "iconSymbol": "figure.walk",
+      "badgeColors": ["#E74C3C", "#A93226"],
+      "condition": { "type": "totalPlayHours", "playHours": 1 },
+      "isSecret": false
+    },
+    {
+      "id": "time_10h",
+      "displayName": "Devoted Ruler",
+      "description": "10 hours of real playtime. Your citizens never sleep.",
+      "category": "dedication",
+      "iconSymbol": "clock.fill",
+      "badgeColors": ["#CB4335", "#8A2E24"],
+      "condition": { "type": "totalPlayHours", "playHours": 10 },
+      "isSecret": false
+    },
+    {
+      "id": "time_50h",
+      "displayName": "Veteran",
+      "description": "50 hours. History will remember your dedication.",
+      "category": "dedication",
+      "iconSymbol": "medal.fill",
+      "badgeColors": ["#B03A2E", "#7B2820"],
+      "condition": { "type": "totalPlayHours", "playHours": 50 },
+      "isSecret": false
+    },
+    {
+      "id": "time_100h",
+      "displayName": "Immortal",
+      "description": "100 hours of playtime. Historians will write books about you.",
+      "category": "dedication",
+      "iconSymbol": "flame.fill",
+      "badgeColors": ["#943126", "#5E1F18"],
+      "condition": { "type": "totalPlayHours", "playHours": 100 },
+      "isSecret": false
+    },
+    {
+      "id": "time_500h",
+      "displayName": "The Eternal King",
+      "description": "500 hours. You have outlasted every civilization you've built.",
+      "category": "dedication",
+      "iconSymbol": "crown.fill",
+      "badgeColors": ["#7B241C", "#4A1610"],
+      "condition": { "type": "totalPlayHours", "playHours": 500 },
+      "isSecret": true
+    }
+  ]
+}

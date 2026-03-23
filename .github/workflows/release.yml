@@ -1,0 +1,169 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      game:
+        description: "Game ID (from config/games.yml)"
+        required: true
+        default: "idle-civilizations"
+        type: choice
+        options:
+          - idle-civilizations
+
+      target:
+        description: "What to do"
+        required: true
+        default: "beta"
+        type: choice
+        options:
+          - beta            # Build + upload to TestFlight (internal only)
+          - distribute      # Push latest TestFlight build to external groups
+          - metadata        # Upload text metadata + screenshots (no build)
+          - sync-asc        # Sync IAP + Game Center from config files
+          - full-release    # Build → TestFlight → metadata → submit for review
+
+      changelog:
+        description: "Release notes (TestFlight + App Store)"
+        required: false
+        default: ""
+
+      auto_release:
+        description: "Auto-release on App Store approval? (full-release only)"
+        required: false
+        default: "false"
+        type: boolean
+
+env:
+  RUBY_VERSION: "3.3"
+
+jobs:
+  release:
+    name: "${{ inputs.game }} → ${{ inputs.target }}"
+    runs-on: macos-14
+    environment: production     # Add manual approval gate in GitHub repo settings → Environments
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode 16
+        run: sudo xcode-select -s /Applications/Xcode_16.0.app/Contents/Developer
+
+      - name: Set up Ruby ${{ env.RUBY_VERSION }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+          bundler-cache: true
+          working-directory: tools/release
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: pip3 install -r tools/release/scripts/requirements.txt
+
+      - name: Install XcodeGen (build targets only)
+        if: ${{ inputs.target == 'beta' || inputs.target == 'full-release' }}
+        run: brew install xcodegen
+
+      - name: Generate Xcode project (build targets only)
+        if: ${{ inputs.target == 'beta' || inputs.target == 'full-release' }}
+        run: cd apps/IdleCivilizations && xcodegen generate
+
+      - name: Write ASC API key to disk
+        run: |
+          mkdir -p ~/.appstoreconnect/private_keys
+          printf '%s' "${{ secrets.ASC_PRIVATE_KEY }}" \
+            > ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.ASC_KEY_ID }}.p8
+          chmod 600 ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.ASC_KEY_ID }}.p8
+
+      - name: Set up SSH for match certificate repo
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.MATCH_REPO_SSH_KEY }}
+
+      # ── beta ──────────────────────────────────────────────────────────────────
+
+      - name: "Build + upload to TestFlight (internal)"
+        if: ${{ inputs.target == 'beta' }}
+        run: cd tools/release && bundle exec fastlane beta game:${{ inputs.game }} "changelog:${{ inputs.changelog }}"
+        env:
+          ASC_KEY_PATH: ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.ASC_KEY_ID }}.p8
+          ASC_KEY_ID:   ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT: "120"
+
+      # ── distribute ────────────────────────────────────────────────────────────
+
+      - name: "Distribute to external TestFlight groups"
+        if: ${{ inputs.target == 'distribute' }}
+        run: cd tools/release && bundle exec fastlane distribute_beta game:${{ inputs.game }} "changelog:${{ inputs.changelog }}"
+        env:
+          ASC_KEY_PATH: ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.ASC_KEY_ID }}.p8
+          ASC_KEY_ID:   ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+
+      # ── metadata ──────────────────────────────────────────────────────────────
+
+      - name: "Upload metadata and screenshots"
+        if: ${{ inputs.target == 'metadata' }}
+        run: cd tools/release && bundle exec fastlane upload_metadata game:${{ inputs.game }} skip_screenshots:false
+        env:
+          ASC_KEY_PATH: ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.ASC_KEY_ID }}.p8
+          ASC_KEY_ID:   ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+
+      # ── sync-asc ──────────────────────────────────────────────────────────────
+
+      - name: "Sync IAP products"
+        if: ${{ inputs.target == 'sync-asc' }}
+        run: python3 tools/release/scripts/sync_iap.py --game ${{ inputs.game }}
+        env:
+          ASC_KEY_PATH: ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.ASC_KEY_ID }}.p8
+          ASC_KEY_ID:   ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+
+      - name: "Sync Game Center"
+        if: ${{ inputs.target == 'sync-asc' }}
+        run: python3 tools/release/scripts/sync_gamecenter.py --game ${{ inputs.game }}
+        env:
+          ASC_KEY_PATH: ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.ASC_KEY_ID }}.p8
+          ASC_KEY_ID:   ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+
+      # ── full-release ──────────────────────────────────────────────────────────
+
+      - name: "Full release pipeline"
+        if: ${{ inputs.target == 'full-release' }}
+        run: |
+          cd tools/release && bundle exec fastlane release \
+            game:${{ inputs.game }} \
+            "changelog:${{ inputs.changelog }}" \
+            auto_release:${{ inputs.auto_release }}
+        env:
+          ASC_KEY_PATH: ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.ASC_KEY_ID }}.p8
+          ASC_KEY_ID:   ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT: "120"
+
+      # ── Summary ───────────────────────────────────────────────────────────────
+
+      - name: Write job summary
+        if: always()
+        run: |
+          echo "## Release Summary" >> $GITHUB_STEP_SUMMARY
+          echo "| Field | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Game | ${{ inputs.game }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Target | ${{ inputs.target }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Changelog | ${{ inputs.changelog }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Triggered by | @${{ github.actor }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Run | [${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) |" >> $GITHUB_STEP_SUMMARY

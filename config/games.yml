@@ -1,0 +1,54 @@
+studio:
+  team_id: "TMXM5W4D89"
+  asc_issuer_id: "69a6de94-b56e-47e3-e053-5b8c7c11a4d1"
+  asc_key_id: "TMXM5W4D89"
+  # ASC private key path — set via env: export ASC_KEY_PATH=~/.appstoreconnect/private_keys/AuthKey_XXXXXX.p8
+  # Never commit the .p8 file.
+
+  match_repo: "git@github.com:your-org/idle-studio-certs.git"  # Private repo for fastlane match
+  match_type: "appstore"
+
+  # App Store reviewer contact (used by fastlane deliver for review information)
+  reviewer_first_name: "Victor"
+  reviewer_last_name: "Mihaita"
+  reviewer_phone: "+40726433942"
+  reviewer_email: "vmihai12@icloud.com"
+
+games:
+  idle-civilizations:
+    display_name: "Idle Civilizations"
+    bundle_id: "com.idlestudio.idleciv"
+    app_id: "6760996636"
+    xcode_project: "apps/IdleCivilizations/IdleCivilizations.xcodeproj"
+    xcode_scheme: "IdleCivilizations"
+    storekit_config: "apps/IdleCivilizations/Resources/IdleCivilizations.storekit"
+    theme_json: "games/idle-civilizations/idle-civilizations.json"
+    metadata_path: "metadata/idle-civilizations"
+    testflight_groups:
+      - "Internal Testers"
+      - "External Beta"
+    subscription_group_name: "Civ Pass"
+    primary_locale: "en-US"
+    age_rating: "4+"
+    categories:
+      primary: "GAMES_SIMULATION"
+      secondary: "GAMES_STRATEGY"
+
+  # ── Add future games below ──────────────────────────────────────────────────
+  # idle-restaurant-empire:
+  #   display_name: "Idle Restaurant Empire"
+  #   bundle_id: "com.idlestudio.idlerestaurant"
+  #   app_id: ""
+  #   xcode_project: "apps/IdleRestaurantEmpire/IdleRestaurantEmpire.xcodeproj"
+  #   xcode_scheme: "IdleRestaurantEmpire"
+  #   storekit_config: "apps/IdleRestaurantEmpire/Resources/IdleRestaurantEmpire.storekit"
+  #   theme_json: "games/idle-restaurant-empire/idle-restaurant-empire.json"
+  #   metadata_path: "metadata/idle-restaurant-empire"
+  #   testflight_groups:
+  #     - "Internal Testers"
+  #   subscription_group_name: "Chef Pass"
+  #   primary_locale: "en-US"
+  #   age_rating: "4+"
+  #   categories:
+  #     primary: "GAMES_SIMULATION"
+  #     secondary: "GAMES_CASUAL"

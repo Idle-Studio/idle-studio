@@ -1,0 +1,1 @@
+idle,civilization,history,empire,incremental,clicker,offline,gold,strategy,builder

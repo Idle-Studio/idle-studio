@@ -1,0 +1,86 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: Build & Test
+    runs-on: macos-14          # Xcode 16 available on macos-14
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode 16
+        run: sudo xcode-select -s /Applications/Xcode_16.0.app/Contents/Developer
+
+      - name: Cache Swift Package dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/Library/Caches/org.swift.swiftpm
+            ~/.build
+          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: ${{ runner.os }}-spm-
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: cd apps/IdleCivilizations && xcodegen generate
+
+      - name: Build (Debug, no signing)
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project apps/IdleCivilizations/IdleCivilizations.xcodeproj \
+            -scheme IdleCivilizations \
+            -configuration Debug \
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.0' \
+            build \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            | xcpretty
+
+      - name: Run Engine Unit Tests
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project apps/IdleCivilizations/IdleCivilizations.xcodeproj \
+            -scheme IdleCivilizations \
+            -configuration Debug \
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.0' \
+            test \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            | xcpretty
+
+      - name: Install Python dependencies
+        run: pip3 install -r tools/release/scripts/requirements.txt
+
+      - name: Validate Theme JSON
+        run: |
+          python3 - <<'EOF'
+          import json, sys
+          for path in ["games/idle-civilizations/idle-civilizations.json"]:
+              with open(path) as f:
+                  data = json.load(f)
+              required = ["schemaVersion", "gameID", "displayName", "bundleID",
+                          "levels", "leaderboards", "achievements"]
+              missing = [k for k in required if k not in data]
+              if missing:
+                  print(f"FAIL {path}: missing keys {missing}")
+                  sys.exit(1)
+              level_count = len(data.get("levels", []))
+              unit_count  = sum(len(lvl.get("units", [])) for lvl in data.get("levels", []))
+              print(f"OK   {path}: {level_count} levels, {unit_count} units")
+          EOF

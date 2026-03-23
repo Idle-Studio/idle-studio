@@ -1,0 +1,117 @@
+'use client'
+
+import { useRef } from 'react'
+import { motion, useScroll, useTransform, useMotionValue } from 'framer-motion'
+import Image from 'next/image'
+import type { GameConfig } from '@/config/types'
+import { assetPath } from '@/lib/assetPath'
+import { AppStoreButton } from '@/components/ui/AppStoreButton'
+
+interface GameHeroProps {
+  game: GameConfig
+}
+
+export function GameHero({ game }: GameHeroProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const { scrollY } = useScroll()
+  const heroY = useTransform(scrollY, [0, 600], [0, 150])
+  const heroOpacity = useTransform(scrollY, [0, 400], [1, 0])
+  const mouseX = useMotionValue(0)
+  const mouseY = useMotionValue(0)
+  const imgShiftX = useTransform(mouseX, [-1, 1], [-15, 15])
+
+  const heroSrc = assetPath(game.id, 'eras', game.heroArtworkAsset)
+  const iconSrc = assetPath(game.id, 'root', game.appIconAsset)
+  const taglineWords = game.tagline.split(' ')
+
+  function handleMouseMove(e: React.MouseEvent) {
+    const rect = containerRef.current?.getBoundingClientRect()
+    if (!rect) return
+    const x = ((e.clientX - rect.left) / rect.width) * 2 - 1
+    mouseX.set(x)
+  }
+
+  return (
+    <section
+      ref={containerRef}
+      onMouseMove={handleMouseMove}
+      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+    >
+      <motion.div
+        style={{ y: heroY, x: imgShiftX }}
+        className="absolute inset-[-10%] z-0"
+      >
+        <Image src={heroSrc} alt={game.displayName} fill className="object-cover" priority />
+      </motion.div>
+
+      <div
+        className="absolute inset-0 z-10"
+        style={{ background: `linear-gradient(to bottom, ${game.backgroundColor}80 0%, transparent 30%, transparent 60%, ${game.backgroundColor} 100%)` }}
+      />
+      <div
+        className="absolute inset-0 z-10"
+        style={{ background: `radial-gradient(ellipse 70% 80% at 50% 50%, transparent 0%, ${game.backgroundColor}90 100%)` }}
+      />
+
+      <motion.div style={{ opacity: heroOpacity }} className="relative z-20 text-center px-6 max-w-4xl mx-auto pt-24">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: [0.21, 0.47, 0.32, 0.98] }}
+          className="mb-8 flex justify-center"
+        >
+          <div className="relative w-24 h-24 rounded-[22px] overflow-hidden shadow-2xl border border-white/20">
+            <Image src={iconSrc} alt={`${game.displayName} icon`} fill className="object-cover" />
+          </div>
+        </motion.div>
+
+        <motion.p
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="text-sm uppercase tracking-[0.3em] mb-5 font-sans"
+          style={{ color: game.accentColor }}
+        >
+          {game.subtitle}
+        </motion.p>
+
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.7 }}
+          className="font-serif text-5xl md:text-7xl lg:text-8xl font-bold text-white leading-tight mb-6"
+        >
+          {game.displayName}
+        </motion.h1>
+
+        <div className="font-sans text-white/70 text-xl md:text-2xl mb-10 overflow-hidden">
+          {taglineWords.map((word, i) => (
+            <motion.span
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 + i * 0.07, duration: 0.4 }}
+              className="inline-block mr-[0.3em]"
+            >
+              {word}
+            </motion.span>
+          ))}
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2, duration: 0.6 }}
+        >
+          {game.status === 'live' ? (
+            <AppStoreButton url={game.appStoreUrl} size="lg" />
+          ) : (
+            <div className="inline-flex items-center gap-3 bg-white/10 text-white/60 font-semibold rounded-2xl px-10 py-5 text-lg font-sans">
+              Coming Soon
+            </div>
+          )}
+        </motion.div>
+      </motion.div>
+    </section>
+  )
+}

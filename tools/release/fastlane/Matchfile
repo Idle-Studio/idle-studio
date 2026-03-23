@@ -1,0 +1,9 @@
+require "yaml"
+
+config = YAML.load_file(File.join(__dir__, "../../config/games.yml"))
+
+git_url(config["studio"]["match_repo"])
+storage_mode("git")
+type("appstore")
+readonly(ENV["CI"] ? true : false)
+clone_branch_directly(true)

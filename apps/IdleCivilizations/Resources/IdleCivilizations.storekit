@@ -1,0 +1,325 @@
+{
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
+  "identifier" : "F7DA4A69",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : false,
+      "internalID" : "AA000001",
+      "localizations" : [
+        {
+          "description" : "Remove all ads forever",
+          "displayName" : "Remove Ads",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.idlestudio.idleciv.remove_ads",
+      "referenceName" : "Remove Ads",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "29.99",
+      "familyShareable" : false,
+      "internalID" : "AA000002",
+      "localizations" : [
+        {
+          "description" : "Lifetime access to Civ Pass, ad-free forever",
+          "displayName" : "Patron Pack (Lifetime)",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.idlestudio.idleciv.patron_lifetime",
+      "referenceName" : "Patron Lifetime",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "0.99",
+      "familyShareable" : false,
+      "internalID" : "AA000003",
+      "localizations" : [
+        {
+          "description" : "1,200 Coins to jumpstart your civilization",
+          "displayName" : "Starter Pack",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.idlestudio.idleciv.starter_pack",
+      "referenceName" : "Starter Pack",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "0.99",
+      "familyShareable" : false,
+      "internalID" : "AA000004",
+      "localizations" : [
+        {
+          "description" : "1,000 Coins",
+          "displayName" : "Small Coin Pack",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.idlestudio.idleciv.coins.1000",
+      "referenceName" : "Coins 1000",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : false,
+      "internalID" : "AA000005",
+      "localizations" : [
+        {
+          "description" : "5,000 Coins",
+          "displayName" : "Medium Coin Pack",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.idlestudio.idleciv.coins.5000",
+      "referenceName" : "Coins 5000",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "9.99",
+      "familyShareable" : false,
+      "internalID" : "AA000006",
+      "localizations" : [
+        {
+          "description" : "15,000 Coins",
+          "displayName" : "Large Coin Pack",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.idlestudio.idleciv.coins.15000",
+      "referenceName" : "Coins 15000",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "19.99",
+      "familyShareable" : false,
+      "internalID" : "AA00000F",
+      "localizations" : [
+        {
+          "description" : "30,000 Coins — covers 15 late-era Wonder skips",
+          "displayName" : "XL Coin Pack",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.idlestudio.idleciv.coins.30000",
+      "referenceName" : "Coins 30000",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "39.99",
+      "familyShareable" : false,
+      "internalID" : "AA000010",
+      "localizations" : [
+        {
+          "description" : "75,000 Coins — best value, 37 late-era Wonder skips",
+          "displayName" : "Mega Coin Pack",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.idlestudio.idleciv.coins.75000",
+      "referenceName" : "Coins 75000",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "2.99",
+      "familyShareable" : false,
+      "internalID" : "AA000007",
+      "localizations" : [
+        {
+          "description" : "Era skins + 500 Coins for the Stone Age",
+          "displayName" : "Stone Age Bundle",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.idlestudio.idleciv.bundle.stone_age",
+      "referenceName" : "Bundle Stone Age",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "2.99",
+      "familyShareable" : false,
+      "internalID" : "AA000008",
+      "localizations" : [
+        {
+          "description" : "Era skins + 750 Coins for the Bronze Age",
+          "displayName" : "Bronze Age Bundle",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.idlestudio.idleciv.bundle.bronze_age",
+      "referenceName" : "Bundle Bronze Age",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "2.99",
+      "familyShareable" : false,
+      "internalID" : "AA000009",
+      "localizations" : [
+        {
+          "description" : "Era skins + 1,000 Coins for the Ancient Empires",
+          "displayName" : "Ancient Empires Bundle",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.idlestudio.idleciv.bundle.ancient_empires",
+      "referenceName" : "Bundle Ancient Empires",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "2.99",
+      "familyShareable" : false,
+      "internalID" : "AA00000A",
+      "localizations" : [
+        {
+          "description" : "Era skins + 1,500 Coins for the Classical World",
+          "displayName" : "Classical World Bundle",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.idlestudio.idleciv.bundle.classical_world",
+      "referenceName" : "Bundle Classical World",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "2.99",
+      "familyShareable" : false,
+      "internalID" : "AA00000B",
+      "localizations" : [
+        {
+          "description" : "Era skins + 2,000 Coins for the Medieval Era",
+          "displayName" : "Medieval Era Bundle",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.idlestudio.idleciv.bundle.medieval_era",
+      "referenceName" : "Bundle Medieval Era",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "2.99",
+      "familyShareable" : false,
+      "internalID" : "AA00000C",
+      "localizations" : [
+        {
+          "description" : "Era skins + 2,500 Coins for the Renaissance",
+          "displayName" : "Renaissance Bundle",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.idlestudio.idleciv.bundle.renaissance",
+      "referenceName" : "Bundle Renaissance",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "2.99",
+      "familyShareable" : false,
+      "internalID" : "AA00000D",
+      "localizations" : [
+        {
+          "description" : "Era skins + 3,000 Coins for the Industrial Revolution",
+          "displayName" : "Industrial Revolution Bundle",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.idlestudio.idleciv.bundle.industrial_revolution",
+      "referenceName" : "Bundle Industrial Revolution",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "2.99",
+      "familyShareable" : false,
+      "internalID" : "AA00000E",
+      "localizations" : [
+        {
+          "description" : "Era skins + 4,000 Coins for the Space Age",
+          "displayName" : "Space Age Bundle",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.idlestudio.idleciv.bundle.space_age",
+      "referenceName" : "Bundle Space Age",
+      "type" : "Consumable"
+    }
+  ],
+  "settings" : {
+    "_askToBuyEnabled" : false,
+    "_billingGracePeriodEnabled" : false,
+    "_billingIssuesEnabled" : false,
+    "_disableDialogs" : false,
+    "_failTransactionsEnabled" : false,
+    "_locale" : "en_US",
+    "_renewalBillingIssuesEnabled" : false,
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+
+    ],
+    "_timeRate" : 0
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "BB000001",
+      "localizations" : [
+
+      ],
+      "name" : "Civ Pass",
+      "subscriptions" : [
+        {
+          "adHocOfferCodesEnabled" : false,
+          "displayPrice" : "2.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "BB000002",
+          "localizations" : [
+            {
+              "description" : "Double production speed, exclusive wonders, and ad-free play",
+              "displayName" : "Civ Pass",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.idlestudio.idleciv.civ_pass.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Civ Pass Monthly",
+          "subscriptionGroupID" : "BB000001",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOfferCodesEnabled" : false,
+          "displayPrice" : "19.99",
+          "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "BB000003",
+          "localizations" : [
+            {
+              "description" : "Double production speed, exclusive wonders, ad-free — save 40%",
+              "displayName" : "Civ Pass (Annual)",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.idlestudio.idleciv.civ_pass.annual",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Civ Pass Annual",
+          "subscriptionGroupID" : "BB000001",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

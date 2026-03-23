@@ -1,0 +1,34 @@
+{
+  "enabledPlugins": {
+    "swiftui-expert@swiftui-expert-skill": true,
+    "swift-concurrency-expert@swift-concurrency-agent-skill": true,
+    "swift-testing-expert@swift-testing-agent-skill": true,
+    "core-data-expert@core-data-agent-skill": true,
+    "idle-studio-expert@idle-studio-skill": true
+  },
+  "extraKnownMarketplaces": {
+    "swiftui-expert-skill": {
+      "source": { "source": "github", "repo": "AvdLee/SwiftUI-Agent-Skill" }
+    },
+    "swift-concurrency-agent-skill": {
+      "source": { "source": "github", "repo": "AvdLee/Swift-Concurrency-Agent-Skill" }
+    },
+    "swift-testing-agent-skill": {
+      "source": { "source": "github", "repo": "AvdLee/Swift-Testing-Agent-Skill" }
+    },
+    "core-data-agent-skill": {
+      "source": { "source": "github", "repo": "AvdLee/Core-Data-Agent-Skill" }
+    },
+    "idle-studio-skill": {
+      "source": { "source": "local", "path": "./idle-studio-skill" }
+    }
+  },
+  "agents": {
+    "engine-architect": ".claude/agents/engine-architect-agent.md",
+    "theme-author": ".claude/agents/theme-author-agent.md",
+    "balance": ".claude/agents/balance-agent.md",
+    "monetization": ".claude/agents/monetization-agent.md",
+    "testing": ".claude/agents/testing-agent.md",
+    "release": ".claude/agents/release-agent.md"
+  }
+}
