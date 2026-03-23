@@ -80,7 +80,7 @@ export const idleCivilizationsConfig: GameConfig = {
     { icon: 'RotateCcw', title: 'Prestige & Legacy Tokens', description: 'Found a New Empire to earn permanent multipliers. Every reset makes you stronger.' },
     { icon: 'Globe', title: 'Weekly Competitions', description: 'Compete in Olympic Games and seasonal exhibitions against players worldwide.' },
   ],
-  supportEmail: 'support@idlestudio.io',
+  supportEmail: 'vmihai12@icloud.com',
   privacyPolicyLastUpdated: '2026-03-23',
   supportFAQ: [
     {
@@ -105,7 +105,7 @@ export const idleCivilizationsConfig: GameConfig = {
     },
     {
       question: 'I have a bug or a suggestion. How do I contact you?',
-      answer: 'Email us at support@idlestudio.io — we read every message and usually respond within 1 business day.',
+      answer: 'Email us at vmihai12@icloud.com — we read every message and usually respond within 1 business day.',
     },
   ],
 }

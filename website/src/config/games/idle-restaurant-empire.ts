@@ -34,7 +34,7 @@ export const idleRestaurantEmpireConfig: GameConfig = {
     { icon: 'Trophy', title: '5 Legendary Chefs', description: 'Unlock famous chefs who transform your kitchen output.' },
     { icon: 'Globe', title: 'Weekly Cook-offs', description: 'Compete against players worldwide in timed cooking competitions.' },
   ],
-  supportEmail: 'support@idlestudio.io',
+  supportEmail: 'vmihai12@icloud.com',
   privacyPolicyLastUpdated: '2026-03-23',
   supportFAQ: [],
 }
