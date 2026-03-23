@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 63;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -28,7 +28,7 @@
 /* Begin PBXFileReference section */
 		25404DCBDA77AB4643CFE80E /* ambient_ancient_empires.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ambient_ancient_empires.mp3; sourceTree = "<group>"; };
 		2EB1A3FCA982F1134F2F60D2 /* A4D15D4B-07E6-4C50-8930-509B7A5FA5F7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "A4D15D4B-07E6-4C50-8930-509B7A5FA5F7.png"; sourceTree = "<group>"; };
-		4B4B3E91FB5EE05FBBAFAEDC /* IdleCivilizations.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IdleCivilizations.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B4B3E91FB5EE05FBBAFAEDC /* IdleCivilizations.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = IdleCivilizations.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		623E86E258F96481D8683612 /* ambient_renaissance.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ambient_renaissance.mp3; sourceTree = "<group>"; };
 		748B70A69AC9C2A4F6746105 /* IdleCivilizationsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdleCivilizationsApp.swift; sourceTree = "<group>"; };
 		7AE3E605AA7AC16F063BA588 /* icon.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = icon.json; sourceTree = "<group>"; };
@@ -41,7 +41,7 @@
 		AAF70E2E1CC1C2C8554D3FB9 /* 44D2026C-A19A-415D-B060-74AAA47C13F2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "44D2026C-A19A-415D-B060-74AAA47C13F2.png"; sourceTree = "<group>"; };
 		B1300B11B702EF5B5AE62085 /* ambient_stone_age.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ambient_stone_age.mp3; sourceTree = "<group>"; };
 		B8519172A7318C1E1E13AF6D /* ambient_classical_world.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ambient_classical_world.mp3; sourceTree = "<group>"; };
-		D60F46E55FD705E7C10DCA75 /* IdleCivilizations.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = IdleCivilizations.storekit; sourceTree = "<group>"; };
+		D60F46E55FD705E7C10DCA75 /* IdleCivilizations.storekit */ = {isa = PBXFileReference; path = IdleCivilizations.storekit; sourceTree = "<group>"; };
 		DAA83546FEE45CA9B9BDC160 /* ambient_industrial_revolution.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ambient_industrial_revolution.mp3; sourceTree = "<group>"; };
 		E64271D57008C62097BC6205 /* ambient_medieval_era.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ambient_medieval_era.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -163,6 +163,7 @@
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					DED91C0F96D627984830D655 = {
+						DevelopmentTeam = GP9C46ZQ3K;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -180,6 +181,7 @@
 			packageReferences = (
 				D20738215C5BBD3F1AC4D366 /* XCLocalSwiftPackageReference "../../Packages/IdleEngine" */,
 			);
+			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -290,16 +292,16 @@
 		634367269548566901525803 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = IdleCivilizations;
-				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Resources/IdleCivilizations.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202603231820;
-				DEVELOPMENT_TEAM = JL84E9GK95;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = GP9C46ZQ3K;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Idle Civilizations";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -320,16 +322,16 @@
 		97BA44BC99E158FEC3465724 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = IdleCivilizations;
-				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Resources/IdleCivilizations.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202603231820;
-				DEVELOPMENT_TEAM = JL84E9GK95;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = GP9C46ZQ3K;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Idle Civilizations";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

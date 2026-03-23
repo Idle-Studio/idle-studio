@@ -120,6 +120,11 @@ platform :ios do
 
     sh("xcrun altool --upload-app --type ios --file #{ipa.shellescape} " \
        "--apiKey #{key_id.shellescape} --apiIssuer #{issuer.shellescape}")
+
+    # Mark encryption = None (no non-exempt encryption) on the uploaded build
+    build_number = lane_context[SharedValues::BUILD_NUMBER]
+    sh("python3 #{repo('tools/release/scripts/set_encryption.py')} " \
+       "--game #{game['id'].shellescape} --build #{build_number.to_s.shellescape}")
   end
 
   desc "Distribute latest processed TestFlight build to all external groups"
