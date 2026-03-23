@@ -9,6 +9,7 @@ public struct EraUpgradeCard: View {
     public let onPurchase: () -> Void
 
     @Environment(\.theme) private var theme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     public init(
         upgrade: ThemeEraUpgrade,
@@ -29,6 +30,7 @@ public struct EraUpgradeCard: View {
                 .font(.title3)
                 .foregroundStyle(isPurchased ? theme.textSecondaryColor : theme.goldAccentColor)
                 .frame(width: 32)
+                .accessibilityHidden(true)
 
             // Name + description
             VStack(alignment: .leading, spacing: 2) {
@@ -50,6 +52,7 @@ public struct EraUpgradeCard: View {
                 Image(systemName: "checkmark.circle.fill")
                     .font(.title2)
                     .foregroundStyle(.green)
+                    .accessibilityLabel("Purchased")
             } else {
                 VStack(alignment: .trailing, spacing: 4) {
                     costLabel
@@ -63,6 +66,8 @@ public struct EraUpgradeCard: View {
                             .clipShape(.capsule)
                     }
                     .disabled(!canAfford)
+                    .accessibilityLabel("Buy \(upgrade.displayName)")
+                    .accessibilityHint("Double-tap to purchase this upgrade")
                 }
             }
         }
@@ -70,7 +75,7 @@ public struct EraUpgradeCard: View {
         .background(cardBackground)
         .clipShape(.rect(cornerRadius: 14))
         .opacity(isPurchased ? 0.55 : 1)
-        .animation(.easeOut(duration: 0.2), value: isPurchased)
+        .animation(reduceMotion ? nil : .easeOut(duration: 0.2), value: isPurchased)
     }
 
     // MARK: - Private

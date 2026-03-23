@@ -8,6 +8,7 @@ public struct ProgressBar: View {
     public let tint: Color
 
     @ScaledMetric private var height: CGFloat = 8
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     public init(progress: Double, tint: Color) {
         self.progress = progress
@@ -22,10 +23,11 @@ public struct ProgressBar: View {
                 Capsule()
                     .fill(tint)
                     .frame(width: max(0, geo.size.width * min(1, max(0, progress))))
-                    .animation(.easeOut(duration: 0.3), value: progress)
+                    .animation(reduceMotion ? nil : .easeOut(duration: 0.3), value: progress)
             }
         }
         .frame(height: height)
+        .accessibilityLabel("Progress")
         .accessibilityValue("\(Int(progress * 100))%")
     }
 }

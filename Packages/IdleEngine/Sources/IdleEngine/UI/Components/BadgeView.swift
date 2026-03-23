@@ -39,6 +39,8 @@ public struct BadgeView: View {
             }
         }
         .buttonStyle(.plain)
+        .accessibilityLabel("\(achievement.displayName), \(isEarned ? "earned" : "locked")")
+        .accessibilityHint("Double-tap to view details")
         .sheet(isPresented: $showDetail) {
             BadgeDetailSheet(achievement: achievement, isEarned: isEarned)
         }
@@ -76,7 +78,7 @@ public struct BadgeView: View {
                 .font(.system(size: 28, weight: .semibold))
                 .foregroundStyle(isEarned ? .white : .white.opacity(0.25))
 
-            // Lock overlay for unearned
+            // Lock overlay for unearned badges — provides non-color state indicator
             if !isEarned {
                 Circle()
                     .fill(Color.black.opacity(0.3))
@@ -86,6 +88,7 @@ public struct BadgeView: View {
                     .offset(x: 20, y: 20)
             }
         }
+        .accessibilityHidden(true)
     }
 }
 
@@ -132,6 +135,7 @@ struct BadgeDetailSheet: View {
                         .foregroundStyle(isEarned ? .white : .white.opacity(0.2))
                 }
                 .padding(.top, 12)
+                .accessibilityHidden(true)
 
                 VStack(spacing: 8) {
                     Text(achievement.displayName)

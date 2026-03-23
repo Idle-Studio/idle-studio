@@ -150,6 +150,7 @@ public struct GameplayScreen: View {
     @Bindable var viewModel: GameplayViewModel
 
     @Environment(\.theme) private var theme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var particles = ParticleSystem()
     @State private var tapScale: CGFloat = 1.0
     @State private var tapGlow: Double = 0
@@ -174,7 +175,7 @@ public struct GameplayScreen: View {
                     totalUnitCount: totalUnitCount
                 )
                 .id(level.id)
-                .transition(.opacity.animation(.easeInOut(duration: 1.2)))
+                .transition(.opacity.animation(reduceMotion ? nil : .easeInOut(duration: 1.2)))
             } else {
                 theme.backgroundColor.ignoresSafeArea()
             }
@@ -246,7 +247,7 @@ public struct GameplayScreen: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: .iapRewardReceived)) { note in
             let coins = note.userInfo?["gold"] as? Decimal ?? 0
-            triggerCoinRain(amount: coins)
+            if !reduceMotion { triggerCoinRain(amount: coins) }
         }
         .sheet(isPresented: $showPrestigeSheet) {
             PrestigeSheet(tokensPreview: viewModel.tokensPreview) {
@@ -389,19 +390,21 @@ public struct GameplayScreen: View {
             .scaleEffect(tapScale)
             .contentShape(.rect)
             .onTapGesture { location in
-                let tapPoint = CGPoint(
-                    x: location.x,
-                    y: location.y + geo.frame(in: .global).minY
-                )
                 let earned = max(1, viewModel.productionRate["gold"])
-                particles.emit(
-                    text: "+\(earned.idleFormatted())",
-                    color: theme.goldAccentColor,
-                    at: tapPoint
-                )
+                if !reduceMotion {
+                    let tapPoint = CGPoint(
+                        x: location.x,
+                        y: location.y + geo.frame(in: .global).minY
+                    )
+                    particles.emit(
+                        text: "+\(earned.idleFormatted())",
+                        color: theme.goldAccentColor,
+                        at: tapPoint
+                    )
+                }
                 viewModel.tap()
                 HapticsService.impact(.light)
-                animateTap()
+                if !reduceMotion { animateTap() }
             }
         }
         .frame(height: 180)

@@ -97,6 +97,7 @@ platform :ios do
           game["bundle_id"] => "match AppStore #{game["bundle_id"]}"
         }
       },
+      xcargs:           skip_match ? "-allowProvisioningUpdates -authenticationKeyPath \"#{ENV['ASC_KEY_PATH']}\" -authenticationKeyID \"#{ENV['ASC_KEY_ID']}\" -authenticationKeyIssuerID \"#{ENV['ASC_ISSUER_ID']}\"" : "",
       clean: true
     )
   end
@@ -110,16 +111,15 @@ platform :ios do
 
     build(game: game["id"])
 
-    pilot(
-      app_identifier:                  game["bundle_id"],
-      ipa:                             ipa_path(game["id"]),
-      api_key:                         asc_api_key(game),
-      distribute_external:             false,
-      changelog:                       changelog,
-      skip_waiting_for_build_processing: false,
-      wait_processing_interval:        30,
-      wait_processing_timeout_duration: 1800
-    )
+    # Use xcrun altool directly — fastlane pilot copies the .p8 key to a temp
+    # directory which altool rejects on Xcode 15+. xcrun altool reads it in-place.
+    key_path = ENV.fetch("ASC_KEY_PATH")
+    key_id   = ENV.fetch("ASC_KEY_ID")
+    issuer   = ENV.fetch("ASC_ISSUER_ID")
+    ipa      = ipa_path(game["id"])
+
+    sh("xcrun altool --upload-app --type ios --file #{ipa.shellescape} " \
+       "--apiKey #{key_id.shellescape} --apiIssuer #{issuer.shellescape}")
   end
 
   desc "Distribute latest processed TestFlight build to all external groups"

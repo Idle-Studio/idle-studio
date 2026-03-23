@@ -391,15 +391,12 @@ public struct ThemeIAPProducts: Sendable, Equatable, Codable {
     public let coins5000: String?
     public let coins15000: String?
     public let lifetimePack: String?
-    /// One entry per level ID.
-    public let levelBundles: [String: String]
 
     public init(
         starterPack: String? = nil, removeAds: String? = nil,
         premiumPass: String? = nil, premiumPassAnnual: String? = nil,
         coins1000: String? = nil, coins5000: String? = nil,
-        coins15000: String? = nil, lifetimePack: String? = nil,
-        levelBundles: [String: String] = [:]
+        coins15000: String? = nil, lifetimePack: String? = nil
     ) {
         self.starterPack = starterPack
         self.removeAds = removeAds
@@ -409,7 +406,6 @@ public struct ThemeIAPProducts: Sendable, Equatable, Codable {
         self.coins5000 = coins5000
         self.coins15000 = coins15000
         self.lifetimePack = lifetimePack
-        self.levelBundles = levelBundles
     }
 
     public static let empty = ThemeIAPProducts()

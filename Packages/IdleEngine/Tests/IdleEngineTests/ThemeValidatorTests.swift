@@ -48,10 +48,6 @@ private func validTheme(levelCount: Int = 4) -> MockThemePackage {
         ThemeLevelColor(levelID: "level_\(i)", primary: "#8B7355", secondary: "#6B5335")
     }
 
-    let levelBundles = Dictionary(uniqueKeysWithValues: (1...levelCount).map { i in
-        ("level_\(i)", "com.test.mock.bundle.level_\(i)")
-    })
-
     return MockThemePackage(
         schemaVersion: "1.0",
         gameID: "mock-game",
@@ -70,8 +66,7 @@ private func validTheme(levelCount: Int = 4) -> MockThemePackage {
         iapProducts: ThemeIAPProducts(
             starterPack: "com.test.mock.starter",
             removeAds: "com.test.mock.remove_ads",
-            premiumPass: "com.test.mock.premium_pass",
-            levelBundles: levelBundles
+            premiumPass: "com.test.mock.premium_pass"
         ),
         leaderboards: .empty,
         copy: .fixture

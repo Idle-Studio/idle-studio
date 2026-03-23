@@ -10,6 +10,7 @@ public struct ResourceBar: View {
     public let currentLevelID: String
 
     @Environment(\.theme) private var theme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     public init(resources: ResourceBundle, productionRate: ResourceBundle, currentLevelID: String = "") {
         self.resources = resources
@@ -38,7 +39,7 @@ public struct ResourceBar: View {
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
         .background(surfaceBackground)
-        .animation(.easeOut(duration: 0.3), value: secondaryResources.map(\.key))
+        .animation(reduceMotion ? nil : .easeOut(duration: 0.3), value: secondaryResources.map(\.key))
         .accessibilityElement(children: .combine)
         .accessibilityLabel(resourceAccessibilityLabel)
     }

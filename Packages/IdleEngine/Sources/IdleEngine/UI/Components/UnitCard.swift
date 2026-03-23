@@ -12,6 +12,7 @@ public struct UnitCard: View {
     public let onPurchase: (Int) -> Void
 
     @Environment(\.theme) private var theme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var buyQuantity: BuyQuantity = .one
 
     public init(
@@ -39,7 +40,7 @@ public struct UnitCard: View {
         .background(cardBackground)
         .clipShape(.rect(cornerRadius: 14))
         .opacity(canAfford ? 1 : 0.55)
-        .animation(.easeOut(duration: 0.15), value: canAfford)
+        .animation(reduceMotion ? nil : .easeOut(duration: 0.15), value: canAfford)
     }
 
     // MARK: - Subviews
@@ -58,12 +59,13 @@ public struct UnitCard: View {
             Text(unit.displayName)
                 .font(Typography.headline)
                 .foregroundStyle(theme.textPrimaryColor)
-                .lineLimit(1)
+                .lineLimit(2)
+                .minimumScaleFactor(0.8)
 
             Text(productionLabel)
                 .font(Typography.caption)
                 .foregroundStyle(theme.textSecondaryColor)
-                .lineLimit(1)
+                .lineLimit(2)
         }
     }
 
@@ -74,23 +76,31 @@ public struct UnitCard: View {
                 .font(Typography.number)
                 .foregroundStyle(theme.textPrimaryColor)
                 .monospacedDigit()
-                .animation(.spring(response: 0.25), value: ownedCount)
+                .animation(reduceMotion ? nil : .spring(response: 0.25), value: ownedCount)
 
             // Buy button
             Button {
                 HapticsService.impact(.medium)
                 onPurchase(buyQuantity.rawValue)
             } label: {
-                Text(buyButtonLabel)
-                    .font(Typography.subheadline.weight(.semibold))
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 5)
-                    .background(buyButtonBackground)
-                    .foregroundStyle(canAfford ? .black : theme.textSecondaryColor)
-                    .clipShape(.capsule)
+                HStack(spacing: 4) {
+                    if !canAfford {
+                        Image(systemName: "lock.fill")
+                            .font(.caption2)
+                            .accessibilityHidden(true)
+                    }
+                    Text(buyButtonLabel)
+                        .font(Typography.subheadline.weight(.semibold))
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 5)
+                .background(buyButtonBackground)
+                .foregroundStyle(canAfford ? .black : theme.textSecondaryColor)
+                .clipShape(.capsule)
             }
             .disabled(!canAfford)
             .accessibilityLabel(buyAccessibilityLabel)
+            .accessibilityHint("Double-tap to purchase")
         }
     }
 

@@ -6,6 +6,7 @@ import SwiftUI
 /// Replaces the Social tab.
 public struct AchievementsScreen: View {
     @Environment(\.theme) private var theme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var viewModel = AchievementsViewModel()
     @State private var selectedCategory: AchievementCategory? = nil   // nil = All
 
@@ -43,7 +44,7 @@ public struct AchievementsScreen: View {
                             }
                             .padding(.horizontal, 20)
                             .padding(.bottom, 32)
-                            .animation(.easeInOut(duration: 0.2), value: selectedCategory)
+                            .animation(reduceMotion ? nil : .easeInOut(duration: 0.2), value: selectedCategory)
                         } header: {
                             categoryFilterRow
                         }
@@ -90,10 +91,12 @@ public struct AchievementsScreen: View {
                                         : 0,
                                     height: 8
                                 )
-                                .animation(.spring(response: 0.6), value: viewModel.earnedCount)
+                                .animation(reduceMotion ? nil : .spring(response: 0.6), value: viewModel.earnedCount)
                         }
                     }
                     .frame(height: 8)
+                    .accessibilityLabel("Achievements progress")
+                    .accessibilityValue("\(viewModel.earnedCount) of \(viewModel.totalCount) earned")
                 }
 
                 Spacer()
@@ -103,6 +106,7 @@ public struct AchievementsScreen: View {
                     Image(systemName: "star.fill")
                         .font(.caption)
                         .foregroundStyle(theme.goldAccentColor)
+                        .accessibilityHidden(true)
                     Text("\(viewModel.studioPoints)")
                         .font(Typography.bigNumber)
                         .foregroundStyle(theme.goldAccentColor)
@@ -116,6 +120,8 @@ public struct AchievementsScreen: View {
                     RoundedRectangle(cornerRadius: 12)
                         .fill(theme.surfaceColor)
                 )
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("\(viewModel.studioPoints) \(theme.copy.studioPointsTitle)")
             }
         }
     }
@@ -138,7 +144,13 @@ public struct AchievementsScreen: View {
 
     private func filterChip(label: String, category: AchievementCategory?) -> some View {
         let selected = selectedCategory == category
-        return Button { withAnimation { selectedCategory = category } } label: {
+        return Button {
+            if reduceMotion {
+                selectedCategory = category
+            } else {
+                withAnimation { selectedCategory = category }
+            }
+        } label: {
             HStack(spacing: 5) {
                 if let cat = category {
                     Image(systemName: cat.iconSymbol)
@@ -158,6 +170,7 @@ public struct AchievementsScreen: View {
             .foregroundStyle(selected ? .white : theme.textSecondaryColor)
         }
         .buttonStyle(.plain)
+        .accessibilityAddTraits(selected ? [.isSelected] : [])
     }
 }
 

@@ -7,6 +7,7 @@ public struct LevelAdvanceScreen: View {
     public let onDismiss: () -> Void
 
     @Environment(\.theme) private var theme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var appeared = false
 
     public init(completedLevelName: String, onDismiss: @escaping () -> Void) {
@@ -26,7 +27,7 @@ public struct LevelAdvanceScreen: View {
                     .font(.system(size: 80))
                     .foregroundStyle(theme.goldAccentColor)
                     .scaleEffect(appeared ? 1 : 0.3)
-                    .animation(.spring(response: 0.5, dampingFraction: 0.55), value: appeared)
+                    .animation(reduceMotion ? nil : .spring(response: 0.5, dampingFraction: 0.55), value: appeared)
 
                 // Theme-supplied title and flavor
                 VStack(spacing: 12) {
@@ -45,7 +46,7 @@ public struct LevelAdvanceScreen: View {
                 }
                 .opacity(appeared ? 1 : 0)
                 .offset(y: appeared ? 0 : 20)
-                .animation(.easeOut(duration: 0.4).delay(0.2), value: appeared)
+                .animation(reduceMotion ? nil : .easeOut(duration: 0.4).delay(0.2), value: appeared)
 
                 Spacer()
 
@@ -62,7 +63,7 @@ public struct LevelAdvanceScreen: View {
                 .padding(.horizontal, 32)
                 .padding(.bottom, 48)
                 .opacity(appeared ? 1 : 0)
-                .animation(.easeOut(duration: 0.3).delay(0.5), value: appeared)
+                .animation(reduceMotion ? nil : .easeOut(duration: 0.3).delay(0.5), value: appeared)
             }
         }
         .onAppear { appeared = true }

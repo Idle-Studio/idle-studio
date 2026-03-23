@@ -213,7 +213,7 @@ final class ShopViewModel {
         let allIDs = [iap.starterPack, iap.removeAds, iap.premiumPass,
                       iap.premiumPassAnnual, iap.coins1000, iap.coins5000,
                       iap.coins15000, iap.lifetimePack]
-            .compactMap { $0 } + Array(iap.levelBundles.values)
+            .compactMap { $0 }
         do {
             let products = try await Product.products(for: Set(allIDs))
             premiumPass       = products.first { $0.id == iap.premiumPass }

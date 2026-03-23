@@ -17,11 +17,27 @@ import time
 import datetime
 import json
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 import jwt
 
 
 BASE_URL = "https://api.appstoreconnect.apple.com"
 TOKEN_LIFETIME_SECONDS = 1140  # 19 min (API max is 20)
+
+
+def _make_session() -> requests.Session:
+    session = requests.Session()
+    retry = Retry(
+        total=5,
+        backoff_factor=1.0,
+        status_forcelist=[500, 502, 503, 504],
+        allowed_methods=["GET", "POST", "PATCH", "DELETE"],
+        raise_on_status=False,
+    )
+    adapter = HTTPAdapter(max_retries=retry)
+    session.mount("https://", adapter)
+    return session
 
 
 class ASCClient:
@@ -32,6 +48,7 @@ class ASCClient:
             self.private_key = f.read()
         self._token: str | None = None
         self._token_expiry: float = 0
+        self._session = _make_session()
 
     @classmethod
     def from_env(cls) -> "ASCClient":
@@ -70,7 +87,7 @@ class ASCClient:
         headers = {**self._token_header(), "Content-Type": "application/json"}
 
         for attempt in range(5):
-            resp = requests.request(method, url, headers=headers, **kwargs)
+            resp = self._session.request(method, url, headers=headers, **kwargs)
             if resp.status_code == 429:
                 wait = int(resp.headers.get("Retry-After", 10)) + 1
                 print(f"  Rate limited — waiting {wait}s...")

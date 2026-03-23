@@ -9,6 +9,7 @@ public struct FloatingParticle: View {
 
     @State private var offset: CGFloat = 0
     @State private var opacity: Double = 1
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     public init(text: String, color: Color, origin: CGPoint) {
         self.text = text
@@ -25,9 +26,13 @@ public struct FloatingParticle: View {
             .opacity(opacity)
             .position(origin)
             .onAppear {
-                withAnimation(.easeOut(duration: 1.2)) {
-                    offset  = -80
-                    opacity = 0
+                if reduceMotion {
+                    withAnimation(.linear(duration: 0.15)) { opacity = 0 }
+                } else {
+                    withAnimation(.easeOut(duration: 1.2)) {
+                        offset  = -80
+                        opacity = 0
+                    }
                 }
             }
             .accessibilityHidden(true)

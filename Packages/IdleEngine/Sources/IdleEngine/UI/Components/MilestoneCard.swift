@@ -63,11 +63,13 @@ public struct MilestoneCard: View {
                         .foregroundStyle(.black)
                         .clipShape(.rect(cornerRadius: 10))
                 }
+                .accessibilityHint("Double-tap to begin construction")
             }
         }
         .padding(14)
         .background(cardBackground)
         .clipShape(.rect(cornerRadius: 16))
+        .accessibilityElement(children: .contain)
     }
 
     // MARK: - Subviews
@@ -94,9 +96,11 @@ public struct MilestoneCard: View {
         case .completed:
             Image(systemName: "checkmark.seal.fill")
                 .foregroundStyle(theme.goldAccentColor)
+                .accessibilityLabel("Completed")
         case .underConstruction:
             Image(systemName: "hourglass")
                 .foregroundStyle(theme.textSecondaryColor)
+                .accessibilityLabel("Under construction")
         case .locked(let req):
             requirementLabel(req)
         case .available:
@@ -111,6 +115,7 @@ public struct MilestoneCard: View {
         }
         .font(Typography.caption)
         .foregroundStyle(theme.textSecondaryColor)
+        .accessibilityLabel("Locked. Requires \(req["gold"].idleFormatted()) gold")
     }
 
     @ViewBuilder

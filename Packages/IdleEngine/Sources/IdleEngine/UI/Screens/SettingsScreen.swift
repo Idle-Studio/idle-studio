@@ -7,6 +7,7 @@ import GameKit
 public struct SettingsScreen: View {
     @Environment(\.theme) private var theme
     @State private var viewModel = SettingsViewModel()
+    @AppStorage("appearanceScheme") private var appearanceScheme = "dark"
 
     public init() {}
 
@@ -16,6 +17,7 @@ public struct SettingsScreen: View {
                 theme.backgroundColor.ignoresSafeArea()
 
                 List {
+                    appearanceSection
                     notificationsSection
                     soundSection
                     accountSection
@@ -38,6 +40,23 @@ public struct SettingsScreen: View {
 
     // MARK: - Sections
 
+    private var appearanceSection: some View {
+        Section {
+            Picker(selection: $appearanceScheme) {
+                Text("System").tag("system")
+                Text("Dark").tag("dark")
+                Text("Light").tag("light")
+            } label: {
+                Label("Appearance", systemImage: "circle.lefthalf.filled")
+                    .foregroundStyle(theme.textPrimaryColor)
+            }
+            .tint(theme.goldAccentColor)
+        } header: {
+            sectionHeader("Display")
+        }
+        .listRowBackground(theme.surfaceColor)
+    }
+
     private var notificationsSection: some View {
         Section {
             Toggle(isOn: $viewModel.notificationsEnabled) {
@@ -49,7 +68,7 @@ public struct SettingsScreen: View {
                 viewModel.toggleNotifications(enabled)
             }
         } header: {
-            sectionHeader("Preferences")
+            sectionHeader("Notifications & Sound")
         }
         .listRowBackground(theme.surfaceColor)
     }

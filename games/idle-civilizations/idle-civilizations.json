@@ -1210,17 +1210,7 @@
     "coins15000": "com.idlestudio.idleciv.coins.15000",
     "coins30000": "com.idlestudio.idleciv.coins.30000",
     "coins75000": "com.idlestudio.idleciv.coins.75000",
-    "lifetimePack": "com.idlestudio.idleciv.patron_lifetime",
-    "levelBundles": {
-      "stone_age":             "com.idlestudio.idleciv.bundle.stone_age",
-      "bronze_age":            "com.idlestudio.idleciv.bundle.bronze_age",
-      "ancient_empires":       "com.idlestudio.idleciv.bundle.ancient_empires",
-      "classical_world":       "com.idlestudio.idleciv.bundle.classical_world",
-      "medieval_era":          "com.idlestudio.idleciv.bundle.medieval_era",
-      "renaissance":           "com.idlestudio.idleciv.bundle.renaissance",
-      "industrial_revolution": "com.idlestudio.idleciv.bundle.industrial_revolution",
-      "space_age":             "com.idlestudio.idleciv.bundle.space_age"
-    }
+    "lifetimePack": "com.idlestudio.idleciv.patron_lifetime"
   },
   "leaderboards": {
     "globalTokens": "com.idlestudio.idleciv.lb.global_tokens",

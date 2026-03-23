@@ -231,13 +231,6 @@ public enum ThemeValidator {
             errors.append("IAP product ID '\(id)' must start with bundleID '\(prefix)'")
         }
 
-        // levelBundles must have one entry per level
-        let levelIDs = Set(theme.levels.map { $0.id })
-        let bundleKeys = Set(iap.levelBundles.keys)
-        let missingBundles = levelIDs.subtracting(bundleKeys)
-        for id in missingBundles.sorted() {
-            errors.append("iapProducts.levelBundles is missing an entry for level '\(id)'")
-        }
     }
 
     // MARK: - Colors

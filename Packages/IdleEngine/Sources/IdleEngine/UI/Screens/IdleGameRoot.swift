@@ -22,9 +22,18 @@ public struct IdleGameRoot: View {
 
     @State private var viewModel = IdleGameViewModel()
     @Environment(\.scenePhase) private var scenePhase
+    @AppStorage("appearanceScheme") private var appearanceScheme = "dark"
 
     public init(themeName: String) {
         self.themeName = themeName
+    }
+
+    private var preferredColorScheme: ColorScheme? {
+        switch appearanceScheme {
+        case "light": return .light
+        case "dark":  return .dark
+        default:      return nil  // follow system
+        }
     }
 
     public var body: some View {
@@ -78,7 +87,7 @@ public struct IdleGameRoot: View {
                 loadingView
             }
         }
-        .preferredColorScheme(.dark)
+        .preferredColorScheme(preferredColorScheme)
         .onChange(of: scenePhase) { _, phase in
             if phase == .background { viewModel.appDidBackground() }
         }
