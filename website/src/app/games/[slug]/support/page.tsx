@@ -24,9 +24,9 @@ export default async function SupportPage({ params }: { params: Promise<{ slug: 
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd([
-          { name: 'Idle Studio', url: 'https://idlestudio.io/' },
-          { name: game.displayName, url: `https://idlestudio.io/games/${game.id}/` },
-          { name: 'Support', url: `https://idlestudio.io/games/${game.id}/support/` },
+          { name: 'Idle Studio', url: 'https://idle-studio.vercel.app/' },
+          { name: game.displayName, url: `https://idle-studio.vercel.app/games/${game.id}/` },
+          { name: 'Support', url: `https://idle-studio.vercel.app/games/${game.id}/support/` },
         ])) }}
       />
       <SupportPageClient game={game} />

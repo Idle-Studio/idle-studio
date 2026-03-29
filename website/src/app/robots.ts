@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: 'https://idlestudio.io/sitemap.xml',
+    sitemap: 'https://idle-studio.vercel.app/sitemap.xml',
   }
 }

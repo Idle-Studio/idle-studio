@@ -38,8 +38,8 @@ export default async function GamePage({ params }: { params: Promise<{ slug: str
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd([
-          { name: 'Idle Studio', url: 'https://idlestudio.io/' },
-          { name: game.displayName, url: `https://idlestudio.io/games/${game.id}/` },
+          { name: 'Idle Studio', url: 'https://idle-studio.vercel.app/' },
+          { name: game.displayName, url: `https://idle-studio.vercel.app/games/${game.id}/` },
         ])) }}
       />
       <SiteHeader />

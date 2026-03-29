@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import type { GameConfig } from '@/config/types'
 
-const BASE_URL = 'https://idlestudio.io'
+const BASE_URL = 'https://idle-studio.vercel.app'
 
 function ogImage(game: GameConfig) {
   return {
@@ -127,7 +127,7 @@ export function organizationJsonLd() {
     name: 'Idle Studio',
     url: BASE_URL,
     logo: `${BASE_URL}/icon.png`,
-    email: 'support@idlestudio.io',
+    email: 'vmihai12@icloud.com',
     sameAs: [],
   }
 }

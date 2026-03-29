@@ -34,9 +34,9 @@ export default async function PrivacyPage({ params }: { params: Promise<{ slug: 
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd([
-          { name: 'Idle Studio', url: 'https://idlestudio.io/' },
-          { name: game.displayName, url: `https://idlestudio.io/games/${game.id}/` },
-          { name: 'Privacy Policy', url: `https://idlestudio.io/games/${game.id}/privacy/` },
+          { name: 'Idle Studio', url: 'https://idle-studio.vercel.app/' },
+          { name: game.displayName, url: `https://idle-studio.vercel.app/games/${game.id}/` },
+          { name: 'Privacy Policy', url: `https://idle-studio.vercel.app/games/${game.id}/privacy/` },
         ])) }}
       />
       <div className="border-b border-white/10 py-6 px-6">

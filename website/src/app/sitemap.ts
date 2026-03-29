@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { ALL_GAMES } from '@/config/games'
 
-const BASE_URL = 'https://idlestudio.io'
+const BASE_URL = 'https://idle-studio.vercel.app'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const liveGames = ALL_GAMES.filter(g => g.status === 'live')

@@ -17,10 +17,10 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'Idle Studio — Mobile Idle Games',
   description: 'We build premium idle games for history lovers, foodies, scientists, and sports fans.',
-  metadataBase: new URL('https://idlestudio.io'),
+  metadataBase: new URL('https://idle-studio.vercel.app'),
   keywords: ['idle game', 'incremental game', 'mobile game', 'iOS game', 'Idle Civilizations', 'idle studio'],
   alternates: {
-    canonical: 'https://idlestudio.io/',
+    canonical: 'https://idle-studio.vercel.app/',
   },
   robots: {
     index: true,
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Idle Studio — Mobile Idle Games',
     description: 'We build premium idle games for history lovers, foodies, scientists, and sports fans.',
-    url: 'https://idlestudio.io/',
+    url: 'https://idle-studio.vercel.app/',
     siteName: 'Idle Studio',
     type: 'website',
   },
