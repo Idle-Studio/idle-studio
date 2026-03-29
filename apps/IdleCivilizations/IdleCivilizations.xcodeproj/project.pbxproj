@@ -308,7 +308,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Idle Civilizations";
-				INFOPLIST_KEY_GADApplicationIdentifier = "ca-app-pub-3940256099942544~1458002511";
+				INFOPLIST_KEY_GADApplicationIdentifier = "ca-app-pub-3827016404991252~1697311426";
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "We use your data to show you relevant ads and improve your experience.";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -341,7 +341,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Idle Civilizations";
-				INFOPLIST_KEY_GADApplicationIdentifier = "ca-app-pub-3940256099942544~1458002511";
+				INFOPLIST_KEY_GADApplicationIdentifier = "ca-app-pub-3827016404991252~1697311426";
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "We use your data to show you relevant ads and improve your experience.";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
