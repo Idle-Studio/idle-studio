@@ -156,6 +156,7 @@ platform :ios do
     deliver(
       app_identifier:      game["bundle_id"],
       api_key:             asc_api_key(game),
+      app_version:         options[:app_version] || get_version_number_from_xcodeproj(xcodeproj: repo(game["xcode_project"])),
       metadata_path:       repo(game["metadata_path"]),
       screenshots_path:    repo("#{game["metadata_path"]}/screenshots"),
       skip_binary_upload:  true,

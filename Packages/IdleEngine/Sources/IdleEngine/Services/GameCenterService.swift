@@ -46,10 +46,15 @@ public final class LiveGameCenterService: GameCenterService, @unchecked Sendable
     public init() {}
 
     public func authenticate() async -> Bool {
+        // Fast-path: already authenticated — skip handler setup entirely.
+        // This prevents a second authenticateHandler assignment from stranding
+        // a concurrent continuation (the stuck-loading race on tab switches).
+        if GKLocalPlayer.local.isAuthenticated { return true }
+
         // authenticateHandler can be called multiple times by GameKit (e.g. once
         // presenting a VC, once with the final result). Guard ensures we resume
         // the continuation exactly once.
-        await withCheckedContinuation { continuation in
+        return await withCheckedContinuation { continuation in
             var resumed = false
             GKLocalPlayer.local.authenticateHandler = { _, _ in
                 guard !resumed else { return }
@@ -68,7 +73,8 @@ public final class LiveGameCenterService: GameCenterService, @unchecked Sendable
         guard let board = boards.first else { return [] }
 
         let gkScope: GKLeaderboard.PlayerScope = scope == .friends ? .friendsOnly : .global
-        let (_, entries, _) = try await board.loadEntries(for: gkScope, timeScope: .allTime, range: NSRange(1...100))
+        let timeScope: GKLeaderboard.TimeScope = (scope == .friends) ? .week : .allTime
+        let (_, entries, _) = try await board.loadEntries(for: gkScope, timeScope: timeScope, range: NSRange(1...100))
 
         return entries.map { entry in
             LeaderboardEntry(

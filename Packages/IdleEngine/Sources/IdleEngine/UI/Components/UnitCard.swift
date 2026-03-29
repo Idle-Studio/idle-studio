@@ -150,6 +150,19 @@ public struct UnitCard: View {
     }
 }
 
+// MARK: - Equatable
+
+extension UnitCard: Equatable {
+    /// Compares only the data inputs. The `onPurchase` closure is intentionally excluded —
+    /// closures aren't Equatable and the behaviour is always equivalent across renders.
+    public nonisolated static func == (lhs: UnitCard, rhs: UnitCard) -> Bool {
+        lhs.unit.id == rhs.unit.id &&
+        lhs.ownedCount == rhs.ownedCount &&
+        lhs.canAfford == rhs.canAfford &&
+        lhs.discountMultiplier == rhs.discountMultiplier
+    }
+}
+
 // MARK: - Buy Quantity
 
 enum BuyQuantity: Int, CaseIterable {

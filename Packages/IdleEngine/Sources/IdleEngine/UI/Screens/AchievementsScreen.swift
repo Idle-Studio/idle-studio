@@ -197,8 +197,11 @@ final class AchievementsViewModel {
         streamTask?.cancel()
         streamTask = Task { [weak self] in
             for await state in GameEngine.shared.stateStream() {
-                self?.earnedIDs = state.earnedAchievementIDs
-                self?.studioPoints = state.studioPoints
+                guard let self else { break }
+                // Guard assignments — @Observable fires on every set, even identical values.
+                // Without this guard the entire achievement grid re-renders 10×/sec.
+                if state.earnedAchievementIDs != earnedIDs { earnedIDs = state.earnedAchievementIDs }
+                if state.studioPoints != studioPoints { studioPoints = state.studioPoints }
             }
         }
     }

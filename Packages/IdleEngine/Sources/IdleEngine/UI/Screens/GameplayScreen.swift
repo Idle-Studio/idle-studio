@@ -7,6 +7,19 @@ import SwiftUI
 public final class GameplayViewModel {
     public private(set) var state: GameState = .initial(firstLevelID: "")
     public private(set) var currentUnits: [ThemeUnit] = []
+    // Stored + guarded so views don't re-render when these rarely-changing values are stable.
+    public private(set) var currentEraUpgrades: [ThemeEraUpgrade] = []
+    public private(set) var productionRate: ResourceBundle = .zero
+    public private(set) var eraCostMultiplier: Decimal = 1
+    public private(set) var allMilestonesCompleted: Bool = false
+    /// Pre-computed canAfford flag per unit ID. Updated once per tick with equality guard.
+    public private(set) var unitAffordability: [String: Bool] = [:]
+    /// Pre-computed gold cost per unit ID. Updated once per tick with equality guard.
+    public private(set) var unitCosts: [String: Decimal] = [:]
+    /// Pre-computed unit counts per unit ID. Changes only when units are purchased.
+    public private(set) var unitCounts: [String: Int] = [:]
+    /// Pre-computed canAfford flag per upgrade ID.
+    public private(set) var upgradeAffordability: [String: Bool] = [:]
 
     @ObservationIgnored nonisolated(unsafe) private var streamTask: Task<Void, Never>?
     private var theme: (any ThemePackage)?
@@ -21,26 +34,16 @@ public final class GameplayViewModel {
             self?.theme = loadedTheme
             self?.updateCurrentUnits()
             for await newState in GameEngine.shared.stateStream() {
-                self?.state = newState
-                self?.updateCurrentUnits()
+                guard let self else { break }
+                if newState != state { state = newState }
+                updateCurrentUnits()
+                updateCachedValues()
             }
         }
     }
 
     var currentLevel: ThemeLevel? {
         theme?.level(id: state.currentLevelID)
-    }
-
-    var currentEraUpgrades: [ThemeEraUpgrade] {
-        currentLevel?.eraUpgrades ?? []
-    }
-
-    var productionRate: ResourceBundle {
-        EconomyCalculator.productionRate(state: state, units: currentUnits, eraUpgrades: currentEraUpgrades)
-    }
-
-    var eraCostMultiplier: Decimal {
-        EconomyCalculator.eraCostMultiplier(purchasedIDs: state.purchasedUpgradeIDs, upgrades: currentEraUpgrades)
     }
 
     func purchase(unitID: String, quantity: Int) {
@@ -57,10 +60,6 @@ public final class GameplayViewModel {
 
     var currentMilestones: [ThemeMilestone] {
         theme?.level(id: state.currentLevelID)?.milestones ?? []
-    }
-
-    var allMilestonesCompleted: Bool {
-        currentMilestones.allSatisfy { state.completedMilestoneIDs.contains($0.id) }
     }
 
     func milestoneCardState(for milestone: ThemeMilestone) -> MilestoneCard.MilestoneState {
@@ -144,7 +143,53 @@ public final class GameplayViewModel {
     private func updateCurrentUnits() {
         guard let theme else { return }
         let levelUnits = theme.level(id: state.currentLevelID)?.units ?? []
-        currentUnits = levelUnits
+        // Only reassign when the unit set actually changes (era advance), not every tick.
+        if levelUnits.map(\.id) != currentUnits.map(\.id) {
+            currentUnits = levelUnits
+        }
+        let levelUpgrades = theme.level(id: state.currentLevelID)?.eraUpgrades ?? []
+        if levelUpgrades.map(\.id) != currentEraUpgrades.map(\.id) {
+            currentEraUpgrades = levelUpgrades
+        }
+    }
+
+    /// Moves all expensive per-tick computations out of the view body.
+    /// Each assignment is guarded by equality so @Observable only fires when values truly change.
+    private func updateCachedValues() {
+        // Production rate — only changes when units are purchased or upgrades bought.
+        let newRate = EconomyCalculator.productionRate(state: state, units: currentUnits, eraUpgrades: currentEraUpgrades)
+        if newRate != productionRate { productionRate = newRate }
+
+        // Cost multiplier — only changes when upgrades are purchased.
+        let newMult = EconomyCalculator.eraCostMultiplier(purchasedIDs: state.purchasedUpgradeIDs, upgrades: currentEraUpgrades)
+        if newMult != eraCostMultiplier { eraCostMultiplier = newMult }
+
+        // allMilestonesCompleted — changes only when a milestone is built.
+        let milestones = currentMilestones
+        let newAllDone = milestones.allSatisfy { state.completedMilestoneIDs.contains($0.id) }
+        if newAllDone != allMilestonesCompleted { allMilestonesCompleted = newAllDone }
+
+        // Unit counts — changes only when a unit is purchased.
+        if state.unitCounts != unitCounts { unitCounts = state.unitCounts }
+
+        // Unit affordability and costs — changes when gold crosses a cost threshold.
+        var newAffordability: [String: Bool] = [:]
+        var newCosts: [String: Decimal] = [:]
+        for unit in currentUnits {
+            let count = state.unitCount(id: unit.id)
+            let cost = EconomyCalculator.unitCost(unit: unit, currentCount: count, discountMultiplier: newMult)
+            newAffordability[unit.id] = state.resources.canAfford(cost)
+            newCosts[unit.id] = cost["gold"]
+        }
+        if newAffordability != unitAffordability { unitAffordability = newAffordability }
+        if newCosts != unitCosts { unitCosts = newCosts }
+
+        // Upgrade affordability — changes when gold crosses an upgrade cost threshold.
+        var newUpgradeAffordability: [String: Bool] = [:]
+        for upgrade in currentEraUpgrades {
+            newUpgradeAffordability[upgrade.id] = state.resources.canAfford(upgrade.cost)
+        }
+        if newUpgradeAffordability != upgradeAffordability { upgradeAffordability = newUpgradeAffordability }
     }
 }
 
@@ -191,6 +236,7 @@ public struct GameplayScreen: View {
                     productionRate: viewModel.productionRate,
                     currentLevelID: viewModel.state.currentLevelID
                 )
+                .equatable()
                 .padding(.horizontal)
                 .padding(.top, 8)
 
@@ -222,18 +268,18 @@ public struct GameplayScreen: View {
                             eraUpgradesSection
                         }
 
-                        // Units
+                        // Units — use pre-computed ViewModel dicts so EconomyCalculator is
+                        // never called inside the view body. .equatable() short-circuits
+                        // UnitCard.body when inputs haven't changed (most ticks).
                         ForEach(viewModel.currentUnits) { unit in
-                            let count = viewModel.state.unitCount(id: unit.id)
                             UnitCard(
                                 unit: unit,
-                                ownedCount: count,
-                                canAfford: viewModel.state.resources.canAfford(
-                                    EconomyCalculator.unitCost(unit: unit, currentCount: count, discountMultiplier: viewModel.eraCostMultiplier)
-                                ),
+                                ownedCount: viewModel.unitCounts[unit.id] ?? 0,
+                                canAfford: viewModel.unitAffordability[unit.id] ?? false,
                                 discountMultiplier: viewModel.eraCostMultiplier,
                                 onPurchase: { qty in viewModel.purchase(unitID: unit.id, quantity: qty) }
                             )
+                            .equatable()
                         }
                     }
                     .padding()
@@ -469,9 +515,10 @@ public struct GameplayScreen: View {
                 EraUpgradeCard(
                     upgrade: upgrade,
                     isPurchased: viewModel.state.purchasedUpgradeIDs.contains(upgrade.id),
-                    canAfford: viewModel.state.resources.canAfford(upgrade.cost),
+                    canAfford: viewModel.upgradeAffordability[upgrade.id] ?? false,
                     onPurchase: { viewModel.purchaseEraUpgrade(id: upgrade.id) }
                 )
+                .equatable()
             }
         }
     }

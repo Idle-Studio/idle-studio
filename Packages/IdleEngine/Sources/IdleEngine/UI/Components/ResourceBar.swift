@@ -122,3 +122,13 @@ public struct ResourceBar: View {
         return label
     }
 }
+
+// MARK: - Equatable
+
+extension ResourceBar: Equatable {
+    public nonisolated static func == (lhs: ResourceBar, rhs: ResourceBar) -> Bool {
+        lhs.resources == rhs.resources &&
+        lhs.productionRate == rhs.productionRate &&
+        lhs.currentLevelID == rhs.currentLevelID
+    }
+}

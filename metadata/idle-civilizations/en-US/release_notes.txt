@@ -1,6 +1,9 @@
-Welcome to Idle Civilizations!
+What's New
 
-Build your empire from a Stone Age campfire to a Space Age lunar base.
-8 eras. 40 buildings. 8 Wonders. 5 legendary Leaders.
+• Watch a short ad to double your offline income when you return to your civilization
+• Skip Wonder construction timers instantly with a rewarded ad
+• Grab free gold from the Shop by watching an ad — available every hour
+• Interstitial ads appear occasionally at natural breakpoints (era advances)
+• Purchase "Remove Ads" in the Shop for a completely ad-free experience
 
 Your civilization awaits, Great Leader.

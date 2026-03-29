@@ -107,3 +107,13 @@ public struct EraUpgradeCard: View {
         }
     }
 }
+
+// MARK: - Equatable
+
+extension EraUpgradeCard: Equatable {
+    public nonisolated static func == (lhs: EraUpgradeCard, rhs: EraUpgradeCard) -> Bool {
+        lhs.upgrade.id == rhs.upgrade.id &&
+        lhs.isPurchased == rhs.isPurchased &&
+        lhs.canAfford == rhs.canAfford
+    }
+}

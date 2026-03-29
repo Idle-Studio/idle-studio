@@ -23,6 +23,7 @@ public struct IdleGameRoot: View {
     @State private var viewModel = IdleGameViewModel()
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.adService) private var adService
+    @Environment(\.requestReview) private var requestReview
 
     public init(themeName: String) {
         self.themeName = themeName
@@ -98,6 +99,15 @@ public struct IdleGameRoot: View {
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .background { viewModel.appDidBackground() }
+        }
+        .onChange(of: viewModel.showReviewRequest) { _, newValue in
+            guard newValue else { return }
+            Task {
+                // Small delay so the prestige success screen is fully visible first.
+                try? await Task.sleep(for: .seconds(1))
+                requestReview()
+                viewModel.showReviewRequest = false
+            }
         }
         .task {
             await viewModel.load(themeName: themeName)
@@ -198,6 +208,9 @@ public final class IdleGameViewModel {
     var completedLevelName = ""
     var showPrestigeSuccess = false
     var showNotificationPermission = false
+    var showReviewRequest = false
+    private static let appVersion: String =
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
     private(set) var currentPrestigeCount = 0
 
     @ObservationIgnored nonisolated(unsafe) private var streamTask: Task<Void, Never>?
@@ -260,6 +273,26 @@ public final class IdleGameViewModel {
         }
     }
 
+    /// Computes a Game Center score that increments for ALL players at every stage.
+    ///
+    /// Formula: `totalPrestigeCount * 1_000_000 + goldProgress`
+    /// where `goldProgress` is 0–999_999, representing how far through the ~3T gold
+    /// prestige threshold the player is. This means:
+    /// - Early players (0 prestiges): score grows 0 → 999,999 as they earn gold
+    /// - After 1st prestige: score jumps to 1,000,000+
+    /// - After Nth prestige: score is N × 1,000,000 + current run progress
+    /// The leaderboard is infinite — higher prestige always wins, but runs in progress
+    /// show visible, meaningful increments.
+    static func leaderboardScore(for state: GameState) -> Int {
+        // Normalize lifetime gold on a 0–999_999 scale against the ~3T prestige threshold.
+        // 3_000_000_000_000 / 3_000_000 = 1_000_000, so dividing by 3_000_000 maps
+        // 0…3T gold → 0…1_000_000 (capped at 999_999 so it never reaches the prestige bucket).
+        let goldProgress = Int(
+            truncating: min(state.totalLifetimeGold / 3_000_000, Decimal(999_999)) as NSDecimalNumber
+        )
+        return state.totalPrestigeCount * 1_000_000 + goldProgress
+    }
+
     private func saveState() async {
         guard let persistence,
               let state = await GameEngine.shared.currentState else { return }
@@ -320,12 +353,24 @@ public final class IdleGameViewModel {
         streamTask = Task { [weak self] in
             var ticksSinceLastSave = 0
             var lastPrestigeCount = -1
+            var lastCompletedMilestoneCount = -1
             for await state in GameEngine.shared.stateStream() {
                 guard let self else { break }
                 ticksSinceLastSave += 1
                 if ticksSinceLastSave >= 300 { // autosave every ~30 seconds
                     ticksSinceLastSave = 0
                     await self.saveState()
+                    // Submit leaderboard scores periodically so rankings stay fresh mid-session
+                    if let theme = await GameEngine.shared.currentTheme {
+                        let svc = LiveGameCenterService()
+                        let globalScore = IdleGameViewModel.leaderboardScore(for: state)
+                        try? await svc.submitScore(globalScore, to: theme.leaderboards.globalTokens)
+                        if let countryID = theme.leaderboards.countryTokens {
+                            try? await svc.submitScore(globalScore, to: countryID)
+                        }
+                        let goldScore = (min(state.totalLifetimeGold, Decimal(Int.max)) as NSDecimalNumber).intValue
+                        try? await svc.submitScore(goldScore, to: theme.leaderboards.weeklyGold)
+                    }
                 }
 
                 // Cancel stale notifications on first tick after foreground
@@ -349,8 +394,23 @@ public final class IdleGameViewModel {
                     HapticsService.notification(.success)
                     Task {
                         guard let theme = await GameEngine.shared.currentTheme else { return }
-                        let tokenScore = Int(truncating: state.prestigeTokens as NSDecimalNumber)
-                        try? await LiveGameCenterService().submitScore(tokenScore, to: theme.leaderboards.globalTokens)
+                        let svc = LiveGameCenterService()
+                        let globalScore = Self.leaderboardScore(for: state)
+                        try? await svc.submitScore(globalScore, to: theme.leaderboards.globalTokens)
+                        if let countryID = theme.leaderboards.countryTokens {
+                            try? await svc.submitScore(globalScore, to: countryID)
+                        }
+                        let goldScore = (min(state.totalLifetimeGold, Decimal(Int.max)) as NSDecimalNumber).intValue
+                        try? await svc.submitScore(goldScore, to: theme.leaderboards.weeklyGold)
+                    }
+
+                    // Review request: 2nd prestige is the sweet spot — player is engaged and just had a big win
+                    if state.totalPrestigeCount == 2 {
+                        let key = "review_requested_v\(IdleGameViewModel.appVersion)"
+                        if !UserDefaults.standard.bool(forKey: key) {
+                            UserDefaults.standard.set(true, forKey: key)
+                            self.showReviewRequest = true
+                        }
                     }
                 }
 
@@ -374,6 +434,18 @@ public final class IdleGameViewModel {
                         }
                     }
                 }
+
+                // Review request: first wonder built in run #1 is a high point for non-prestigers
+                if lastCompletedMilestoneCount >= 0 &&
+                   state.completedMilestoneIDs.count > lastCompletedMilestoneCount &&
+                   state.totalPrestigeCount == 0 {
+                    let key = "review_requested_v\(IdleGameViewModel.appVersion)"
+                    if !UserDefaults.standard.bool(forKey: key) {
+                        UserDefaults.standard.set(true, forKey: key)
+                        self.showReviewRequest = true
+                    }
+                }
+                lastCompletedMilestoneCount = state.completedMilestoneIDs.count
 
                 lastPrestigeCount = state.totalPrestigeCount
                 self.currentPrestigeCount = state.totalPrestigeCount

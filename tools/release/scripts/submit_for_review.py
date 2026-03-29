@@ -6,7 +6,7 @@ Strategy:
   1. Find the "Prepare for Submission" App Store version
   2. Find the latest VALID build for that version (or the app's latest)
   3. Attach the build to the version if not already attached
-  4. POST /v1/appStoreVersionSubmissions to request review
+  4. Submit via /v1/reviewSubmissions (replaces deprecated appStoreVersionSubmissions)
 
 Usage:
     python3 submit_for_review.py --game idle-civilizations [--dry-run] [--auto-release]
@@ -85,19 +85,48 @@ def set_auto_release(client: ASCClient, version_id: str, auto_release: bool, dry
     })
 
 
-def submit(client: ASCClient, version_id: str, dry_run: bool):
+def submit(client: ASCClient, app_id: str, version_id: str, dry_run: bool):
+    """Submit for review using the current /v1/reviewSubmissions API.
+
+    Apple deprecated /v1/appStoreVersionSubmissions — the new flow is:
+      1. POST /v1/reviewSubmissions           → create submission
+      2. POST /v1/reviewSubmissionItems       → attach the App Store version
+      3. PATCH /v1/reviewSubmissions/{id}     → mark submitted=true
+    """
     print("  Submitting for App Store review...")
     if dry_run:
         print("  DRY RUN — no submission made.")
         return
-    client.post("/v1/appStoreVersionSubmissions", {
+
+    # 1. Create review submission
+    submission = client.post("/v1/reviewSubmissions", {
         "data": {
-            "type": "appStoreVersionSubmissions",
+            "type": "reviewSubmissions",
+            "attributes": {"platform": "IOS"},
             "relationships": {
-                "appStoreVersion": {
-                    "data": {"type": "appStoreVersions", "id": version_id}
-                }
+                "app": {"data": {"type": "apps", "id": app_id}}
             }
+        }
+    })
+    submission_id = submission["data"]["id"]
+
+    # 2. Attach the App Store version as a review item
+    client.post("/v1/reviewSubmissionItems", {
+        "data": {
+            "type": "reviewSubmissionItems",
+            "relationships": {
+                "reviewSubmission": {"data": {"type": "reviewSubmissions", "id": submission_id}},
+                "appStoreVersion":  {"data": {"type": "appStoreVersions",  "id": version_id}}
+            }
+        }
+    })
+
+    # 3. Submit
+    client.patch(f"/v1/reviewSubmissions/{submission_id}", {
+        "data": {
+            "type": "reviewSubmissions",
+            "id": submission_id,
+            "attributes": {"submitted": True}
         }
     })
     print("  ✓ Submitted for review!")
@@ -150,7 +179,7 @@ def main():
     set_auto_release(client, version_id, args.auto_release, args.dry_run)
 
     # 5. Submit
-    submit(client, version_id, args.dry_run)
+    submit(client, app_id, version_id, args.dry_run)
 
     print("\n✓ Review submission complete")
 

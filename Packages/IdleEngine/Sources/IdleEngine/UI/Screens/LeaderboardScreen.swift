@@ -133,6 +133,7 @@ final class LeaderboardViewModel {
     var isGameCenterUnavailable = false
 
     func load() async {
+        guard !isLoading else { return }
         isLoading = true
         defer { isLoading = false }
         guard let theme = await GameEngine.shared.currentTheme else { return }
@@ -149,8 +150,11 @@ final class LeaderboardViewModel {
         if let state = await GameEngine.shared.currentState {
             let goldScore = (min(state.totalLifetimeGold, Decimal(Int.max)) as NSDecimalNumber).intValue
             try? await svc.submitScore(goldScore, to: theme.leaderboards.weeklyGold)
-            let tokenScore = Int(truncating: state.prestigeTokens as NSDecimalNumber)
-            try? await svc.submitScore(tokenScore, to: theme.leaderboards.globalTokens)
+            let globalScore = IdleGameViewModel.leaderboardScore(for: state)
+            try? await svc.submitScore(globalScore, to: theme.leaderboards.globalTokens)
+            if let countryID = theme.leaderboards.countryTokens {
+                try? await svc.submitScore(globalScore, to: countryID)
+            }
         }
 
         let id = selectedScope == .global
