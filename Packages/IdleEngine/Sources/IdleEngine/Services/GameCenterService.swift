@@ -18,8 +18,9 @@ public protocol GameCenterService: Sendable {
 }
 
 public enum LeaderboardScope: Sendable {
-    case global
-    case friends
+    case global     // all players, all time
+    case thisWeek   // all players, this week
+    case friends    // friends only, all time
     case country
 }
 
@@ -73,7 +74,7 @@ public final class LiveGameCenterService: GameCenterService, @unchecked Sendable
         guard let board = boards.first else { return [] }
 
         let gkScope: GKLeaderboard.PlayerScope = scope == .friends ? .friendsOnly : .global
-        let timeScope: GKLeaderboard.TimeScope = (scope == .friends) ? .week : .allTime
+        let timeScope: GKLeaderboard.TimeScope = scope == .thisWeek ? .week : .allTime
         let (_, entries, _) = try await board.loadEntries(for: gkScope, timeScope: timeScope, range: NSRange(1...100))
 
         return entries.map { entry in

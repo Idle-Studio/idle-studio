@@ -21,8 +21,6 @@ setup: ## Install all Ruby + Python dependencies (run once per machine)
 	cd $(RELEASE_DIR) && PATH="$(BREW_RUBY):$$PATH" bundle config set --local path 'vendor/bundle' && PATH="$(BREW_RUBY):$$PATH" bundle install
 	@echo "→ Setting up Python venv..."
 	python3 -m venv $(RELEASE_DIR)/.venv && $(RELEASE_DIR)/.venv/bin/pip install -q -r $(RELEASE_DIR)/scripts/requirements.txt
-	@echo "→ Installing Playwright Chromium..."
-	$(RELEASE_DIR)/.venv/bin/playwright install chromium
 	@echo ""
 	@echo "✓ Setup complete."
 	@echo ""
@@ -64,10 +62,6 @@ nuke-signing: ## DANGER: Revoke and regenerate all certificates for GAME
 
 # ── Build ──────────────────────────────────────────────────────────────────────
 
-.PHONY: screenshots
-screenshots: ## Generate App Store screenshots from HTML templates for GAME
-	$(PYTHON) $(REPO_ROOT)/tools/generate_screenshots.py --game $(GAME)
-
 .PHONY: verify-icon
 verify-icon: ## Verify the 1024×1024 App Store icon is correctly configured
 	$(PYTHON) $(RELEASE_DIR)/scripts/verify_icon.py --game $(GAME)
@@ -90,12 +84,8 @@ distribute-beta: ## Push latest processed TestFlight build to external groups
 # ── Metadata & screenshots ─────────────────────────────────────────────────────
 
 .PHONY: upload-metadata
-upload-metadata: ## Upload App Store text metadata for GAME (no screenshots)
+upload-metadata: ## Upload App Store text metadata + screenshots from metadata/ for GAME
 	$(FASTLANE) upload_metadata game:$(GAME)
-
-.PHONY: upload-screenshots
-upload-screenshots: ## Upload App Store screenshots for GAME
-	$(PYTHON) $(RELEASE_DIR)/scripts/upload_screenshots.py --game $(GAME)
 
 # ── IAP & Game Center ──────────────────────────────────────────────────────────
 
@@ -110,17 +100,6 @@ sync-gamecenter: ## Sync ThemePackage leaderboards/achievements → ASC Game Cen
 .PHONY: sync-all-asc
 sync-all-asc: sync-iap sync-gamecenter ## Sync IAP + Game Center in one shot
 	@echo "✓ ASC sync complete for $(GAME)"
-
-# ── Submission ─────────────────────────────────────────────────────────────────
-
-.PHONY: submit
-submit: ## Submit GAME for App Store review (uses latest processed build)
-	$(FASTLANE) submit game:$(GAME)
-
-.PHONY: release
-release: ## FULL PIPELINE: build → TestFlight → metadata → submit
-	@test -n "$(CHANGELOG)" || (echo "ERROR: pass CHANGELOG=\"...\""; exit 1)
-	$(FASTLANE) release game:$(GAME) changelog:"$(CHANGELOG)"
 
 # ── Status & reports ───────────────────────────────────────────────────────────
 

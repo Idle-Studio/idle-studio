@@ -16,7 +16,7 @@ public struct LeaderboardScreen: View {
                     // Scope picker
                     Picker("Scope", selection: $viewModel.selectedScope) {
                         Text("Global").tag(LeaderboardScope.global)
-                        Text("This Week").tag(LeaderboardScope.friends)
+                        Text("This Week").tag(LeaderboardScope.thisWeek)
                     }
                     .pickerStyle(.segmented)
                     .padding(.horizontal)
@@ -42,6 +42,15 @@ public struct LeaderboardScreen: View {
             .navigationTitle(theme.copy.leaderboardTabLabel)
             #if os(iOS)
             .toolbarBackground(theme.surfaceColor, for: .navigationBar)
+            #endif
+            #if DEBUG
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(viewModel.isHidingLocalScore ? "Show My Score" : "Hide My Score") {
+                        viewModel.toggleHideLocalScore()
+                    }
+                }
+            }
             #endif
             .task { await viewModel.load() }
         }
@@ -132,6 +141,10 @@ final class LeaderboardViewModel {
     var selectedScope: LeaderboardScope = .global
     var isGameCenterUnavailable = false
 
+    #if DEBUG
+    private(set) var isHidingLocalScore: Bool = UserDefaults.standard.bool(forKey: "debug.leaderboard.hideLocalScore")
+    #endif
+
     func load() async {
         guard !isLoading else { return }
         isLoading = true
@@ -147,7 +160,15 @@ final class LeaderboardViewModel {
         isGameCenterUnavailable = false
 
         // Submit current scores so the local player always appears in the leaderboard.
-        if let state = await GameEngine.shared.currentState {
+        // Skipped in debug when hiding the local score — Game Center ignores lower scores
+        // anyway (best-score policy), so the only reliable way to "reset" for testing is
+        // to stop submitting and filter the local entry out of the results.
+        #if DEBUG
+        let shouldSubmit = !isHidingLocalScore
+        #else
+        let shouldSubmit = true
+        #endif
+        if shouldSubmit, let state = await GameEngine.shared.currentState {
             let goldScore = (min(state.totalLifetimeGold, Decimal(Int.max)) as NSDecimalNumber).intValue
             try? await svc.submitScore(goldScore, to: theme.leaderboards.weeklyGold)
             let globalScore = IdleGameViewModel.leaderboardScore(for: state)
@@ -157,9 +178,20 @@ final class LeaderboardViewModel {
             }
         }
 
-        let id = selectedScope == .global
-            ? theme.leaderboards.globalTokens
-            : theme.leaderboards.weeklyGold
-        entries = (try? await svc.fetchLeaderboard(id: id, scope: selectedScope)) ?? []
+        var fetched = (try? await svc.fetchLeaderboard(id: theme.leaderboards.globalTokens, scope: selectedScope)) ?? []
+        #if DEBUG
+        if isHidingLocalScore {
+            fetched = fetched.filter { !$0.isLocalPlayer }
+        }
+        #endif
+        entries = fetched
     }
+
+    #if DEBUG
+    func toggleHideLocalScore() {
+        isHidingLocalScore.toggle()
+        UserDefaults.standard.set(isHidingLocalScore, forKey: "debug.leaderboard.hideLocalScore")
+        Task { await load() }
+    }
+    #endif
 }

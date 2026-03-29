@@ -148,10 +148,10 @@ platform :ios do
 
   # ── Metadata ──────────────────────────────────────────────────────────────────
 
-  desc "Upload App Store text metadata for GAME (no binary, no screenshots by default)"
+  desc "Upload App Store text metadata and screenshots for GAME from metadata/ folder"
   lane :upload_metadata do |options|
     game             = load_game(options[:game] || ENV.fetch("GAME", "idle-civilizations"))
-    skip_screenshots = options.fetch(:skip_screenshots, true)
+    skip_screenshots = options.fetch(:skip_screenshots, false)
 
     deliver(
       app_identifier:      game["bundle_id"],
@@ -173,7 +173,7 @@ platform :ios do
       },
       submission_information: {
         export_compliance_uses_encryption: false,
-        add_id_info_uses_idfa:             false
+        add_id_info_uses_idfa:             true
       }
     )
   end
@@ -194,42 +194,6 @@ platform :ios do
       ignore_language_directory_validation: true,
       run_precheck_before_submit: false
     )
-  end
-
-  # ── Submission ────────────────────────────────────────────────────────────────
-
-  desc "Submit GAME for App Store review using the latest processed build"
-  lane :submit do |options|
-    game         = load_game(options[:game] || ENV.fetch("GAME", "idle-civilizations"))
-    auto_release = options.fetch(:auto_release, false).to_s == "true"
-    dry_flag     = options[:dry_run] ? "--dry-run" : ""
-    auto_flag    = auto_release ? "--auto-release" : ""
-
-    sh("#{repo("tools/release/.venv/bin/python3")} #{repo("tools/release/scripts/submit_for_review.py")} --game #{game["id"]} #{dry_flag} #{auto_flag}")
-  end
-
-  desc "Full release pipeline: build → TestFlight → metadata → submit"
-  lane :release do |options|
-    game_id   = options[:game] || ENV.fetch("GAME", "idle-civilizations")
-    game      = load_game(game_id)
-    changelog = options[:changelog] || ENV["CHANGELOG"]
-    raise "changelog is required for a full release" unless changelog
-
-    build(game: game_id)
-
-    pilot(
-      app_identifier:                  game["bundle_id"],
-      ipa:                             ipa_path(game_id),
-      api_key:                         asc_api_key(game),
-      distribute_external:             false,
-      changelog:                       changelog,
-      skip_waiting_for_build_processing: false,
-      wait_processing_interval:        30,
-      wait_processing_timeout_duration: 1800
-    )
-
-    upload_metadata(game: game_id, skip_screenshots: true)
-    submit(game: game_id, auto_release: options.fetch(:auto_release, false))
   end
 
   # ── IAP / Game Center (delegate to Python scripts) ────────────────────────────
