@@ -7,7 +7,7 @@ export const idleCivilizationsConfig: GameConfig = {
   subtitle: 'Build History. Earn Gold.',
   description: 'Idle Civilizations is the idle game for history lovers. Begin with nothing but a campfire in the Stone Age and build your civilization through 8 iconic eras — all the way to the Space Age.',
   appStoreId: '6760996636',
-  appStoreUrl: 'https://apps.apple.com/app/id6760996636',
+  appStoreUrl: 'https://apps.apple.com/us/app/idle-civilizations/id6760996636',
   status: 'live',
   accentColor: '#C8A84B',
   backgroundColor: '#0D0D0F',

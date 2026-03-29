@@ -161,7 +161,7 @@ platform :ios do
       skip_binary_upload:  true,
       skip_screenshots:    skip_screenshots,
       skip_metadata:       false,
-      force:               !!ENV["CI"],
+      force:               true,
       ignore_language_directory_validation: true,
       run_precheck_before_submit: false,
       app_review_information: {

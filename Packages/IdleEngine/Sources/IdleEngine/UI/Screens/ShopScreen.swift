@@ -24,7 +24,7 @@ public struct ShopScreen: View {
                         } else {
                             premiumPassSection
                             coinPacksSection
-                            removeAdsSection
+                            oneTimeSection
                         }
                     }
                     .padding()
@@ -77,12 +77,17 @@ public struct ShopScreen: View {
     }
 
     @ViewBuilder
-    private var removeAdsSection: some View {
-        if let removeAds = viewModel.removeAds {
+    private var oneTimeSection: some View {
+        let items = [viewModel.removeAds, viewModel.lifetimePack].compactMap { $0 }
+        if !items.isEmpty {
             VStack(alignment: .leading, spacing: 8) {
                 sectionHeader("One-time")
-                ProductRow(product: removeAds, isPrimary: false, isOwned: viewModel.isOwned(removeAds), rewardLabel: nil, badge: nil) {
-                    viewModel.purchase(removeAds)
+                ForEach(items, id: \.id) { product in
+                    ProductRow(product: product, isPrimary: false,
+                               isOwned: viewModel.isOwned(product),
+                               rewardLabel: viewModel.rewardLabels[product.id], badge: nil) {
+                        viewModel.purchase(product)
+                    }
                 }
             }
         }
@@ -191,6 +196,7 @@ final class ShopViewModel {
     var premiumPassAnnual: Product?   // annual subscription
     var coinPacks: [Product] = []
     var removeAds: Product?
+    var lifetimePack: Product?
     var rewardLabels: [String: String] = [:]
     private(set) var activeProductIDs: Set<String> = []
 
@@ -198,7 +204,7 @@ final class ShopViewModel {
 
     deinit { updatesTask?.cancel() }
 
-    var hasNoProducts: Bool { premiumPass == nil && premiumPassAnnual == nil && coinPacks.isEmpty && removeAds == nil }
+    var hasNoProducts: Bool { premiumPass == nil && premiumPassAnnual == nil && coinPacks.isEmpty && removeAds == nil && lifetimePack == nil }
 
     func isOwned(_ product: Product) -> Bool {
         activeProductIDs.contains(product.id)
@@ -211,15 +217,17 @@ final class ShopViewModel {
         let iap = theme.iapProducts
         let allIDs = [iap.starterPack, iap.removeAds, iap.premiumPass,
                       iap.premiumPassAnnual, iap.coins1000, iap.coins5000,
-                      iap.coins15000, iap.lifetimePack]
+                      iap.coins15000, iap.coins30000, iap.coins75000, iap.lifetimePack]
             .compactMap { $0 }
         do {
             let products = try await Product.products(for: Set(allIDs))
             premiumPass       = products.first { $0.id == iap.premiumPass }
             premiumPassAnnual = products.first { $0.id == iap.premiumPassAnnual }
-            removeAds   = products.first { $0.id == iap.removeAds }
-            coinPacks   = products
-                .filter { [iap.coins1000, iap.coins5000, iap.coins15000, iap.starterPack].contains($0.id) }
+            removeAds    = products.first { $0.id == iap.removeAds }
+            lifetimePack = products.first { $0.id == iap.lifetimePack }
+            coinPacks    = products
+                .filter { [iap.coins1000, iap.coins5000, iap.coins15000,
+                           iap.coins30000, iap.coins75000, iap.starterPack].contains($0.id) }
                 .sorted  { $0.price < $1.price }
             for product in products where Self.packFractions[product.id] != nil {
                 let amount = await scaledReward(for: product.id)
@@ -257,6 +265,8 @@ final class ShopViewModel {
         "com.idlestudio.idleciv.coins.1000":      0.010,
         "com.idlestudio.idleciv.coins.5000":      0.050,
         "com.idlestudio.idleciv.coins.15000":     0.150,
+        "com.idlestudio.idleciv.coins.30000":     0.300,
+        "com.idlestudio.idleciv.coins.75000":     0.750,
         "com.idlestudio.idleciv.patron_lifetime": 0.100,
     ]
 

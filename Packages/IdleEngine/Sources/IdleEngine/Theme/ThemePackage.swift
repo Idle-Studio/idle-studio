@@ -390,13 +390,16 @@ public struct ThemeIAPProducts: Sendable, Equatable, Codable {
     public let coins1000: String?
     public let coins5000: String?
     public let coins15000: String?
+    public let coins30000: String?
+    public let coins75000: String?
     public let lifetimePack: String?
 
     public init(
         starterPack: String? = nil, removeAds: String? = nil,
         premiumPass: String? = nil, premiumPassAnnual: String? = nil,
         coins1000: String? = nil, coins5000: String? = nil,
-        coins15000: String? = nil, lifetimePack: String? = nil
+        coins15000: String? = nil, coins30000: String? = nil,
+        coins75000: String? = nil, lifetimePack: String? = nil
     ) {
         self.starterPack = starterPack
         self.removeAds = removeAds
@@ -405,6 +408,8 @@ public struct ThemeIAPProducts: Sendable, Equatable, Codable {
         self.coins1000 = coins1000
         self.coins5000 = coins5000
         self.coins15000 = coins15000
+        self.coins30000 = coins30000
+        self.coins75000 = coins75000
         self.lifetimePack = lifetimePack
     }
 

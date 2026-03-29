@@ -225,7 +225,8 @@ public enum ThemeValidator {
         // All non-nil product IDs must start with the bundle ID
         let allIDs: [String?] = [
             iap.starterPack, iap.removeAds, iap.premiumPass, iap.premiumPassAnnual,
-            iap.coins1000, iap.coins5000, iap.coins15000, iap.lifetimePack
+            iap.coins1000, iap.coins5000, iap.coins15000, iap.coins30000,
+            iap.coins75000, iap.lifetimePack
         ]
         for case let id? in allIDs where !id.hasPrefix(prefix) {
             errors.append("IAP product ID '\(id)' must start with bundleID '\(prefix)'")
