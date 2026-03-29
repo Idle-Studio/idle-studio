@@ -4,6 +4,7 @@ import StoreKit
 /// IAP shop. Product IDs come from `theme.iapProducts` — no hardcoded identifiers.
 public struct ShopScreen: View {
     @Environment(\.theme) private var theme
+    @Environment(\.adService) private var adService
     @State private var viewModel = ShopViewModel()
 
     public init() {}
@@ -25,6 +26,9 @@ public struct ShopScreen: View {
                             premiumPassSection
                             coinPacksSection
                             oneTimeSection
+                            if !adService.adsRemoved {
+                                freeCoinsAdSection
+                            }
                         }
                     }
                     .padding()
@@ -90,6 +94,42 @@ public struct ShopScreen: View {
                     }
                 }
             }
+        }
+    }
+
+    @ViewBuilder
+    private var freeCoinsAdSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            sectionHeader("Free")
+            HStack {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Watch Ad for Coins")
+                        .font(Typography.headline)
+                        .foregroundStyle(theme.textPrimaryColor)
+                    Text(viewModel.freeCoinsAdSubtitle)
+                        .font(Typography.caption)
+                        .foregroundStyle(theme.textSecondaryColor)
+                }
+                Spacer()
+                Button {
+                    Task { await viewModel.watchAdForCoins(adService: adService) }
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: "play.circle.fill")
+                        Text("Watch")
+                    }
+                    .font(Typography.subheadline.weight(.semibold))
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 8)
+                    .background(viewModel.freeCoinsAdAvailable ? theme.surfaceElevatedColor : theme.surfaceColor)
+                    .foregroundStyle(viewModel.freeCoinsAdAvailable ? theme.textPrimaryColor : theme.textSecondaryColor)
+                    .clipShape(.capsule)
+                }
+                .disabled(!viewModel.freeCoinsAdAvailable)
+            }
+            .padding(14)
+            .background(theme.surfaceColor)
+            .clipShape(.rect(cornerRadius: 14))
         }
     }
 
@@ -199,6 +239,11 @@ final class ShopViewModel {
     var lifetimePack: Product?
     var rewardLabels: [String: String] = [:]
     private(set) var activeProductIDs: Set<String> = []
+    private(set) var freeCoinsAdAvailable = true
+    private(set) var freeCoinsAdSubtitle = "Earn a small amount of gold"
+
+    private static let freeCoinsAdCooldownKey = "freeCoinsAdLastDate"
+    private static let freeCoinsAdCooldown: TimeInterval = 3600 // 1 hour
 
     @ObservationIgnored private var updatesTask: Task<Void, Never>?
 
@@ -237,6 +282,7 @@ final class ShopViewModel {
 
         await refreshEntitlements()
         startObservingTransactionUpdates()
+        refreshFreeCoinsAdState()
     }
 
     private func refreshEntitlements() async {
@@ -290,6 +336,50 @@ final class ShopViewModel {
         let d = NSDecimalNumber(decimal: value).doubleValue
         let magnitude = pow(10.0, floor(log10(d)) - Double(figures - 1))
         return Decimal(round(d / magnitude) * magnitude)
+    }
+
+    func watchAdForCoins(adService: any AdService) async {
+        guard freeCoinsAdAvailable else { return }
+        freeCoinsAdAvailable = false
+        let reward = try? await adService.showRewardedAd(placement: .freeCoins)
+        if reward != nil {
+            let coins = await scaledReward(forFraction: 0.005)
+            await GameEngine.shared.awardResources(ResourceBundle(["gold": coins]))
+            NotificationCenter.default.post(
+                name: .iapRewardReceived,
+                object: nil,
+                userInfo: ["gold": coins]
+            )
+            UserDefaults.standard.set(Date(), forKey: Self.freeCoinsAdCooldownKey)
+            refreshFreeCoinsAdState()
+        } else {
+            freeCoinsAdAvailable = true
+        }
+    }
+
+    private func refreshFreeCoinsAdState() {
+        let last = UserDefaults.standard.object(forKey: Self.freeCoinsAdCooldownKey) as? Date
+        if let last, Date().timeIntervalSince(last) < Self.freeCoinsAdCooldown {
+            freeCoinsAdAvailable = false
+            let remaining = Int((Self.freeCoinsAdCooldown - Date().timeIntervalSince(last)) / 60)
+            freeCoinsAdSubtitle = "Available in \(remaining)m"
+        } else {
+            freeCoinsAdAvailable = true
+            freeCoinsAdSubtitle = "Earn a small amount of gold"
+        }
+    }
+
+    private func scaledReward(forFraction fraction: Double) async -> Decimal {
+        guard let state = await GameEngine.shared.currentState,
+              let theme = await GameEngine.shared.currentTheme,
+              let level = theme.level(id: state.currentLevelID) else {
+            return roundToSignificantFigures(Decimal(fraction) * 50_000, figures: 3)
+        }
+        let req = level.advanceRequirement["gold"]
+        guard req > 0 else {
+            return roundToSignificantFigures(Decimal(fraction) * 50_000, figures: 3)
+        }
+        return roundToSignificantFigures(req * Decimal(fraction), figures: 3)
     }
 
     func purchase(_ product: Product) {

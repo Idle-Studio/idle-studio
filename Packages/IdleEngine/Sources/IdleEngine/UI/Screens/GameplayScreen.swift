@@ -91,6 +91,10 @@ public final class GameplayViewModel {
         Task { try? await GameEngine.shared.startMilestone(id: id) }
     }
 
+    func skipMilestoneConstruction(id: String) {
+        Task { try? await GameEngine.shared.completeMilestone(id: id) }
+    }
+
     var isLastLevel: Bool {
         guard let theme else { return false }
         return theme.nextLevel(after: state.currentLevelID) == nil
@@ -151,6 +155,7 @@ public struct GameplayScreen: View {
 
     @Environment(\.theme) private var theme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.adService) private var adService
     @State private var particles = ParticleSystem()
     @State private var tapScale: CGFloat = 1.0
     @State private var tapGlow: Double = 0
@@ -330,13 +335,38 @@ public struct GameplayScreen: View {
             )
 
             if let timeLeft = viewModel.remainingConstructionTime(for: wonder) {
-                HStack(spacing: 6) {
-                    Image(systemName: "hourglass")
-                        .font(.caption)
-                    Text(timeLeft)
-                        .font(Typography.caption.monospacedDigit())
+                HStack(spacing: 10) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "hourglass")
+                            .font(.caption)
+                        Text(timeLeft)
+                            .font(Typography.caption.monospacedDigit())
+                    }
+                    .foregroundStyle(theme.goldAccentColor)
+
+                    if !adService.adsRemoved {
+                        Spacer()
+                        Button {
+                            Task {
+                                let reward = try? await adService.showRewardedAd(placement: .skipMilestone)
+                                if reward != nil {
+                                    viewModel.skipMilestoneConstruction(id: wonder.id)
+                                }
+                            }
+                        } label: {
+                            HStack(spacing: 4) {
+                                Image(systemName: "play.circle.fill")
+                                Text("Skip")
+                            }
+                            .font(Typography.caption.weight(.semibold))
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 4)
+                            .background(theme.surfaceElevatedColor)
+                            .foregroundStyle(theme.textPrimaryColor)
+                            .clipShape(.capsule)
+                        }
+                    }
                 }
-                .foregroundStyle(theme.goldAccentColor)
                 .padding(.horizontal, 4)
             }
         }

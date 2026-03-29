@@ -11,6 +11,8 @@
 		23CC0047F4993F8FFEAF1895 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A09DC0A681FB69F28F3F5066 /* Assets.xcassets */; };
 		2786C36AE68D0A21777CC659 /* IdleEngine in Frameworks */ = {isa = PBXBuildFile; productRef = F4DEAA2A47120DB0E5AEF99A /* IdleEngine */; };
 		29EE4386A67E3ADE048D83CD /* IdleCivilizationsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 748B70A69AC9C2A4F6746105 /* IdleCivilizationsApp.swift */; };
+		CC33DD44EE55FF66AA11BB22 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = BB22CC33DD44EE55FF66AA11 /* GoogleMobileAds */; };
+		DD44EE55FF66AA11BB22CC33 /* GoogleMobileAdsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE55FF66AA11BB22CC33DD44 /* GoogleMobileAdsService.swift */; };
 		3E8723E6CF437CA81F20500E /* ambient_space_age.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 995D44BF687D133B257DE8C9 /* ambient_space_age.mp3 */; };
 		43D95730A9D54D24DF29E2B1 /* ambient_classical_world.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = B8519172A7318C1E1E13AF6D /* ambient_classical_world.mp3 */; };
 		55E9AF3738243CA6D833425F /* ambient_stone_age.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = B1300B11B702EF5B5AE62085 /* ambient_stone_age.mp3 */; };
@@ -31,6 +33,7 @@
 		4B4B3E91FB5EE05FBBAFAEDC /* IdleCivilizations.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IdleCivilizations.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		623E86E258F96481D8683612 /* ambient_renaissance.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ambient_renaissance.mp3; sourceTree = "<group>"; };
 		748B70A69AC9C2A4F6746105 /* IdleCivilizationsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdleCivilizationsApp.swift; sourceTree = "<group>"; };
+		EE55FF66AA11BB22CC33DD44 /* GoogleMobileAdsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleMobileAdsService.swift; sourceTree = "<group>"; };
 		7AE3E605AA7AC16F063BA588 /* icon.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = icon.json; sourceTree = "<group>"; };
 		8711AA2717BFD75224C113D5 /* idle-civilizations.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "idle-civilizations.json"; sourceTree = "<group>"; };
 		8E59F0BEE9744AE118B0FA62 /* ambient_bronze_age.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ambient_bronze_age.mp3; sourceTree = "<group>"; };
@@ -52,6 +55,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2786C36AE68D0A21777CC659 /* IdleEngine in Frameworks */,
+				CC33DD44EE55FF66AA11BB22 /* GoogleMobileAds in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -98,6 +102,7 @@
 			isa = PBXGroup;
 			children = (
 				748B70A69AC9C2A4F6746105 /* IdleCivilizationsApp.swift */,
+				EE55FF66AA11BB22CC33DD44 /* GoogleMobileAdsService.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -148,6 +153,7 @@
 			name = IdleCivilizations;
 			packageProductDependencies = (
 				F4DEAA2A47120DB0E5AEF99A /* IdleEngine */,
+				BB22CC33DD44EE55FF66AA11 /* GoogleMobileAds */,
 			);
 			productName = IdleCivilizations;
 			productReference = 4B4B3E91FB5EE05FBBAFAEDC /* IdleCivilizations.app */;
@@ -179,6 +185,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				D20738215C5BBD3F1AC4D366 /* XCLocalSwiftPackageReference "../../Packages/IdleEngine" */,
+				AA11BB22CC33DD44EE55FF66 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
 			);
 			projectDirPath = "";
 			projectRoot = "";
@@ -218,6 +225,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				29EE4386A67E3ADE048D83CD /* IdleCivilizationsApp.swift in Sources */,
+				DD44EE55FF66AA11BB22CC33 /* GoogleMobileAdsService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -295,11 +303,13 @@
 				CODE_SIGN_ENTITLEMENTS = Resources/IdleCivilizations.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202603270912;
+				CURRENT_PROJECT_VERSION = 202603291344;
 				DEVELOPMENT_TEAM = JL84E9GK95;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Idle Civilizations";
+				INFOPLIST_KEY_GADApplicationIdentifier = "ca-app-pub-3940256099942544~1458002511";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "We use your data to show you relevant ads and improve your experience.";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -326,11 +336,13 @@
 				CODE_SIGN_ENTITLEMENTS = Resources/IdleCivilizations.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202603270912;
+				CURRENT_PROJECT_VERSION = 202603291344;
 				DEVELOPMENT_TEAM = JL84E9GK95;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Idle Civilizations";
+				INFOPLIST_KEY_GADApplicationIdentifier = "ca-app-pub-3940256099942544~1458002511";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "We use your data to show you relevant ads and improve your experience.";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -435,10 +447,26 @@
 		};
 /* End XCLocalSwiftPackageReference section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		AA11BB22CC33DD44EE55FF66 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		F4DEAA2A47120DB0E5AEF99A /* IdleEngine */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = IdleEngine;
+		};
+		BB22CC33DD44EE55FF66AA11 /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA11BB22CC33DD44EE55FF66 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

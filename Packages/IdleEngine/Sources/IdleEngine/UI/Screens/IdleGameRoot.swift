@@ -22,6 +22,7 @@ public struct IdleGameRoot: View {
 
     @State private var viewModel = IdleGameViewModel()
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.adService) private var adService
 
     public init(themeName: String) {
         self.themeName = themeName
@@ -34,17 +35,31 @@ public struct IdleGameRoot: View {
             } else if viewModel.isReady {
                 GameTabView()
                     .environment(\.theme, viewModel.appTheme)
+                    .environment(\.adService, adService)
                     .sheet(isPresented: $viewModel.showOfflineSheet) {
                         if let result = viewModel.pendingOfflineResult {
-                            OfflineIncomeSheet(result: result) {
-                                viewModel.showOfflineSheet = false
-                            }
+                            OfflineIncomeSheet(
+                                result: result,
+                                onCollect: { viewModel.showOfflineSheet = false },
+                                onDoubleWithAd: adService.adsRemoved ? nil : {
+                                    Task {
+                                        let reward = try? await adService.showRewardedAd(placement: .doubleOfflineIncome)
+                                        if reward != nil {
+                                            await GameEngine.shared.awardResources(result.earnedResources)
+                                        }
+                                        viewModel.showOfflineSheet = false
+                                    }
+                                }
+                            )
                         }
                     }
 #if os(iOS)
                     .fullScreenCover(isPresented: $viewModel.showLevelAdvance) {
                         LevelAdvanceScreen(completedLevelName: viewModel.completedLevelName) {
                             viewModel.showLevelAdvance = false
+                            if !adService.adsRemoved {
+                                Task { try? await adService.showInterstitial(placement: .levelAdvance) }
+                            }
                         }
                         .environment(\.theme, viewModel.appTheme)
                     }
@@ -58,6 +73,9 @@ public struct IdleGameRoot: View {
                     .sheet(isPresented: $viewModel.showLevelAdvance) {
                         LevelAdvanceScreen(completedLevelName: viewModel.completedLevelName) {
                             viewModel.showLevelAdvance = false
+                            if !adService.adsRemoved {
+                                Task { try? await adService.showInterstitial(placement: .levelAdvance) }
+                            }
                         }
                         .environment(\.theme, viewModel.appTheme)
                     }
@@ -81,7 +99,21 @@ public struct IdleGameRoot: View {
         .onChange(of: scenePhase) { _, phase in
             if phase == .background { viewModel.appDidBackground() }
         }
-        .task { await viewModel.load(themeName: themeName) }
+        .task {
+            await viewModel.load(themeName: themeName)
+            await preloadAds()
+        }
+    }
+
+    // MARK: - Ad Preloading
+
+    private func preloadAds() async {
+        guard !adService.adsRemoved else { return }
+        await withTaskGroup(of: Void.self) { group in
+            group.addTask { try? await adService.loadRewardedAd(placement: .doubleOfflineIncome) }
+            group.addTask { try? await adService.loadInterstitial(placement: .levelAdvance) }
+            group.addTask { try? await adService.loadRewardedAd(placement: .freeCoins) }
+        }
     }
 
     // MARK: - Loading / Error Views

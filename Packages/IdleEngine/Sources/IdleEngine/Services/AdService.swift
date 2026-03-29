@@ -43,6 +43,13 @@ public protocol AdService: Sendable {
     var adsRemoved: Bool { get }
 }
 
+// MARK: - Environment Key
+
+extension EnvironmentValues {
+    /// Inject a concrete `AdService` from the app target. Defaults to `NoOpAdService`.
+    @Entry public var adService: any AdService = NoOpAdService()
+}
+
 // MARK: - No-op stub
 
 /// Stub used until the AdMob SDK is wired in the app target.
