@@ -62,6 +62,11 @@ public struct ShopScreen: View {
                         viewModel.purchase(monthly)
                     }
                 }
+                PolicyLinks(
+                    privacyPolicyURL: theme.copy.privacyPolicyURL,
+                    termsOfUseURL: theme.copy.termsOfUseURL
+                )
+                .frame(maxWidth: .infinity)
             }
         }
     }
@@ -242,7 +247,9 @@ final class ShopViewModel {
     private(set) var freeCoinsAdAvailable = true
     private(set) var freeCoinsAdSubtitle = "Earn a small amount of gold"
 
-    private static let freeCoinsAdCooldownKey = "freeCoinsAdLastDate"
+    private var gameID = ""
+    private var cachedIAP: ThemeIAPProducts?
+    private var freeCoinsAdCooldownKey: String { "freeCoinsAdLastDate_\(gameID)" }
     private static let freeCoinsAdCooldown: TimeInterval = 3600 // 1 hour
 
     @ObservationIgnored private var updatesTask: Task<Void, Never>?
@@ -260,6 +267,8 @@ final class ShopViewModel {
         defer { isLoading = false }
         guard let theme = await GameEngine.shared.currentTheme else { return }
         let iap = theme.iapProducts
+        gameID = theme.gameID
+        cachedIAP = iap
         let allIDs = [iap.starterPack, iap.removeAds, iap.premiumPass,
                       iap.premiumPassAnnual, iap.coins1000, iap.coins5000,
                       iap.coins15000, iap.coins30000, iap.coins75000, iap.lifetimePack]
@@ -274,7 +283,7 @@ final class ShopViewModel {
                 .filter { [iap.coins1000, iap.coins5000, iap.coins15000,
                            iap.coins30000, iap.coins75000, iap.starterPack].contains($0.id) }
                 .sorted  { $0.price < $1.price }
-            for product in products where Self.packFractions[product.id] != nil {
+            for product in products where packFraction(for: product.id) != nil {
                 let amount = await scaledReward(for: product.id)
                 rewardLabels[product.id] = "= \(amount.idleFormatted()) gold"
             }
@@ -305,19 +314,24 @@ final class ShopViewModel {
         }
     }
 
-    // Fraction of the current level's advanceRequirement["gold"] to award
-    private static let packFractions: [String: Double] = [
-        "com.idlestudio.idleciv.starter_pack":    0.015,
-        "com.idlestudio.idleciv.coins.1000":      0.010,
-        "com.idlestudio.idleciv.coins.5000":      0.050,
-        "com.idlestudio.idleciv.coins.15000":     0.150,
-        "com.idlestudio.idleciv.coins.30000":     0.300,
-        "com.idlestudio.idleciv.coins.75000":     0.750,
-        "com.idlestudio.idleciv.patron_lifetime": 0.100,
-    ]
+    // Resolve the reward fraction for a product using the active theme's IAP product IDs.
+    // This is theme-agnostic: it works for any game by matching semantic slot, not hardcoded ID.
+    private func packFraction(for productID: String) -> Double? {
+        guard let iap = cachedIAP else { return nil }
+        switch productID {
+        case iap.starterPack:    return 0.015
+        case iap.coins1000:      return 0.010
+        case iap.coins5000:      return 0.050
+        case iap.coins15000:     return 0.150
+        case iap.coins30000:     return 0.300
+        case iap.coins75000:     return 0.750
+        case iap.lifetimePack:   return 0.100
+        default:                 return nil
+        }
+    }
 
     func scaledReward(for productID: String) async -> Decimal {
-        guard let fraction = Self.packFractions[productID] else { return 0 }
+        guard let fraction = packFraction(for: productID) else { return 0 }
         guard let state = await GameEngine.shared.currentState,
               let theme = await GameEngine.shared.currentTheme,
               let level = theme.level(id: state.currentLevelID) else {
@@ -350,7 +364,7 @@ final class ShopViewModel {
                 object: nil,
                 userInfo: ["gold": coins]
             )
-            UserDefaults.standard.set(Date(), forKey: Self.freeCoinsAdCooldownKey)
+            UserDefaults.standard.set(Date(), forKey: freeCoinsAdCooldownKey)
             refreshFreeCoinsAdState()
         } else {
             freeCoinsAdAvailable = true
@@ -358,7 +372,7 @@ final class ShopViewModel {
     }
 
     private func refreshFreeCoinsAdState() {
-        let last = UserDefaults.standard.object(forKey: Self.freeCoinsAdCooldownKey) as? Date
+        let last = UserDefaults.standard.object(forKey: freeCoinsAdCooldownKey) as? Date
         if let last, Date().timeIntervalSince(last) < Self.freeCoinsAdCooldown {
             freeCoinsAdAvailable = false
             let remaining = Int((Self.freeCoinsAdCooldown - Date().timeIntervalSince(last)) / 60)
@@ -397,6 +411,9 @@ final class ShopViewModel {
                     userInfo: ["gold": coins]
                 )
             }
+            // Refresh immediately so the "Active" badge appears without waiting for the
+            // background Transaction.updates observer to fire.
+            await refreshEntitlements()
         }
     }
 }

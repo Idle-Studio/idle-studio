@@ -1,9 +1,1 @@
-What's New
-
-• Watch a short ad to double your offline income when you return to your civilization
-• Skip Wonder construction timers instantly with a rewarded ad
-• Grab free gold from the Shop by watching an ad — available every hour
-• Interstitial ads appear occasionally at natural breakpoints (era advances)
-• Purchase "Remove Ads" in the Shop for a completely ad-free experience
-
-Your civilization awaits, Great Leader.
+Ads are now live! Watch rewarded ads to double your offline income or skip construction timers. Bug fixes and performance improvements.

@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <defs>
+    <filter id="ds" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="2" dy="3" stdDeviation="4" flood-color="#3A1500" flood-opacity="0.28"/>
+    </filter>
+    <!-- Clip waffle grid to the iron plate rectangle -->
+    <clipPath id="topPlate">
+      <rect x="84" y="90" width="32" height="32" rx="3"/>
+    </clipPath>
+    <clipPath id="botPlate">
+      <rect x="122" y="90" width="32" height="32" rx="3"/>
+    </clipPath>
+    <linearGradient id="cabGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#E06030"/>
+      <stop offset="100%" stop-color="#C05020"/>
+    </linearGradient>
+    <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F0A070"/>
+      <stop offset="100%" stop-color="#C85828"/>
+    </linearGradient>
+  </defs>
+
+  <g filter="url(#ds)">
+
+    <!-- ── TRUCK BODY (cargo, right) ── -->
+    <rect x="68" y="72" width="106" height="64" rx="5" fill="url(#bodyGrad)"/>
+    <!-- Top-left highlight -->
+    <rect x="68" y="72" width="106" height="16" rx="5" fill="white" opacity="0.10"/>
+    <rect x="68" y="72" width="106" height="64" rx="6" fill="none" stroke="#7A3012" stroke-width="3"/>
+
+    <!-- ── TRUCK CAB (left) ── -->
+    <path d="M22 136 L22 96 Q22 84 34 84 L72 84 L72 136 Z" fill="url(#cabGrad)"/>
+    <path d="M22 136 L22 96 Q22 84 34 84 L72 84 L72 136 Z" fill="none" stroke="#7A3012" stroke-width="3"/>
+    <!-- Cab windshield -->
+    <rect x="30" y="92" width="34" height="26" rx="4" fill="#A8D0E8" stroke="#7A3012" stroke-width="2"/>
+    <!-- Windshield glare -->
+    <path d="M32 94 L40 92 L40 100 Z" fill="white" opacity="0.45"/>
+    <!-- Cab-body join line -->
+    <line x1="68" y1="84" x2="68" y2="136" stroke="#7A3012" stroke-width="1.5"/>
+
+    <!-- ── SERVICE WINDOW (on cargo body) ── -->
+    <rect x="76" y="80" width="90" height="48" rx="4" fill="#1A0A08" stroke="#7A3012" stroke-width="2"/>
+
+    <!-- ══════════════════════════════════
+         WAFFLE IRON
+    ══════════════════════════════════ -->
+    <!-- Iron housing -->
+    <rect x="80" y="86" width="80" height="40" rx="6" fill="#7A4A24" stroke="#4E2E0E" stroke-width="2.5"/>
+    <!-- Hinge bar in center -->
+    <rect x="115" y="89" width="10" height="26" rx="3" fill="#5A3010" stroke="#3A1A04" stroke-width="1.5"/>
+
+    <!-- TOP PLATE (slightly dark — cast-iron) -->
+    <rect x="84" y="90" width="32" height="32" rx="3" fill="#9A6830"/>
+    <g clip-path="url(#topPlate)">
+      <line x1="90"  y1="90" x2="90"  y2="122" stroke="#6A4018" stroke-width="1.5"/>
+      <line x1="96"  y1="90" x2="96"  y2="122" stroke="#6A4018" stroke-width="1.5"/>
+      <line x1="102" y1="90" x2="102" y2="122" stroke="#6A4018" stroke-width="1.5"/>
+      <line x1="108" y1="90" x2="108" y2="122" stroke="#6A4018" stroke-width="1.5"/>
+      <line x1="84"  y1="96" x2="116" y2="96"  stroke="#6A4018" stroke-width="1.5"/>
+      <line x1="84"  y1="102" x2="116" y2="102" stroke="#6A4018" stroke-width="1.5"/>
+      <line x1="84"  y1="108" x2="116" y2="108" stroke="#6A4018" stroke-width="1.5"/>
+      <line x1="84"  y1="114" x2="116" y2="114" stroke="#6A4018" stroke-width="1.5"/>
+    </g>
+    <rect x="84" y="90" width="32" height="32" rx="3" fill="none" stroke="#4E2E0E" stroke-width="1.5"/>
+
+    <!-- BOTTOM PLATE (golden — fresh waffle!) -->
+    <rect x="122" y="90" width="32" height="32" rx="3" fill="#E8B030"/>
+    <g clip-path="url(#botPlate)">
+      <line x1="128" y1="90" x2="128" y2="122" stroke="#B08018" stroke-width="1.5"/>
+      <line x1="134" y1="90" x2="134" y2="122" stroke="#B08018" stroke-width="1.5"/>
+      <line x1="140" y1="90" x2="140" y2="122" stroke="#B08018" stroke-width="1.5"/>
+      <line x1="146" y1="90" x2="146" y2="122" stroke="#B08018" stroke-width="1.5"/>
+      <line x1="122" y1="96"  x2="154" y2="96"  stroke="#B08018" stroke-width="1.5"/>
+      <line x1="122" y1="102" x2="154" y2="102" stroke="#B08018" stroke-width="1.5"/>
+      <line x1="122" y1="108" x2="154" y2="108" stroke="#B08018" stroke-width="1.5"/>
+      <line x1="122" y1="114" x2="154" y2="114" stroke="#B08018" stroke-width="1.5"/>
+    </g>
+    <rect x="122" y="90" width="32" height="32" rx="3" fill="none" stroke="#8A6010" stroke-width="1.5"/>
+
+    <!-- ── CHASSIS BAR ── -->
+    <rect x="22" y="134" width="152" height="9" rx="3" fill="#A8421A" stroke="#7A3012" stroke-width="2"/>
+
+    <!-- ── LEFT WHEEL (under cab) ── -->
+    <circle cx="48"  cy="152" r="16" fill="#2A1808" stroke="#1A0A00" stroke-width="2.5"/>
+    <circle cx="48"  cy="152" r="9"  fill="#5A3018"/>
+    <circle cx="48"  cy="152" r="4"  fill="#2A1008"/>
+    <line x1="48" y1="137" x2="48" y2="167" stroke="#7A4820" stroke-width="2"/>
+    <line x1="33" y1="152" x2="63" y2="152" stroke="#7A4820" stroke-width="2"/>
+
+    <!-- ── RIGHT WHEEL (under cargo) ── -->
+    <circle cx="144" cy="152" r="16" fill="#2A1808" stroke="#1A0A00" stroke-width="2.5"/>
+    <circle cx="144" cy="152" r="9"  fill="#5A3018"/>
+    <circle cx="144" cy="152" r="4"  fill="#2A1008"/>
+    <line x1="144" y1="137" x2="144" y2="167" stroke="#7A4820" stroke-width="2"/>
+    <line x1="129" y1="152" x2="159" y2="152" stroke="#7A4820" stroke-width="2"/>
+
+    <!-- ── STEAM FROM IRON ── -->
+    <path d="M98  82 Q94  72 98  62 Q102 52 98  42" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+    <path d="M138 82 Q134 72 138 62 Q142 52 138 42" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+
+  </g>
+</svg>

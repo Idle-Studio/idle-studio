@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <defs>
+    <filter id="ds" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="2" dy="3" stdDeviation="4" flood-color="#3A1500" flood-opacity="0.28"/>
+    </filter>
+    <!-- Interior clip paths for taco fillings -->
+    <clipPath id="t1">
+      <path d="M50 100 Q40 134 68 158 Q96 134 86 100 Z"/>
+    </clipPath>
+    <clipPath id="t2">
+      <path d="M106 100 Q96 134 124 158 Q152 134 142 100 Z"/>
+    </clipPath>
+    <linearGradient id="boardGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#C0844A"/>
+      <stop offset="100%" stop-color="#8B5E3C"/>
+    </linearGradient>
+  </defs>
+
+  <g filter="url(#ds)">
+
+    <!-- ── WOODEN BOARD ── -->
+    <rect x="20" y="88" width="152" height="70" rx="14" fill="url(#boardGrad)"/>
+    <!-- Wood grain lines -->
+    <line x1="30"  y1="102" x2="162" y2="100" stroke="#D09060" stroke-width="2"   opacity="0.45"/>
+    <line x1="28"  y1="114" x2="164" y2="112" stroke="#D09060" stroke-width="1.5" opacity="0.35"/>
+    <line x1="28"  y1="126" x2="164" y2="124" stroke="#D09060" stroke-width="2"   opacity="0.45"/>
+    <line x1="30"  y1="138" x2="162" y2="136" stroke="#D09060" stroke-width="1.5" opacity="0.35"/>
+    <line x1="30"  y1="150" x2="162" y2="148" stroke="#D09060" stroke-width="2"   opacity="0.40"/>
+    <rect x="20" y="88" width="152" height="70" rx="14" fill="none" stroke="#6A4028" stroke-width="3"/>
+
+    <!-- ── LEFT TACO ── -->
+    <!-- Shell fill (outer U-curve) -->
+    <path d="M50 100 Q40 134 68 158 Q96 134 86 100 Z" fill="#D4A840"/>
+    <!-- Fillings clipped to shell interior -->
+    <g clip-path="url(#t1)">
+      <!-- Protein (brown) base -->
+      <rect x="40" y="100" width="56" height="58" fill="#7A3A1A"/>
+      <!-- Salsa (red) upper band -->
+      <rect x="40" y="100" width="56" height="24" fill="#D4622A"/>
+      <!-- Cheese streak -->
+      <rect x="40" y="120" width="56" height="6" fill="#F0C040" opacity="0.85"/>
+    </g>
+    <!-- Lettuce wavy top sticking out of shell -->
+    <path d="M52 100 Q57 89 64 97 Q67 89 68 97 Q69 89 72 97 Q79 89 84 100"
+          fill="#5DB836" stroke="#3A8020" stroke-width="1.5" stroke-linejoin="round"/>
+    <!-- Shell front outline -->
+    <path d="M50 100 Q40 134 68 158 Q96 134 86 100"
+          fill="none" stroke="#A07820" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- ── RIGHT TACO ── -->
+    <path d="M106 100 Q96 134 124 158 Q152 134 142 100 Z" fill="#D4A840"/>
+    <g clip-path="url(#t2)">
+      <rect x="96" y="100" width="56" height="58" fill="#7A3A1A"/>
+      <rect x="96" y="100" width="56" height="24" fill="#D4622A"/>
+      <rect x="96" y="120" width="56" height="6" fill="#F0C040" opacity="0.85"/>
+    </g>
+    <path d="M108 100 Q113 89 120 97 Q123 89 124 97 Q125 89 128 97 Q135 89 140 100"
+          fill="#5DB836" stroke="#3A8020" stroke-width="1.5" stroke-linejoin="round"/>
+    <path d="M106 100 Q96 134 124 158 Q152 134 142 100"
+          fill="none" stroke="#A07820" stroke-width="3" stroke-linecap="round"/>
+
+  </g>
+</svg>

@@ -1,0 +1,216 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <filter id="ds" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="2" dy="3" stdDeviation="4" flood-color="#3A1500" flood-opacity="0.28"/>
+    </filter>
+
+    <!-- Deep burgundy background gradient -->
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6B0820"/>
+      <stop offset="100%" stop-color="#3A0010"/>
+    </linearGradient>
+
+    <!-- Wall panel gradient -->
+    <linearGradient id="wallGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8B1A3A"/>
+      <stop offset="70%" stop-color="#6B1028"/>
+      <stop offset="100%" stop-color="#4A0818"/>
+    </linearGradient>
+
+    <!-- Arch gradient -->
+    <linearGradient id="archGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F0D060"/>
+      <stop offset="100%" stop-color="#B89020"/>
+    </linearGradient>
+
+    <!-- Floor gradient -->
+    <linearGradient id="floorGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#C8845A"/>
+      <stop offset="100%" stop-color="#8B4A28"/>
+    </linearGradient>
+
+    <!-- Banquette gradient — near -->
+    <linearGradient id="banqNearGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8B1A3A"/>
+      <stop offset="100%" stop-color="#4A0818"/>
+    </linearGradient>
+
+    <!-- Banquette gradient — far (receding) -->
+    <linearGradient id="banqFarGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7A1030"/>
+      <stop offset="100%" stop-color="#3A0818"/>
+    </linearGradient>
+
+    <!-- Table gradient -->
+    <radialGradient id="tableGrad" cx="40%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#FFFAF0"/>
+      <stop offset="100%" stop-color="#D8CCA8"/>
+    </radialGradient>
+
+    <!-- Sconce glow -->
+    <radialGradient id="sconceGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFE080" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#FF9020" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Ceiling gradient -->
+    <linearGradient id="ceilGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2A0808"/>
+      <stop offset="100%" stop-color="#4A0C18"/>
+    </linearGradient>
+  </defs>
+
+  <g filter="url(#ds)">
+
+    <!-- ── MAIN BACKGROUND ROOM ── -->
+    <rect x="18" y="20" width="156" height="154" rx="6"
+          fill="url(#wallGrad)" stroke="#3A0818" stroke-width="2.5"/>
+
+    <!-- Ceiling band (dark, above arch) -->
+    <rect x="18" y="20" width="156" height="38" rx="6"
+          fill="url(#ceilGrad)"/>
+
+    <!-- ── ARCHED CEILING ── -->
+    <!-- Outer arch (gold) -->
+    <path d="M32 58 Q96 18 160 58"
+          fill="none" stroke="url(#archGrad)" stroke-width="5" stroke-linecap="round"/>
+    <!-- Inner arch detail line -->
+    <path d="M40 60 Q96 26 152 60"
+          fill="none" stroke="#D4A840" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+    <!-- Ornate keystone at top of arch -->
+    <ellipse cx="96" cy="22" rx="10" ry="7" fill="#D4A840" stroke="#B08020" stroke-width="1.5"/>
+    <ellipse cx="96" cy="22" rx="5" ry="3.5" fill="#F0C840" opacity="0.7"/>
+    <!-- Arch side acanthus hints -->
+    <circle cx="34" cy="56" r="5" fill="#D4A840" stroke="#B08020" stroke-width="1"/>
+    <circle cx="158" cy="56" r="5" fill="#D4A840" stroke="#B08020" stroke-width="1"/>
+
+    <!-- ── FLOOR ── -->
+    <rect x="18" y="152" width="156" height="22" rx="0"
+          fill="url(#floorGrad)"/>
+    <!-- Floor tile lines -->
+    <g stroke="#A06840" stroke-width="0.8" opacity="0.5">
+      <line x1="18" y1="162" x2="174" y2="162"/>
+      <line x1="50" y1="152" x2="50" y2="174"/>
+      <line x1="82" y1="152" x2="82" y2="174"/>
+      <line x1="114" y1="152" x2="114" y2="174"/>
+      <line x1="146" y1="152" x2="146" y2="174"/>
+    </g>
+
+    <!-- ── WALL PANELLING ── -->
+    <!-- Left wainscoting panel -->
+    <rect x="22" y="70" width="20" height="78" rx="3"
+          fill="#7A1030" stroke="#5A0820" stroke-width="1.2"/>
+    <rect x="25" y="74" width="14" height="34" rx="2"
+          fill="none" stroke="#9A2848" stroke-width="1" opacity="0.5"/>
+    <rect x="25" y="112" width="14" height="32" rx="2"
+          fill="none" stroke="#9A2848" stroke-width="1" opacity="0.5"/>
+    <!-- Right wainscoting panel -->
+    <rect x="150" y="70" width="20" height="78" rx="3"
+          fill="#7A1030" stroke="#5A0820" stroke-width="1.2"/>
+    <rect x="153" y="74" width="14" height="34" rx="2"
+          fill="none" stroke="#9A2848" stroke-width="1" opacity="0.5"/>
+    <rect x="153" y="112" width="14" height="32" rx="2"
+          fill="none" stroke="#9A2848" stroke-width="1" opacity="0.5"/>
+
+    <!-- ── LEFT WALL SCONCE ── -->
+    <!-- Glow -->
+    <ellipse cx="28" cy="86" rx="16" ry="14" fill="url(#sconceGlow)"/>
+    <!-- Sconce bracket -->
+    <rect x="22" y="85" width="10" height="6" rx="2" fill="#8B7020" stroke="#5A4010" stroke-width="1"/>
+    <!-- Candle flame -->
+    <path d="M27 84 Q25 80 27 76 Q26 80 29 78 Q28 82 30 79 Q29 83 27 84 Z"
+          fill="#FFE060" stroke="#FF9020" stroke-width="0.5"/>
+    <rect x="25" y="84" width="4" height="8" rx="1" fill="#F5EDD8" stroke="#D8C870" stroke-width="1"/>
+
+    <!-- ── RIGHT WALL SCONCE ── -->
+    <ellipse cx="164" cy="86" rx="16" ry="14" fill="url(#sconceGlow)"/>
+    <rect x="160" y="85" width="10" height="6" rx="2" fill="#8B7020" stroke="#5A4010" stroke-width="1"/>
+    <path d="M165 84 Q163 80 165 76 Q164 80 167 78 Q166 82 168 79 Q167 83 165 84 Z"
+          fill="#FFE060" stroke="#FF9020" stroke-width="0.5"/>
+    <rect x="163" y="84" width="4" height="8" rx="1" fill="#F5EDD8" stroke="#D8C870" stroke-width="1"/>
+
+    <!-- ── BANQUETTES — far row (receding, smaller) ── -->
+    <!-- Far left banquette -->
+    <rect x="42" y="80" width="38" height="22" rx="5"
+          fill="url(#banqFarGrad)" stroke="#3A0818" stroke-width="2"/>
+    <!-- Tufted diamond pattern on far left -->
+    <g stroke="#7A1830" stroke-width="0.8" opacity="0.6">
+      <line x1="50" y1="81" x2="54" y2="85"/> <line x1="54" y1="81" x2="50" y2="85"/>
+      <line x1="60" y1="81" x2="64" y2="85"/> <line x1="64" y1="81" x2="60" y2="85"/>
+      <line x1="70" y1="81" x2="74" y2="85"/> <line x1="74" y1="81" x2="70" y2="85"/>
+      <line x1="50" y1="87" x2="54" y2="91"/> <line x1="54" y1="87" x2="50" y2="91"/>
+      <line x1="60" y1="87" x2="64" y2="91"/> <line x1="64" y1="87" x2="60" y2="91"/>
+      <line x1="70" y1="87" x2="74" y2="91"/> <line x1="74" y1="87" x2="70" y2="91"/>
+    </g>
+    <!-- Far left seat pad -->
+    <rect x="43" y="98" width="36" height="7" rx="3" fill="#5A0818" opacity="0.7"/>
+
+    <!-- Far right banquette -->
+    <rect x="112" y="80" width="38" height="22" rx="5"
+          fill="url(#banqFarGrad)" stroke="#3A0818" stroke-width="2"/>
+    <g stroke="#7A1830" stroke-width="0.8" opacity="0.6">
+      <line x1="120" y1="81" x2="124" y2="85"/> <line x1="124" y1="81" x2="120" y2="85"/>
+      <line x1="130" y1="81" x2="134" y2="85"/> <line x1="134" y1="81" x2="130" y2="85"/>
+      <line x1="140" y1="81" x2="144" y2="85"/> <line x1="144" y1="81" x2="140" y2="85"/>
+      <line x1="120" y1="87" x2="124" y2="91"/> <line x1="124" y1="87" x2="120" y2="91"/>
+      <line x1="130" y1="87" x2="134" y2="91"/> <line x1="134" y1="87" x2="130" y2="91"/>
+      <line x1="140" y1="87" x2="144" y2="91"/> <line x1="144" y1="87" x2="140" y2="91"/>
+    </g>
+    <rect x="113" y="98" width="36" height="7" rx="3" fill="#5A0818" opacity="0.7"/>
+
+    <!-- Far center table -->
+    <ellipse cx="96" cy="100" rx="14" ry="7" fill="url(#tableGrad)" stroke="#C8A870" stroke-width="1.5"/>
+    <!-- Wine glasses on far table -->
+    <path d="M90 100 L88 94 L86 100 Q88 101 90 100 Z" fill="none" stroke="#AAAAAA" stroke-width="1.2" opacity="0.8"/>
+    <line x1="88" y1="100" x2="88" y2="103" stroke="#AAAAAA" stroke-width="1" opacity="0.7"/>
+    <path d="M101 100 L99 94 L97 100 Q99 101 101 100 Z" fill="none" stroke="#AAAAAA" stroke-width="1.2" opacity="0.8"/>
+    <line x1="99" y1="100" x2="99" y2="103" stroke="#AAAAAA" stroke-width="1" opacity="0.7"/>
+
+    <!-- ── BANQUETTES — near row (larger, in foreground) ── -->
+    <!-- Near left banquette (main, wide) -->
+    <rect x="26" y="112" width="58" height="32" rx="7"
+          fill="url(#banqNearGrad)" stroke="#3A0818" stroke-width="2.5"/>
+    <!-- Tufted pattern near left -->
+    <g stroke="#A02040" stroke-width="1" opacity="0.55">
+      <line x1="36" y1="114" x2="42" y2="120"/> <line x1="42" y1="114" x2="36" y2="120"/>
+      <line x1="50" y1="114" x2="56" y2="120"/> <line x1="56" y1="114" x2="50" y2="120"/>
+      <line x1="64" y1="114" x2="70" y2="120"/> <line x1="70" y1="114" x2="64" y2="120"/>
+      <line x1="36" y1="122" x2="42" y2="128"/> <line x1="42" y1="122" x2="36" y2="128"/>
+      <line x1="50" y1="122" x2="56" y2="128"/> <line x1="56" y1="122" x2="50" y2="128"/>
+      <line x1="64" y1="122" x2="70" y2="128"/> <line x1="70" y1="122" x2="64" y2="128"/>
+      <line x1="36" y1="130" x2="42" y2="136"/> <line x1="42" y1="130" x2="36" y2="136"/>
+      <line x1="50" y1="130" x2="56" y2="136"/> <line x1="56" y1="130" x2="50" y2="136"/>
+      <line x1="64" y1="130" x2="70" y2="136"/> <line x1="70" y1="130" x2="64" y2="136"/>
+    </g>
+    <!-- Seat cushion near left -->
+    <rect x="27" y="138" width="56" height="9" rx="4" fill="#5A0818"/>
+
+    <!-- Near right banquette -->
+    <rect x="108" y="112" width="58" height="32" rx="7"
+          fill="url(#banqNearGrad)" stroke="#3A0818" stroke-width="2.5"/>
+    <g stroke="#A02040" stroke-width="1" opacity="0.55">
+      <line x1="118" y1="114" x2="124" y2="120"/> <line x1="124" y1="114" x2="118" y2="120"/>
+      <line x1="132" y1="114" x2="138" y2="120"/> <line x1="138" y1="114" x2="132" y2="120"/>
+      <line x1="146" y1="114" x2="152" y2="120"/> <line x1="152" y1="114" x2="146" y2="120"/>
+      <line x1="118" y1="122" x2="124" y2="128"/> <line x1="124" y1="122" x2="118" y2="128"/>
+      <line x1="132" y1="122" x2="138" y2="128"/> <line x1="138" y1="122" x2="132" y2="128"/>
+      <line x1="146" y1="122" x2="152" y2="128"/> <line x1="152" y1="122" x2="146" y2="128"/>
+      <line x1="118" y1="130" x2="124" y2="136"/> <line x1="124" y1="130" x2="118" y2="136"/>
+      <line x1="132" y1="130" x2="138" y2="136"/> <line x1="138" y1="130" x2="132" y2="136"/>
+      <line x1="146" y1="130" x2="152" y2="136"/> <line x1="152" y1="130" x2="146" y2="136"/>
+    </g>
+    <rect x="109" y="138" width="56" height="9" rx="4" fill="#5A0818"/>
+
+    <!-- Near center table -->
+    <ellipse cx="96" cy="136" rx="18" ry="9" fill="url(#tableGrad)" stroke="#C8A870" stroke-width="2"/>
+    <!-- Wine glasses on near table -->
+    <path d="M88 134 L86 127 L83 134 Q85 135 88 134 Z" fill="none" stroke="#CCCCCC" stroke-width="1.5" opacity="0.9"/>
+    <line x1="85.5" y1="134" x2="85.5" y2="138" stroke="#CCCCCC" stroke-width="1.2" opacity="0.8"/>
+    <path d="M104 134 L102 127 L99 134 Q101 135 104 134 Z" fill="none" stroke="#CCCCCC" stroke-width="1.5" opacity="0.9"/>
+    <line x1="101.5" y1="134" x2="101.5" y2="138" stroke="#CCCCCC" stroke-width="1.2" opacity="0.8"/>
+    <!-- Wine in glasses -->
+    <path d="M83 133 Q85 135 88 133" fill="none" stroke="#8B1A3A" stroke-width="1.2" opacity="0.8"/>
+    <path d="M99 133 Q101 135 104 133" fill="none" stroke="#8B1A3A" stroke-width="1.2" opacity="0.8"/>
+
+  </g>
+</svg>

@@ -2,10 +2,14 @@ import SwiftUI
 import StoreKit
 import UserNotifications
 import GameKit
+#if os(iOS)
+import UIKit
+#endif
 
 /// Settings screen. All copy from theme; cross-promo card from Remote Config.
 public struct SettingsScreen: View {
     @Environment(\.theme) private var theme
+    @Environment(\.scenePhase) private var scenePhase
     @State private var viewModel = SettingsViewModel()
     public init() {}
 
@@ -19,7 +23,7 @@ public struct SettingsScreen: View {
                     soundSection
                     accountSection
                     aboutSection
-                    #if targetEnvironment(simulator)
+                    #if DEBUG
                     devSection
                     #endif
                 }
@@ -31,6 +35,9 @@ public struct SettingsScreen: View {
             .toolbarBackground(theme.surfaceColor, for: .navigationBar)
             #endif
             .task { await viewModel.load() }
+            .onChange(of: scenePhase) { _, phase in
+                if phase == .active { Task { await viewModel.load() } }
+            }
         }
     }
 
@@ -76,9 +83,23 @@ public struct SettingsScreen: View {
             Button {
                 viewModel.restorePurchases()
             } label: {
-                Label("Restore Purchases", systemImage: "arrow.counterclockwise")
-                    .foregroundStyle(theme.textPrimaryColor)
+                HStack {
+                    switch viewModel.restoreStatus {
+                    case .idle:
+                        Label("Restore Purchases", systemImage: "arrow.counterclockwise")
+                            .foregroundStyle(theme.textPrimaryColor)
+                    case .restoring:
+                        Label("Restoring…", systemImage: "arrow.counterclockwise")
+                            .foregroundStyle(theme.textSecondaryColor)
+                        Spacer()
+                        ProgressView().tint(theme.textSecondaryColor)
+                    case .done:
+                        Label("Purchases Restored", systemImage: "checkmark.circle.fill")
+                            .foregroundStyle(.green)
+                    }
+                }
             }
+            .disabled(viewModel.restoreStatus == .restoring)
 
             Button {
                 viewModel.signInWithGameCenter()
@@ -104,9 +125,10 @@ public struct SettingsScreen: View {
         .listRowBackground(theme.surfaceColor)
     }
 
-    #if targetEnvironment(simulator)
+    #if DEBUG
     private var devSection: some View {
         Section {
+            #if targetEnvironment(simulator)
             Toggle(isOn: $viewModel.devFastForwardEnabled) {
                 Label("Fast Forward (×1000)", systemImage: "forward.fill")
                     .foregroundStyle(theme.textPrimaryColor)
@@ -115,10 +137,22 @@ public struct SettingsScreen: View {
             .onChange(of: viewModel.devFastForwardEnabled) { _, on in
                 GameEngine.devFastForwardEnabled = on
             }
+            #endif
+
+            Button {
+                viewModel.resetOnboarding()
+            } label: {
+                Label(
+                    viewModel.onboardingResetConfirmed ? "Reset — Relaunch to See It" : "Reset Onboarding",
+                    systemImage: viewModel.onboardingResetConfirmed ? "checkmark.circle" : "arrow.counterclockwise.circle"
+                )
+                .foregroundStyle(viewModel.onboardingResetConfirmed ? theme.textSecondaryColor : .orange)
+            }
+            .disabled(viewModel.onboardingResetConfirmed)
         } header: {
             sectionHeader("Developer")
         } footer: {
-            Text("Simulator only — not included in release builds.")
+            Text("Debug builds only — not included in release builds.")
                 .font(Typography.caption)
                 .foregroundStyle(theme.textSecondaryColor)
         }
@@ -143,8 +177,15 @@ final class SettingsViewModel {
     var soundEnabled = true
     var hapticsEnabled = true
     var appVersion = ""
+    var restoreStatus: RestoreStatus = .idle
+
+    enum RestoreStatus: Equatable { case idle, restoring, done }
+
     #if targetEnvironment(simulator)
     var devFastForwardEnabled = GameEngine.devFastForwardEnabled
+    #endif
+    #if DEBUG
+    var onboardingResetConfirmed = false
     #endif
 
     func load() async {
@@ -163,7 +204,21 @@ final class SettingsViewModel {
     func toggleNotifications(_ on: Bool) {
         if on {
             Task {
-                _ = try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge])
+                let settings = await UNUserNotificationCenter.current().notificationSettings()
+                if settings.authorizationStatus == .denied {
+                    // Permission was previously denied — iOS won't show the prompt again.
+                    // Send the user to the app's page in Settings to enable it manually.
+                    notificationsEnabled = false
+                    #if os(iOS)
+                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                        await UIApplication.shared.open(url)
+                    }
+                    #endif
+                } else {
+                    let granted = (try? await UNUserNotificationCenter.current()
+                        .requestAuthorization(options: [.alert, .sound, .badge])) ?? false
+                    notificationsEnabled = granted
+                }
             }
         } else {
             UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
@@ -189,8 +244,24 @@ final class SettingsViewModel {
     }
 
     func restorePurchases() {
-        Task { try? await AppStore.sync() }
+        Task {
+            restoreStatus = .restoring
+            try? await AppStore.sync()
+            restoreStatus = .done
+            try? await Task.sleep(for: .seconds(3))
+            restoreStatus = .idle
+        }
     }
+
+    #if DEBUG
+    func resetOnboarding() {
+        Task {
+            guard let theme = await GameEngine.shared.currentTheme else { return }
+            UserDefaults.standard.removeObject(forKey: "onboarding_completed_\(theme.gameID)")
+            onboardingResetConfirmed = true
+        }
+    }
+    #endif
 
     func signInWithGameCenter() {
         GKLocalPlayer.local.authenticateHandler = { viewController, error in

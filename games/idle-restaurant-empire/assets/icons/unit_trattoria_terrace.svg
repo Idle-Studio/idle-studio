@@ -1,0 +1,197 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <filter id="ds" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="2" dy="3" stdDeviation="4" flood-color="#3A1500" flood-opacity="0.28"/>
+    </filter>
+    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1A1840"/>
+      <stop offset="100%" stop-color="#3A2860"/>
+    </linearGradient>
+    <linearGradient id="tableGrad" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#A07848"/>
+      <stop offset="100%" stop-color="#6B4820"/>
+    </linearGradient>
+    <linearGradient id="potGrad" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#D4722A"/>
+      <stop offset="100%" stop-color="#8B3A10"/>
+    </linearGradient>
+    <linearGradient id="plantGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4CAF50"/>
+      <stop offset="100%" stop-color="#1B5E20"/>
+    </linearGradient>
+    <linearGradient id="stoneGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#AE9E86"/>
+      <stop offset="100%" stop-color="#8A7A62"/>
+    </linearGradient>
+  </defs>
+
+  <g filter="url(#ds)">
+
+    <!-- ── EVENING SKY (top 45%) ── -->
+    <rect x="22" y="22" width="148" height="86" rx="5" fill="url(#skyGrad)"/>
+    <!-- Stars scattered in sky -->
+    <circle cx="34" cy="32" r="1" fill="#FFFFFF" opacity="0.7"/>
+    <circle cx="56" cy="28" r="1.2" fill="#FFFFFF" opacity="0.8"/>
+    <circle cx="78" cy="34" r="0.8" fill="#FFFFFF" opacity="0.6"/>
+    <circle cx="110" cy="28" r="1.2" fill="#FFFFFF" opacity="0.75"/>
+    <circle cx="138" cy="32" r="1" fill="#FFFFFF" opacity="0.7"/>
+    <circle cx="158" cy="26" r="0.8" fill="#FFFFFF" opacity="0.6"/>
+    <circle cx="44" cy="44" r="0.8" fill="#FFFFFF" opacity="0.5"/>
+    <circle cx="164" cy="42" r="1" fill="#FFFFFF" opacity="0.6"/>
+    <circle cx="92" cy="26" r="1" fill="#FFFFFF" opacity="0.65"/>
+    <circle cx="122" cy="44" r="0.8" fill="#FFFFFF" opacity="0.5"/>
+    <circle cx="148" cy="46" r="0.8" fill="#FFFFFF" opacity="0.5"/>
+    <circle cx="30" cy="54" r="0.8" fill="#FFFFFF" opacity="0.4"/>
+
+    <!-- ── STRING LIGHTS across top ── -->
+    <!-- Wire arc -->
+    <path d="M26 52 Q58 62 96 58 Q134 54 166 62" fill="none" stroke="#5A4820" stroke-width="1.5" opacity="0.8"/>
+    <!-- Light bulbs (tiny circles with glow) -->
+    <circle cx="36" cy="56" r="3.5" fill="#F0C040" opacity="0.9"/>
+    <circle cx="36" cy="56" r="5" fill="#F0C040" opacity="0.2"/>
+    <circle cx="50" cy="60" r="3.5" fill="#F0D060" opacity="0.9"/>
+    <circle cx="50" cy="60" r="5" fill="#F0C040" opacity="0.2"/>
+    <circle cx="66" cy="62" r="3.5" fill="#F0C040" opacity="0.9"/>
+    <circle cx="66" cy="62" r="5" fill="#F0C040" opacity="0.2"/>
+    <circle cx="82" cy="60" r="3.5" fill="#F0D060" opacity="0.9"/>
+    <circle cx="82" cy="60" r="5" fill="#F0C040" opacity="0.2"/>
+    <circle cx="98" cy="58" r="3.5" fill="#F0C040" opacity="0.9"/>
+    <circle cx="98" cy="58" r="5" fill="#F0C040" opacity="0.2"/>
+    <circle cx="114" cy="57" r="3.5" fill="#F0D060" opacity="0.9"/>
+    <circle cx="114" cy="57" r="5" fill="#F0C040" opacity="0.2"/>
+    <circle cx="130" cy="58" r="3.5" fill="#F0C040" opacity="0.9"/>
+    <circle cx="130" cy="58" r="5" fill="#F0C040" opacity="0.2"/>
+    <circle cx="146" cy="60" r="3.5" fill="#F0D060" opacity="0.9"/>
+    <circle cx="146" cy="60" r="5" fill="#F0C040" opacity="0.2"/>
+    <circle cx="160" cy="62" r="3.5" fill="#F0C040" opacity="0.9"/>
+    <circle cx="160" cy="62" r="5" fill="#F0C040" opacity="0.2"/>
+
+    <!-- ── COBBLESTONE FLOOR (lower 55%) ── -->
+    <rect x="22" y="108" width="148" height="64" rx="5" fill="url(#stoneGrad)"/>
+    <!-- Cobblestones — staggered rows of rounded shapes -->
+    <!-- Row 1 -->
+    <rect x="24" y="110" width="22" height="14" rx="5" fill="#A89878" stroke="#7A6A52" stroke-width="1"/>
+    <rect x="50" y="110" width="18" height="14" rx="5" fill="#B0A080" stroke="#7A6A52" stroke-width="1"/>
+    <rect x="72" y="110" width="24" height="14" rx="5" fill="#A08870" stroke="#7A6A52" stroke-width="1"/>
+    <rect x="100" y="110" width="20" height="14" rx="5" fill="#B0A080" stroke="#7A6A52" stroke-width="1"/>
+    <rect x="124" y="110" width="22" height="14" rx="5" fill="#A89878" stroke="#7A6A52" stroke-width="1"/>
+    <rect x="150" y="110" width="18" height="14" rx="5" fill="#A08870" stroke="#7A6A52" stroke-width="1"/>
+    <!-- Row 2 (offset) -->
+    <rect x="22" y="128" width="16" height="13" rx="4" fill="#A8987A" stroke="#7A6A52" stroke-width="1"/>
+    <rect x="42" y="128" width="22" height="13" rx="4" fill="#B0A080" stroke="#7A6A52" stroke-width="1"/>
+    <rect x="68" y="128" width="18" height="13" rx="4" fill="#9E8E70" stroke="#7A6A52" stroke-width="1"/>
+    <rect x="90" y="128" width="24" height="13" rx="4" fill="#AE9E80" stroke="#7A6A52" stroke-width="1"/>
+    <rect x="118" y="128" width="20" height="13" rx="4" fill="#A89878" stroke="#7A6A52" stroke-width="1"/>
+    <rect x="142" y="128" width="18" height="13" rx="4" fill="#B0A082" stroke="#7A6A52" stroke-width="1"/>
+    <rect x="164" y="128" width="6" height="13" rx="3" fill="#A08870" stroke="#7A6A52" stroke-width="1"/>
+    <!-- Row 3 -->
+    <rect x="24" y="145" width="20" height="13" rx="4" fill="#AE9E80" stroke="#7A6A52" stroke-width="1"/>
+    <rect x="48" y="145" width="24" height="13" rx="4" fill="#A08870" stroke="#7A6A52" stroke-width="1"/>
+    <rect x="76" y="145" width="18" height="13" rx="4" fill="#B0A080" stroke="#7A6A52" stroke-width="1"/>
+    <rect x="98" y="145" width="22" height="13" rx="4" fill="#A89878" stroke="#7A6A52" stroke-width="1"/>
+    <rect x="124" y="145" width="20" height="13" rx="4" fill="#9E8E70" stroke="#7A6A52" stroke-width="1"/>
+    <rect x="148" y="145" width="22" height="13" rx="4" fill="#AE9E80" stroke="#7A6A52" stroke-width="1"/>
+    <!-- Row 4 (bottom partial) -->
+    <rect x="22" y="162" width="26" height="10" rx="4" fill="#A89878" stroke="#7A6A52" stroke-width="1"/>
+    <rect x="52" y="162" width="18" height="10" rx="4" fill="#B0A080" stroke="#7A6A52" stroke-width="1"/>
+    <rect x="74" y="162" width="22" height="10" rx="4" fill="#A08870" stroke="#7A6A52" stroke-width="1"/>
+    <rect x="100" y="162" width="24" height="10" rx="4" fill="#AE9E80" stroke="#7A6A52" stroke-width="1"/>
+    <rect x="128" y="162" width="18" height="10" rx="4" fill="#A89878" stroke="#7A6A52" stroke-width="1"/>
+    <rect x="150" y="162" width="20" height="10" rx="4" fill="#A08870" stroke="#7A6A52" stroke-width="1"/>
+
+    <!-- ── SKY / FLOOR DIVIDER WALL ── -->
+    <rect x="22" y="105" width="148" height="8" rx="3" fill="#6A5A40" stroke="#4A3A28" stroke-width="1.5"/>
+
+    <!-- ── TABLE 1 (left) ── -->
+    <!-- Table top (round) -->
+    <ellipse cx="60" cy="106" rx="22" ry="8" fill="url(#tableGrad)" stroke="#4A2808" stroke-width="2"/>
+    <!-- White linen circle on top -->
+    <ellipse cx="60" cy="104" rx="17" ry="6" fill="#F5F0E8" opacity="0.9"/>
+    <!-- Table leg -->
+    <rect x="56" y="110" width="8" height="20" rx="3" fill="#7A5028" stroke="#4A2808" stroke-width="1.5"/>
+    <ellipse cx="60" cy="131" rx="10" ry="4" fill="#7A5028" stroke="#4A2808" stroke-width="1.5"/>
+    <!-- Candle on table 1 -->
+    <rect x="57" y="95" width="6" height="12" rx="2" fill="#F5EDD8" stroke="#D4C4A0" stroke-width="1"/>
+    <!-- Flame -->
+    <path d="M60 95 Q57 90 60 85 Q63 90 60 95 Z" fill="#F0C040" opacity="0.95"/>
+    <path d="M60 93 Q58 89 60 86 Q62 89 60 93 Z" fill="#FFEE80" opacity="0.8"/>
+    <!-- Candle glow -->
+    <circle cx="60" cy="90" r="8" fill="#F0C040" opacity="0.15"/>
+
+    <!-- ── WROUGHT IRON CHAIR (left of table 1) ── -->
+    <path d="M34 108 Q30 114 32 128 Q34 136 36 140" fill="none" stroke="#1A1A1A" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M28 116 Q34 112 40 116" fill="none" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round"/>
+    <path d="M30 128 Q34 124 38 128" fill="none" stroke="#1A1A1A" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- Chair right -->
+    <path d="M46 108 Q50 115 48 128 Q46 136 46 140" fill="none" stroke="#1A1A1A" stroke-width="2.5" stroke-linecap="round"/>
+
+    <!-- ── TABLE 2 (right) ── -->
+    <ellipse cx="138" cy="106" rx="22" ry="8" fill="url(#tableGrad)" stroke="#4A2808" stroke-width="2"/>
+    <ellipse cx="138" cy="104" rx="17" ry="6" fill="#F5F0E8" opacity="0.9"/>
+    <rect x="134" y="110" width="8" height="20" rx="3" fill="#7A5028" stroke="#4A2808" stroke-width="1.5"/>
+    <ellipse cx="138" cy="131" rx="10" ry="4" fill="#7A5028" stroke="#4A2808" stroke-width="1.5"/>
+    <!-- Candle on table 2 -->
+    <rect x="135" y="95" width="6" height="12" rx="2" fill="#F5EDD8" stroke="#D4C4A0" stroke-width="1"/>
+    <path d="M138 95 Q135 90 138 85 Q141 90 138 95 Z" fill="#F0C040" opacity="0.95"/>
+    <path d="M138 93 Q136 89 138 86 Q140 89 138 93 Z" fill="#FFEE80" opacity="0.8"/>
+    <circle cx="138" cy="90" r="8" fill="#F0C040" opacity="0.15"/>
+
+    <!-- ── WROUGHT IRON CHAIR (right of table 2) ── -->
+    <path d="M112 108 Q108 114 110 128 Q112 136 112 140" fill="none" stroke="#1A1A1A" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M108 116 Q114 112 120 116" fill="none" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round"/>
+    <path d="M110 128 Q114 124 118 128" fill="none" stroke="#1A1A1A" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M160 108 Q164 115 162 128 Q160 136 160 140" fill="none" stroke="#1A1A1A" stroke-width="2.5" stroke-linecap="round"/>
+
+    <!-- ── TERRA-COTTA POTS ── -->
+
+    <!-- Pot 1 (left foreground) ── -->
+    <!-- Pot body -->
+    <path d="M24 140 Q22 150 24 162 Q26 168 32 170 Q38 172 42 168 Q46 164 46 158 Q48 148 44 140 Q40 136 34 136 Q28 136 24 140 Z"
+          fill="url(#potGrad)" stroke="#6A2808" stroke-width="2"/>
+    <!-- Pot rim -->
+    <ellipse cx="34" cy="140" rx="11" ry="4" fill="#D4722A" stroke="#6A2808" stroke-width="1.5"/>
+    <!-- Soil surface -->
+    <ellipse cx="34" cy="138" rx="9" ry="3.5" fill="#4A2810"/>
+    <!-- Herb plant in pot 1 -->
+    <path d="M34 138 Q32 128 30 120" fill="none" stroke="#2E7D32" stroke-width="2" stroke-linecap="round"/>
+    <path d="M34 138 Q36 126 40 118" fill="none" stroke="#2E7D32" stroke-width="2" stroke-linecap="round"/>
+    <path d="M34 138 Q34 124 34 116" fill="none" stroke="#1B5E20" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- Basil leaves -->
+    <ellipse cx="30" cy="120" rx="7" ry="4" fill="url(#plantGrad)" stroke="#1B5E20" stroke-width="1" transform="rotate(-25 30 120)"/>
+    <ellipse cx="40" cy="118" rx="7" ry="4" fill="#4CAF50" stroke="#1B5E20" stroke-width="1" transform="rotate(30 40 118)"/>
+    <ellipse cx="34" cy="115" rx="6" ry="3.5" fill="url(#plantGrad)" stroke="#1B5E20" stroke-width="1" transform="rotate(5 34 115)"/>
+    <ellipse cx="27" cy="126" rx="5.5" ry="3" fill="#81C784" stroke="#1B5E20" stroke-width="1" transform="rotate(-40 27 126)"/>
+    <ellipse cx="38" cy="125" rx="5.5" ry="3" fill="url(#plantGrad)" stroke="#1B5E20" stroke-width="1" transform="rotate(35 38 125)"/>
+
+    <!-- Pot 2 (center back) ── -->
+    <path d="M84 116 Q82 122 84 130 Q86 136 92 138 Q98 140 102 136 Q106 132 106 126 Q108 118 104 116 Q100 112 94 112 Q88 112 84 116 Z"
+          fill="url(#potGrad)" stroke="#6A2808" stroke-width="2"/>
+    <ellipse cx="95" cy="116" rx="11" ry="4" fill="#D4722A" stroke="#6A2808" stroke-width="1.5"/>
+    <ellipse cx="95" cy="114" rx="9" ry="3.5" fill="#4A2810"/>
+    <!-- Herbs in pot 2 -->
+    <path d="M95 114 Q92 104 88 96" fill="none" stroke="#2E7D32" stroke-width="2" stroke-linecap="round"/>
+    <path d="M95 114 Q98 102 102 94" fill="none" stroke="#2E7D32" stroke-width="2" stroke-linecap="round"/>
+    <path d="M95 114 Q95 100 95 92" fill="none" stroke="#1B5E20" stroke-width="1.5" stroke-linecap="round"/>
+    <ellipse cx="88" cy="96" rx="7" ry="4" fill="url(#plantGrad)" stroke="#1B5E20" stroke-width="1" transform="rotate(-20 88 96)"/>
+    <ellipse cx="102" cy="94" rx="7" ry="4" fill="#4CAF50" stroke="#1B5E20" stroke-width="1" transform="rotate(25 102 94)"/>
+    <ellipse cx="95" cy="91" rx="6" ry="3.5" fill="url(#plantGrad)" stroke="#1B5E20" stroke-width="1"/>
+    <ellipse cx="85" cy="104" rx="5" ry="3" fill="#81C784" stroke="#1B5E20" stroke-width="1" transform="rotate(-35 85 104)"/>
+    <ellipse cx="103" cy="103" rx="5" ry="3" fill="url(#plantGrad)" stroke="#1B5E20" stroke-width="1" transform="rotate(30 103 103)"/>
+
+    <!-- Pot 3 (right foreground) ── -->
+    <path d="M146 140 Q144 150 146 162 Q148 168 154 170 Q160 172 164 168 Q168 164 168 158 Q170 148 166 140 Q162 136 156 136 Q150 136 146 140 Z"
+          fill="url(#potGrad)" stroke="#6A2808" stroke-width="2"/>
+    <ellipse cx="156" cy="140" rx="11" ry="4" fill="#D4722A" stroke="#6A2808" stroke-width="1.5"/>
+    <ellipse cx="156" cy="138" rx="9" ry="3.5" fill="#4A2810"/>
+    <!-- Herbs in pot 3 -->
+    <path d="M156 138 Q152 128 148 120" fill="none" stroke="#2E7D32" stroke-width="2" stroke-linecap="round"/>
+    <path d="M156 138 Q160 126 164 118" fill="none" stroke="#2E7D32" stroke-width="2" stroke-linecap="round"/>
+    <path d="M156 138 Q156 124 156 116" fill="none" stroke="#1B5E20" stroke-width="1.5" stroke-linecap="round"/>
+    <ellipse cx="148" cy="120" rx="7" ry="4" fill="url(#plantGrad)" stroke="#1B5E20" stroke-width="1" transform="rotate(-28 148 120)"/>
+    <ellipse cx="164" cy="118" rx="7" ry="4" fill="#4CAF50" stroke="#1B5E20" stroke-width="1" transform="rotate(32 164 118)"/>
+    <ellipse cx="156" cy="115" rx="6" ry="3.5" fill="url(#plantGrad)" stroke="#1B5E20" stroke-width="1"/>
+    <ellipse cx="145" cy="128" rx="5" ry="3" fill="#81C784" stroke="#1B5E20" stroke-width="1" transform="rotate(-38 145 128)"/>
+    <ellipse cx="163" cy="126" rx="5" ry="3" fill="url(#plantGrad)" stroke="#1B5E20" stroke-width="1" transform="rotate(28 163 126)"/>
+
+  </g>
+</svg>

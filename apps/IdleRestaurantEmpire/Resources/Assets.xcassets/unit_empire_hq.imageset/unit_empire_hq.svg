@@ -1,0 +1,163 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <filter id="ds" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="2" dy="3" stdDeviation="4" flood-color="#3A1500" flood-opacity="0.28"/>
+    </filter>
+    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0E1A2E"/>
+      <stop offset="100%" stop-color="#1A2A4A"/>
+    </linearGradient>
+    <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#C4DCF0"/>
+      <stop offset="100%" stop-color="#6A98C0"/>
+    </linearGradient>
+    <linearGradient id="glassGrad2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#D0E8F8"/>
+      <stop offset="100%" stop-color="#80B0D8"/>
+    </linearGradient>
+    <linearGradient id="podiumGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#E8DCC0"/>
+      <stop offset="100%" stop-color="#B8A880"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F0C040"/>
+      <stop offset="100%" stop-color="#B8860B"/>
+    </linearGradient>
+    <linearGradient id="forkGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F8D060"/>
+      <stop offset="100%" stop-color="#B8860B"/>
+    </linearGradient>
+    <radialGradient id="glintGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="1"/>
+      <stop offset="40%" stop-color="#F0C040" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#F0C040" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <g filter="url(#ds)">
+
+    <!-- Deep sky background -->
+    <rect x="14" y="14" width="164" height="164" rx="4" fill="url(#skyGrad)"/>
+
+    <!-- Stars -->
+    <circle cx="26" cy="24" r="1.2" fill="white" opacity="0.8"/>
+    <circle cx="44" cy="18" r="0.9" fill="white" opacity="0.65"/>
+    <circle cx="68" cy="22" r="1.1" fill="white" opacity="0.7"/>
+    <circle cx="160" cy="20" r="1.0" fill="white" opacity="0.6"/>
+    <circle cx="174" cy="28" r="1.3" fill="white" opacity="0.75"/>
+    <circle cx="30" cy="44" r="0.8" fill="white" opacity="0.55"/>
+    <circle cx="168" cy="40" r="0.9" fill="white" opacity="0.6"/>
+
+    <!-- Stone podium/base (wider than tower) -->
+    <rect x="38" y="148" width="116" height="22" rx="3" fill="url(#podiumGrad)" stroke="#9A8860" stroke-width="2.5"/>
+    <rect x="38" y="148" width="116" height="6" rx="2" fill="white" opacity="0.14"/>
+    <!-- Podium detail lines -->
+    <rect x="38" y="162" width="116" height="2" rx="1" fill="#B8A880" opacity="0.6"/>
+
+    <!-- Tower body — glass, main rectangular form -->
+    <rect x="60" y="54" width="72" height="96" rx="3" fill="url(#glassGrad)" stroke="#5A88B0" stroke-width="2.5"/>
+
+    <!-- Tower slight taper at top — angled top section -->
+    <path d="M60 54 L72 34 L120 34 L132 54 Z" fill="url(#glassGrad2)" stroke="#5A88B0" stroke-width="2"/>
+
+    <!-- Tower highlight (top-left light) -->
+    <path d="M60 54 L132 54 L132 66 Q96 58 60 70 Z" fill="white" opacity="0.15"/>
+    <path d="M72 34 L120 34 L120 40 Q96 37 72 43 Z" fill="white" opacity="0.18"/>
+
+    <!-- Window grid on tower — vertical lines -->
+    <line x1="84" y1="54" x2="84" y2="148" stroke="#8AB8D8" stroke-width="0.8" opacity="0.5"/>
+    <line x1="96" y1="54" x2="96" y2="148" stroke="#8AB8D8" stroke-width="0.8" opacity="0.5"/>
+    <line x1="108" y1="54" x2="108" y2="148" stroke="#8AB8D8" stroke-width="0.8" opacity="0.5"/>
+
+    <!-- Gold band floor 1 -->
+    <rect x="60" y="68" width="72" height="3.5" rx="1" fill="url(#goldGrad)" opacity="0.9"/>
+    <!-- Window row 1 -->
+    <rect x="64" y="72" width="14" height="10" rx="1.5" fill="#A0C8E8" opacity="0.75" stroke="#6A98B8" stroke-width="1"/>
+    <rect x="82" y="72" width="14" height="10" rx="1.5" fill="#A0C8E8" opacity="0.75" stroke="#6A98B8" stroke-width="1"/>
+    <rect x="100" y="72" width="14" height="10" rx="1.5" fill="#A0C8E8" opacity="0.75" stroke="#6A98B8" stroke-width="1"/>
+    <rect x="118" y="72" width="10" height="10" rx="1.5" fill="#A0C8E8" opacity="0.75" stroke="#6A98B8" stroke-width="1"/>
+
+    <!-- Gold band floor 2 -->
+    <rect x="60" y="84" width="72" height="3.5" rx="1" fill="url(#goldGrad)" opacity="0.9"/>
+    <!-- Window row 2 -->
+    <rect x="64" y="88" width="14" height="10" rx="1.5" fill="#A0C8E8" opacity="0.75" stroke="#6A98B8" stroke-width="1"/>
+    <rect x="82" y="88" width="14" height="10" rx="1.5" fill="#A0C8E8" opacity="0.75" stroke="#6A98B8" stroke-width="1"/>
+    <rect x="100" y="88" width="14" height="10" rx="1.5" fill="#A0C8E8" opacity="0.75" stroke="#6A98B8" stroke-width="1"/>
+    <rect x="118" y="88" width="10" height="10" rx="1.5" fill="#A0C8E8" opacity="0.75" stroke="#6A98B8" stroke-width="1"/>
+
+    <!-- Gold band floor 3 -->
+    <rect x="60" y="100" width="72" height="3.5" rx="1" fill="url(#goldGrad)" opacity="0.9"/>
+    <!-- Window row 3 -->
+    <rect x="64" y="104" width="14" height="10" rx="1.5" fill="#A0C8E8" opacity="0.75" stroke="#6A98B8" stroke-width="1"/>
+    <rect x="82" y="104" width="14" height="10" rx="1.5" fill="#A0C8E8" opacity="0.75" stroke="#6A98B8" stroke-width="1"/>
+    <rect x="100" y="104" width="14" height="10" rx="1.5" fill="#A0C8E8" opacity="0.75" stroke="#6A98B8" stroke-width="1"/>
+    <rect x="118" y="104" width="10" height="10" rx="1.5" fill="#A0C8E8" opacity="0.75" stroke="#6A98B8" stroke-width="1"/>
+
+    <!-- Gold band floor 4 -->
+    <rect x="60" y="116" width="72" height="3.5" rx="1" fill="url(#goldGrad)" opacity="0.9"/>
+    <!-- Window row 4 -->
+    <rect x="64" y="120" width="14" height="10" rx="1.5" fill="#A0C8E8" opacity="0.75" stroke="#6A98B8" stroke-width="1"/>
+    <rect x="82" y="120" width="14" height="10" rx="1.5" fill="#A0C8E8" opacity="0.75" stroke="#6A98B8" stroke-width="1"/>
+    <rect x="100" y="120" width="14" height="10" rx="1.5" fill="#A0C8E8" opacity="0.75" stroke="#6A98B8" stroke-width="1"/>
+    <rect x="118" y="120" width="10" height="10" rx="1.5" fill="#A0C8E8" opacity="0.75" stroke="#6A98B8" stroke-width="1"/>
+
+    <!-- Gold band floor 5 -->
+    <rect x="60" y="132" width="72" height="3.5" rx="1" fill="url(#goldGrad)" opacity="0.9"/>
+    <!-- Window row 5 -->
+    <rect x="64" y="136" width="14" height="9" rx="1.5" fill="#A0C8E8" opacity="0.75" stroke="#6A98B8" stroke-width="1"/>
+    <rect x="82" y="136" width="14" height="9" rx="1.5" fill="#A0C8E8" opacity="0.75" stroke="#6A98B8" stroke-width="1"/>
+    <rect x="100" y="136" width="14" height="9" rx="1.5" fill="#A0C8E8" opacity="0.75" stroke="#6A98B8" stroke-width="1"/>
+    <rect x="118" y="136" width="10" height="9" rx="1.5" fill="#A0C8E8" opacity="0.75" stroke="#6A98B8" stroke-width="1"/>
+
+    <!-- Windows in tapered top section -->
+    <rect x="78" y="38" width="10" height="8" rx="1.5" fill="#A0C8E8" opacity="0.75" stroke="#6A98B8" stroke-width="1"/>
+    <rect x="92" y="36" width="10" height="8" rx="1.5" fill="#A0C8E8" opacity="0.75" stroke="#6A98B8" stroke-width="1"/>
+    <rect x="106" y="38" width="10" height="8" rx="1.5" fill="#A0C8E8" opacity="0.75" stroke="#6A98B8" stroke-width="1"/>
+
+    <!-- Clouds at mid-tower height -->
+    <ellipse cx="46" cy="80" rx="18" ry="8" fill="white" opacity="0.78"/>
+    <ellipse cx="34" cy="80" rx="11" ry="6.5" fill="white" opacity="0.72"/>
+    <ellipse cx="150" cy="76" rx="16" ry="7" fill="white" opacity="0.75"/>
+    <ellipse cx="164" cy="78" rx="10" ry="5.5" fill="white" opacity="0.68"/>
+
+    <!-- Fork spire (left of center, rising from tower top) -->
+    <g>
+      <!-- Fork handle -->
+      <rect x="84" y="18" width="7" height="18" rx="3.5" fill="url(#forkGrad)" stroke="#8B6914" stroke-width="1.5"/>
+      <!-- Fork head + tines -->
+      <rect x="84" y="14" width="7" height="6" rx="1" fill="url(#forkGrad)" stroke="#8B6914" stroke-width="1.5"/>
+      <!-- Tines (3) -->
+      <rect x="84.5" y="14" width="1.8" height="8" rx="0.9" fill="#F0C040"/>
+      <rect x="87.5" y="14" width="1.8" height="8" rx="0.9" fill="#F0C040"/>
+      <rect x="90.5" y="14" width="1.8" height="8" rx="0.9" fill="#F0C040"/>
+      <!-- Tine gaps (dark) -->
+      <rect x="86.3" y="14" width="1.2" height="6" rx="0.6" fill="#5A4208" opacity="0.7"/>
+      <rect x="89.3" y="14" width="1.2" height="6" rx="0.6" fill="#5A4208" opacity="0.7"/>
+    </g>
+
+    <!-- Knife spire (right of center, rising from tower top) -->
+    <g>
+      <!-- Knife handle -->
+      <rect x="101" y="22" width="7" height="14" rx="3.5" fill="url(#forkGrad)" stroke="#8B6914" stroke-width="1.5"/>
+      <!-- Bolster -->
+      <rect x="100" y="19" width="9" height="5" rx="2" fill="#D4A020" stroke="#8B6914" stroke-width="1"/>
+      <!-- Blade -->
+      <path d="M101 14 L108 14 L108 19 Q108 19 104.5 21 Q101 19 101 19 Z" fill="url(#forkGrad)" stroke="#8B6914" stroke-width="1.5"/>
+      <!-- Blade edge -->
+      <path d="M108 14 L108 18" stroke="#FFF0A0" stroke-width="1" opacity="0.8"/>
+    </g>
+
+    <!-- Lens flare / starburst at fork spire tip -->
+    <circle cx="91" cy="14" r="7" fill="url(#glintGrad)"/>
+    <!-- Starburst rays -->
+    <line x1="91" y1="8" x2="91" y2="5" stroke="#F0C040" stroke-width="1.2" opacity="0.8"/>
+    <line x1="91" y1="20" x2="91" y2="23" stroke="#F0C040" stroke-width="1.2" opacity="0.7"/>
+    <line x1="85" y1="14" x2="82" y2="14" stroke="#F0C040" stroke-width="1.2" opacity="0.7"/>
+    <line x1="97" y1="14" x2="100" y2="14" stroke="#F0C040" stroke-width="1.2" opacity="0.7"/>
+    <line x1="87" y1="10" x2="85" y2="8" stroke="#F0C040" stroke-width="1" opacity="0.6"/>
+    <line x1="95" y1="10" x2="97" y2="8" stroke="#F0C040" stroke-width="1" opacity="0.6"/>
+    <line x1="87" y1="18" x2="85" y2="20" stroke="#F0C040" stroke-width="1" opacity="0.55"/>
+    <line x1="95" y1="18" x2="97" y2="20" stroke="#F0C040" stroke-width="1" opacity="0.55"/>
+
+  </g>
+</svg>

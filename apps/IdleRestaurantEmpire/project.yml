@@ -1,0 +1,56 @@
+name: IdleRestaurantEmpire
+
+options:
+  bundleIdPrefix: com.idlestudio
+  xcodeVersion: "16.0"
+  deploymentTarget:
+    iOS: "17.0"
+
+packages:
+  IdleEngine:
+    path: ../../Packages/IdleEngine
+  GoogleMobileAds:
+    url: https://github.com/googleads/swift-package-manager-google-mobile-ads.git
+    minorVersion: 11.0.0
+
+targets:
+  IdleRestaurantEmpire:
+    type: application
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - Sources
+      - Resources
+      - path: ./Resources/IdleRestaurantEmpire.storekit
+        buildPhase: none
+        type: file
+    dependencies:
+      - package: IdleEngine
+      - package: GoogleMobileAds
+        product: GoogleMobileAds
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.idlestudio.idlerestaurant
+        SWIFT_VERSION: "5.9"
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        INFOPLIST_FILE: Resources/Info.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: IdleRestaurantEmpire
+        ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS: YES
+        CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: JL84E9GK95
+        ENABLE_PREVIEWS: YES
+        CODE_SIGN_ENTITLEMENTS: Resources/IdleRestaurantEmpire.entitlements
+
+schemes:
+  IdleRestaurantEmpire:
+    build:
+      targets:
+        IdleRestaurantEmpire: all
+    run:
+      config: Debug
+      storeKitConfiguration: Resources/IdleRestaurantEmpire.storekit
+    test:
+      config: Debug
+    archive:
+      config: Release

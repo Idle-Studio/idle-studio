@@ -19,14 +19,16 @@ import UserNotifications
 /// persistence, game loop, and navigation. The game JSON is the entire game.
 public struct IdleGameRoot: View {
     let themeName: String
+    let cloudKitContainerID: String?
 
     @State private var viewModel = IdleGameViewModel()
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.adService) private var adService
     @Environment(\.requestReview) private var requestReview
 
-    public init(themeName: String) {
+    public init(themeName: String, cloudKitContainerID: String? = nil) {
         self.themeName = themeName
+        self.cloudKitContainerID = cloudKitContainerID
     }
 
     public var body: some View {
@@ -37,18 +39,28 @@ public struct IdleGameRoot: View {
                 GameTabView()
                     .environment(\.theme, viewModel.appTheme)
                     .environment(\.adService, adService)
-                    .sheet(isPresented: $viewModel.showOfflineSheet) {
+                    .fullScreenCover(isPresented: $viewModel.showOnboarding) {
+                        OnboardingFlow(gameID: viewModel.gameID, onComplete: {
+                            viewModel.showOnboarding = false
+                        })
+                        .environment(\.theme, viewModel.appTheme)
+                    }
+                    .sheet(isPresented: $viewModel.showOfflineSheet, onDismiss: {
+                        viewModel.pendingOfflineResult = nil
+                        viewModel.offlineIncomeDoubled = false
+                    }) {
                         if let result = viewModel.pendingOfflineResult {
                             OfflineIncomeSheet(
                                 result: result,
+                                isDoubled: viewModel.offlineIncomeDoubled,
                                 onCollect: { viewModel.showOfflineSheet = false },
-                                onDoubleWithAd: adService.adsRemoved ? nil : {
+                                onDoubleWithAd: (adService.adsRemoved || viewModel.offlineIncomeDoubled) ? nil : {
                                     Task {
                                         let reward = try? await adService.showRewardedAd(placement: .doubleOfflineIncome)
                                         if reward != nil {
                                             await GameEngine.shared.awardResources(result.earnedResources)
+                                            withAnimation { viewModel.offlineIncomeDoubled = true }
                                         }
-                                        viewModel.showOfflineSheet = false
                                     }
                                 }
                             )
@@ -110,7 +122,7 @@ public struct IdleGameRoot: View {
             }
         }
         .task {
-            await viewModel.load(themeName: themeName)
+            await viewModel.load(themeName: themeName, cloudKitContainerID: cloudKitContainerID)
             await preloadAds()
         }
     }
@@ -121,6 +133,7 @@ public struct IdleGameRoot: View {
         guard !adService.adsRemoved else { return }
         await withTaskGroup(of: Void.self) { group in
             group.addTask { try? await adService.loadRewardedAd(placement: .doubleOfflineIncome) }
+            group.addTask { try? await adService.loadRewardedAd(placement: .skipMilestone) }
             group.addTask { try? await adService.loadInterstitial(placement: .levelAdvance) }
             group.addTask { try? await adService.loadRewardedAd(placement: .freeCoins) }
         }
@@ -202,7 +215,9 @@ public final class IdleGameViewModel {
     public private(set) var isReady = false
     public private(set) var loadError: String?
 
+    var showOnboarding = false
     var showOfflineSheet = false
+    var offlineIncomeDoubled = false
     var pendingOfflineResult: OfflineResult?
     var showLevelAdvance = false
     var completedLevelName = ""
@@ -216,7 +231,7 @@ public final class IdleGameViewModel {
     @ObservationIgnored nonisolated(unsafe) private var streamTask: Task<Void, Never>?
     @ObservationIgnored nonisolated(unsafe) private var transactionTask: Task<Void, Never>?
     private var persistence: SwiftDataPersistenceService?
-    private var gameID = ""
+    private(set) var gameID = ""
     private var lastObservedLevelID = ""
     private var hasCancelledOnForeground = false
 
@@ -225,13 +240,13 @@ public final class IdleGameViewModel {
         transactionTask?.cancel()
     }
 
-    func load(themeName: String) async {
+    func load(themeName: String, cloudKitContainerID: String? = nil) async {
         do {
             let theme = try ThemeLoader.load(named: themeName)
             gameID = theme.gameID
 
             // Load persistence service and any saved state.
-            let service = try? SwiftDataPersistenceService()
+            let service = try? SwiftDataPersistenceService(cloudKitContainerID: cloudKitContainerID)
             persistence = service
             let savedState = try? await service?.load(gameID: gameID)
 
@@ -239,17 +254,39 @@ public final class IdleGameViewModel {
             try await GameEngine.shared.loadTheme(theme, savedState: savedState)
             appTheme = AppTheme(theme: theme)
 
+            // Determine onboarding state before making isReady=true so we can suppress
+            // conflicting modals before the view renders.
+            let onboardingKey = "onboarding_completed_\(gameID)"
+            let needsOnboarding = !UserDefaults.standard.bool(forKey: onboardingKey)
+
             // Check for offline income using last-active timestamp saved on background.
-            let lastActive = UserDefaults.standard.object(forKey: "lastActiveDate") as? Date
-            if let date = lastActive {
-                let result = try await GameEngine.shared.collectOfflineIncome(lastActiveDate: date)
-                if result.earnedResources != .zero {
-                    pendingOfflineResult = result
-                    showOfflineSheet = true
+            // Skip when onboarding will be shown — a new user has no meaningful offline income,
+            // and presenting two modals simultaneously causes a continuous warning spam.
+            if !needsOnboarding {
+                let lastActive = UserDefaults.standard.object(forKey: "lastActiveDate") as? Date
+                if let date = lastActive {
+                    let result = try await GameEngine.shared.collectOfflineIncome(lastActiveDate: date)
+                    if result.earnedResources != .zero {
+                        // Premium pass subscribers receive 2× offline income.
+                        // Award the base amount a second time so the engine state is correct,
+                        // then set offlineIncomeDoubled so the sheet reflects it and hides the ad button.
+                        if let passID = theme.iapProducts.premiumPass,
+                           await LiveStoreKitService().isPremiumPassActive(productID: passID) {
+                            await GameEngine.shared.awardResources(result.earnedResources)
+                            offlineIncomeDoubled = true
+                        }
+                        pendingOfflineResult = result
+                        showOfflineSheet = true
+                    }
                 }
             }
 
             isReady = true
+
+            if needsOnboarding {
+                showOnboarding = true
+            }
+
             // Start ambient audio for the initial era.
             if let state = await GameEngine.shared.currentState,
                let level = theme.level(id: state.currentLevelID),

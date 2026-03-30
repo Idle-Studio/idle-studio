@@ -9,6 +9,9 @@ options:
 packages:
   IdleEngine:
     path: ../../Packages/IdleEngine
+  GoogleMobileAds:
+    url: https://github.com/googleads/swift-package-manager-google-mobile-ads
+    from: 11.0.0
 
 targets:
   IdleCivilizations:
@@ -23,6 +26,7 @@ targets:
         type: file
     dependencies:
       - package: IdleEngine
+      - package: GoogleMobileAds
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.idlestudio.idleciv

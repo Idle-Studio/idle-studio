@@ -36,5 +36,6 @@ export const idleRestaurantEmpireConfig: GameConfig = {
   ],
   supportEmail: 'vmihai12@icloud.com',
   privacyPolicyLastUpdated: '2026-03-23',
+  termsLastUpdated: '2026-03-30',
   supportFAQ: [],
 }

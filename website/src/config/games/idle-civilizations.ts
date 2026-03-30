@@ -82,6 +82,7 @@ export const idleCivilizationsConfig: GameConfig = {
   ],
   supportEmail: 'vmihai12@icloud.com',
   privacyPolicyLastUpdated: '2026-03-23',
+  termsLastUpdated: '2026-03-30',
   supportFAQ: [
     {
       question: 'My offline income seems low. Is that normal?',

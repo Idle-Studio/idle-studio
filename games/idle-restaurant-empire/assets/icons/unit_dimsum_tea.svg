@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <filter id="ds" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="2" dy="3" stdDeviation="4" flood-color="#3A1500" flood-opacity="0.28"/>
+    </filter>
+    <linearGradient id="potBody" x1="15%" y1="10%" x2="85%" y2="90%">
+      <stop offset="0%" stop-color="#EF5350"/>
+      <stop offset="40%" stop-color="#C62828"/>
+      <stop offset="100%" stop-color="#8C1010"/>
+    </linearGradient>
+    <linearGradient id="potLid" x1="10%" y1="5%" x2="80%" y2="90%">
+      <stop offset="0%" stop-color="#EF5350"/>
+      <stop offset="100%" stop-color="#B01818"/>
+    </linearGradient>
+    <linearGradient id="goldBand" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F8D860"/>
+      <stop offset="50%" stop-color="#F0C040"/>
+      <stop offset="100%" stop-color="#C09020"/>
+    </linearGradient>
+    <linearGradient id="cupBody" x1="15%" y1="5%" x2="80%" y2="95%">
+      <stop offset="0%" stop-color="#EF5350"/>
+      <stop offset="100%" stop-color="#C62828"/>
+    </linearGradient>
+    <linearGradient id="teaLiquid" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D4880028"/>
+      <stop offset="100%" stop-color="#C07010"/>
+    </linearGradient>
+  </defs>
+
+  <g filter="url(#ds)">
+
+    <!-- ══════════════════════════════════
+         TEAPOT — traditional Chinese style
+    ══════════════════════════════════ -->
+
+    <!-- Body: rounded, wider at middle -->
+    <ellipse cx="88" cy="108" rx="46" ry="50" fill="url(#potBody)" stroke="#8C1010" stroke-width="3"/>
+    <!-- Highlight top-left -->
+    <ellipse cx="72" cy="86" rx="18" ry="14" fill="#FF8A80" opacity="0.35"/>
+
+    <!-- Gold decorative band around middle -->
+    <path d="M43 108 Q43 98 88 95 Q133 98 133 108" fill="none" stroke="url(#goldBand)" stroke-width="5"/>
+    <path d="M43 108 Q43 118 88 121 Q133 118 133 108" fill="none" stroke="url(#goldBand)" stroke-width="5"/>
+    <!-- Inner band fill illusion -->
+    <path d="M43 108 Q43 98 88 95 Q133 98 133 108 Q133 118 88 121 Q43 118 43 108 Z" fill="#F0C040" opacity="0.18"/>
+
+    <!-- Decorative white flower on body -->
+    <!-- 5 petals (simplified) -->
+    <circle cx="100" cy="116" r="5" fill="white" opacity="0.6"/>
+    <ellipse cx="100" cy="108" rx="3.5" ry="5.5" fill="white" opacity="0.55"/>
+    <ellipse cx="107" cy="112" rx="3.5" ry="5.5" transform="rotate(36 107 112)" fill="white" opacity="0.55"/>
+    <ellipse cx="104" cy="121" rx="3.5" ry="5.5" transform="rotate(72 104 121)" fill="white" opacity="0.55"/>
+    <ellipse cx="96"  cy="123" rx="3.5" ry="5.5" transform="rotate(-72 96 123)" fill="white" opacity="0.55"/>
+    <ellipse cx="93"  cy="112" rx="3.5" ry="5.5" transform="rotate(-36 93 112)" fill="white" opacity="0.55"/>
+    <circle cx="100" cy="116" r="2.5" fill="#F0C040" opacity="0.8"/>
+
+    <!-- Spout — curved, pointing upper-right -->
+    <path d="M133 96 Q152 80 162 64 Q168 55 162 50" fill="none" stroke="#C62828" stroke-width="10" stroke-linecap="round"/>
+    <path d="M133 96 Q152 80 162 64 Q168 55 162 50" fill="none" stroke="#EF5350" stroke-width="6" stroke-linecap="round" opacity="0.5"/>
+    <!-- Spout tip opening -->
+    <ellipse cx="162" cy="50" rx="6" ry="4" fill="#8C1010" stroke="#C62828" stroke-width="1.5" transform="rotate(-20 162 50)"/>
+
+    <!-- Handle — loop on left side -->
+    <path d="M43 88 Q22 88 20 108 Q20 128 43 128" fill="none" stroke="#C62828" stroke-width="9" stroke-linecap="round"/>
+    <path d="M43 88 Q22 88 20 108 Q20 128 43 128" fill="none" stroke="#EF5350" stroke-width="5" stroke-linecap="round" opacity="0.4"/>
+
+    <!-- Gold rim bands at top and bottom of body -->
+    <ellipse cx="88" cy="62" rx="30" ry="7" fill="none" stroke="#F0C040" stroke-width="3"/>
+    <ellipse cx="88" cy="154" rx="34" ry="8" fill="none" stroke="#F0C040" stroke-width="3"/>
+
+    <!-- Lid — domed, slightly lighter -->
+    <ellipse cx="88" cy="62" rx="32" ry="8" fill="#EF5350" stroke="#8C1010" stroke-width="2.5"/>
+    <path d="M60 61 Q63 47 88 44 Q113 47 116 61 Z" fill="url(#potLid)" stroke="#8C1010" stroke-width="2"/>
+    <ellipse cx="88" cy="44" rx="28" ry="7" fill="url(#potLid)" stroke="#8C1010" stroke-width="2"/>
+    <!-- Lid knob -->
+    <ellipse cx="88" cy="40" rx="10" ry="5" fill="#F0C040" stroke="#C09020" stroke-width="2"/>
+    <ellipse cx="88" cy="36" rx="7"  ry="4" fill="#F8D860" stroke="#C09020" stroke-width="1.5"/>
+
+    <!-- ── STEAM WISPS from spout ── -->
+    <path d="M162 46 Q158 36 162 26 Q166 16 162 8"  fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" opacity="0.65"/>
+    <path d="M155 48 Q151 38 155 28 Q159 18 155 10" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+
+    <!-- ══════════════════════════════════
+         TEACUP — small, no handle, beside pot
+    ══════════════════════════════════ -->
+    <!-- Saucer -->
+    <ellipse cx="42" cy="163" rx="22" ry="7" fill="#D4A040" stroke="#C09020" stroke-width="2"/>
+    <!-- Cup body — cylindrical with slight taper -->
+    <path d="M24 148 L24 158 Q24 165 42 165 Q60 165 60 158 L60 148 Z" fill="url(#cupBody)" stroke="#8C1010" stroke-width="2.5"/>
+    <!-- Cup top ellipse -->
+    <ellipse cx="42" cy="148" rx="18" ry="6" fill="#EF5350" stroke="#8C1010" stroke-width="2"/>
+    <!-- Tea inside cup (top view) -->
+    <ellipse cx="42" cy="148" rx="14" ry="4.5" fill="#C07010" opacity="0.8"/>
+    <ellipse cx="38" cy="147" rx="5"  ry="2"   fill="#E09020" opacity="0.5"/>
+    <!-- Gold rim on cup -->
+    <ellipse cx="42" cy="148" rx="18" ry="6" fill="none" stroke="#F0C040" stroke-width="2"/>
+    <!-- Highlight on cup -->
+    <ellipse cx="31" cy="152" rx="5" ry="7" fill="#FF8A80" opacity="0.25"/>
+
+  </g>
+</svg>

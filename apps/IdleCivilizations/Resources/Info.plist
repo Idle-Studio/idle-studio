@@ -19,7 +19,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
-	<string>202603291824</string>
+	<string>202603301033</string>
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-3827016404991252~1697311426</string>
 	<key>ITSAppUsesNonExemptEncryption</key>

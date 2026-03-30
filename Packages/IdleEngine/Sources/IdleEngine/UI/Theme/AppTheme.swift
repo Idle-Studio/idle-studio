@@ -89,7 +89,8 @@ public struct AppTheme: Sendable {
                 title: "Stay ahead", body: "Get notified when resources cap.",
                 enableButton: "Enable", laterButton: "Later"
             ),
-            onboarding: []
+            onboarding: [],
+            onboardingCopy: .default
         ),
         primaryCurrency: "gold",
         primaryCurrencyIcon: "dollarsign.circle.fill"

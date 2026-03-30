@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <filter id="ds" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="2" dy="3" stdDeviation="4" flood-color="#3A1500" flood-opacity="0.28"/>
+    </filter>
+    <!-- Marble surface gradient -->
+    <linearGradient id="marbleGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F5F5F5"/>
+      <stop offset="100%" stop-color="#E0E4E6"/>
+    </linearGradient>
+    <!-- Spoon bowl gradient -->
+    <linearGradient id="spoonBowlGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FAFAFA"/>
+      <stop offset="100%" stop-color="#D8DCDE"/>
+    </linearGradient>
+    <!-- Spoon handle gradient -->
+    <linearGradient id="spoonHandleGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ECEFF1"/>
+      <stop offset="100%" stop-color="#B0BEC5"/>
+    </linearGradient>
+    <!-- Gold glow beneath spoon -->
+    <radialGradient id="goldGlow" cx="50%" cy="70%" r="40%">
+      <stop offset="0%" stop-color="#F0C040" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#F0C040" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <g filter="url(#ds)">
+
+    <!-- Marble surface background -->
+    <rect x="14" y="98" width="164" height="80" rx="6" fill="url(#marbleGrad)"/>
+    <!-- Marble veining -->
+    <path d="M30 108 Q60 105 80 115 Q100 125 130 112 Q150 104 165 110" fill="none" stroke="#C8CBD0" stroke-width="1" opacity="0.7"/>
+    <path d="M20 125 Q50 120 70 130 Q90 140 120 128 Q145 118 168 125" fill="none" stroke="#C8CBD0" stroke-width="0.8" opacity="0.5"/>
+    <path d="M40 145 Q65 140 85 150 Q105 160 140 148 Q155 144 170 150" fill="none" stroke="#D0D4D8" stroke-width="0.7" opacity="0.5"/>
+    <!-- Marble surface edge -->
+    <rect x="14" y="98" width="164" height="80" rx="6" fill="none" stroke="#C0C8CC" stroke-width="2"/>
+
+    <!-- Gold accent glow beneath spoon -->
+    <ellipse cx="96" cy="136" rx="80" ry="24" fill="url(#goldGlow)"/>
+
+    <!-- ══ CERAMIC SPOON (angled ~-18°, center) ══ -->
+    <g transform="translate(96, 116) rotate(-18)">
+
+      <!-- Spoon shadow/depth -->
+      <ellipse cx="1" cy="4" rx="30" ry="12" fill="#263238" opacity="0.18" transform="translate(0, 8)"/>
+
+      <!-- Spoon handle — long elegant taper -->
+      <!-- Handle base to neck -->
+      <path d="M-4 8 Q-5 20 -5 30 L-5 80 Q-5 86 0 86 Q5 86 5 80 L5 30 Q5 20 4 8 Z"
+            fill="url(#spoonHandleGrad)" stroke="#90A4AE" stroke-width="2"/>
+      <!-- Handle top-edge highlight -->
+      <path d="M-3 10 Q-4 22 -4 32 L-4 78 Q-4 83 0 84"
+            fill="none" stroke="white" stroke-width="1" opacity="0.45"/>
+      <!-- Handle decorative indent line -->
+      <line x1="-4" y1="55" x2="4" y2="55" stroke="#90A4AE" stroke-width="1" opacity="0.5"/>
+      <line x1="-4" y1="62" x2="4" y2="62" stroke="#90A4AE" stroke-width="1" opacity="0.4"/>
+
+      <!-- Neck taper from handle to bowl -->
+      <path d="M-5 8 Q-6 0 -8 -8 L8 -8 Q6 0 5 8 Z"
+            fill="url(#spoonBowlGrad)" stroke="#90A4AE" stroke-width="2"/>
+
+      <!-- Spoon bowl — large elegant oval -->
+      <ellipse cx="0" cy="-22" rx="22" ry="14" fill="url(#spoonBowlGrad)" stroke="#90A4AE" stroke-width="2.5"/>
+      <!-- Bowl inner shadow (depth) -->
+      <ellipse cx="0" cy="-21" rx="18" ry="10" fill="#E0E8EA" opacity="0.5"/>
+      <!-- Bowl highlight (top-left) -->
+      <ellipse cx="-6" cy="-26" rx="9" ry="5" fill="white" opacity="0.5"/>
+
+      <!-- ══ AMUSE-BOUCHE COMPOSITION (in bowl) ══ -->
+
+      <!-- Crispy base — small dark brown circle -->
+      <ellipse cx="0" cy="-22" rx="9" ry="5" fill="#6B3A1A" stroke="#4A2810" stroke-width="1.2"/>
+      <!-- Base highlight -->
+      <path d="M-7 -24 Q-3 -27 2 -26" fill="none" stroke="#9A5830" stroke-width="0.8" opacity="0.7"/>
+
+      <!-- Espuma sphere — green pea -->
+      <circle cx="0" cy="-29" r="7" fill="#7CB342" stroke="#558B2F" stroke-width="1.2"/>
+      <!-- Sphere highlight -->
+      <ellipse cx="-2" cy="-32" rx="3" ry="2" fill="white" opacity="0.5"/>
+      <!-- Sphere shadow at base -->
+      <ellipse cx="1" cy="-27" rx="4" ry="2" fill="#4A7A20" opacity="0.35"/>
+
+      <!-- Micro-herb (tiny leaf on top) -->
+      <path d="M0 -36 Q3 -40 5 -38 Q3 -35 0 -36 Z" fill="#4CAF50" stroke="#388E3C" stroke-width="0.8"/>
+      <path d="M0 -36 Q-3 -40 -4 -38 Q-2 -35 0 -36 Z" fill="#66BB6A" stroke="#388E3C" stroke-width="0.8"/>
+      <!-- Herb stem -->
+      <line x1="0" y1="-36" x2="0" y2="-42" stroke="#388E3C" stroke-width="0.8" stroke-linecap="round"/>
+
+      <!-- Gold leaf flake (irregular tiny shape, offset) -->
+      <path d="M7 -34 Q10 -37 12 -35 Q11 -32 8 -33 Z" fill="#F0C040" stroke="#C09020" stroke-width="0.5" opacity="0.9"/>
+
+    </g>
+
+  </g>
+</svg>

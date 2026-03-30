@@ -1,0 +1,15 @@
+{
+  "images" : [
+    {
+      "filename" : "unit_empire_hq.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  },
+  "properties" : {
+    "preserves-vector-representation" : true
+  }
+}

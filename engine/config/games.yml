@@ -35,20 +35,21 @@ games:
       secondary: "GAMES_STRATEGY"
 
   # ── Add future games below ──────────────────────────────────────────────────
-  # idle-restaurant-empire:
-  #   display_name: "Idle Restaurant Empire"
-  #   bundle_id: "com.idlestudio.idlerestaurant"
-  #   app_id: ""
-  #   xcode_project: "apps/IdleRestaurantEmpire/IdleRestaurantEmpire.xcodeproj"
-  #   xcode_scheme: "IdleRestaurantEmpire"
-  #   storekit_config: "apps/IdleRestaurantEmpire/Resources/IdleRestaurantEmpire.storekit"
-  #   theme_json: "games/idle-restaurant-empire/idle-restaurant-empire.json"
-  #   metadata_path: "metadata/idle-restaurant-empire"
-  #   testflight_groups:
-  #     - "Internal Testers"
-  #   subscription_group_name: "Chef Pass"
-  #   primary_locale: "en-US"
-  #   age_rating: "4+"
-  #   categories:
-  #     primary: "GAMES_SIMULATION"
-  #     secondary: "GAMES_CASUAL"
+  idle-restaurant-empire:
+    display_name: "Idle Restaurant Empire"
+    bundle_id: "com.idlestudio.idlerestaurant"
+    app_id: ""  # TODO: Create app in App Store Connect → paste numeric App ID here
+    xcode_project: "apps/IdleRestaurantEmpire/IdleRestaurantEmpire.xcodeproj"
+    xcode_scheme: "IdleRestaurantEmpire"
+    storekit_config: "apps/IdleRestaurantEmpire/Resources/IdleRestaurantEmpire.storekit"
+    theme_json: "games/idle-restaurant-empire/idle-restaurant-empire.json"
+    metadata_path: "metadata/idle-restaurant-empire"
+    testflight_groups:
+      - "Internal Testers"
+      - "External Beta"
+    subscription_group_name: "Chef's Table"
+    primary_locale: "en-US"
+    age_rating: "4+"
+    categories:
+      primary: "GAMES_SIMULATION"
+      secondary: "GAMES_CASUAL"

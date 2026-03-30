@@ -586,6 +586,9 @@ public struct ThemeCopy: Sendable, Equatable, Codable {
     public let notifications: NotificationsCopy
     public let notificationPermission: NotificationPermissionCopy
     public let onboarding: [OnboardingStep]
+    public let onboardingCopy: OnboardingCopy
+    public let privacyPolicyURL: String
+    public let termsOfUseURL: String
 
     public init(
         unitNoun: String, unitNounPlural: String, levelNoun: String,
@@ -598,7 +601,10 @@ public struct ThemeCopy: Sendable, Equatable, Codable {
         achievementsTabLabel: String = "Achievements",
         offlineSheet: OfflineSheetCopy, prestigeSheet: PrestigeSheetCopy = .default,
         notifications: NotificationsCopy,
-        notificationPermission: NotificationPermissionCopy, onboarding: [OnboardingStep]
+        notificationPermission: NotificationPermissionCopy, onboarding: [OnboardingStep],
+        onboardingCopy: OnboardingCopy = .default,
+        privacyPolicyURL: String = "",
+        termsOfUseURL: String = "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"
     ) {
         self.unitNoun = unitNoun
         self.unitNounPlural = unitNounPlural
@@ -626,6 +632,9 @@ public struct ThemeCopy: Sendable, Equatable, Codable {
         self.notifications = notifications
         self.notificationPermission = notificationPermission
         self.onboarding = onboarding
+        self.onboardingCopy = onboardingCopy
+        self.privacyPolicyURL = privacyPolicyURL
+        self.termsOfUseURL = termsOfUseURL
     }
 
     public init(from decoder: any Decoder) throws {
@@ -656,6 +665,10 @@ public struct ThemeCopy: Sendable, Equatable, Codable {
         notifications = try c.decode(NotificationsCopy.self, forKey: .notifications)
         notificationPermission = try c.decode(NotificationPermissionCopy.self, forKey: .notificationPermission)
         onboarding = try c.decode([OnboardingStep].self, forKey: .onboarding)
+        onboardingCopy = try c.decodeIfPresent(OnboardingCopy.self, forKey: .onboardingCopy) ?? .default
+        privacyPolicyURL = try c.decodeIfPresent(String.self, forKey: .privacyPolicyURL) ?? ""
+        termsOfUseURL = try c.decodeIfPresent(String.self, forKey: .termsOfUseURL)
+            ?? "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"
     }
 
     public struct OfflineSheetCopy: Sendable, Equatable, Codable {
@@ -792,6 +805,67 @@ public struct ThemeCopy: Sendable, Equatable, Codable {
             self.body = body
             self.highlightTarget = highlightTarget
         }
+    }
+
+    // MARK: - OnboardingCopy
+
+    /// Copy for the full-screen first-launch onboarding flow.
+    /// Decoded with `decodeIfPresent` — existing game JSONs without this key get `.default`.
+    public struct OnboardingCopy: Sendable, Equatable, Codable {
+        // Page 0 — Welcome
+        public let welcomeTitle: String
+        public let welcomeTagline: String
+        public let beginButton: String
+        /// Image asset name in the app bundle (e.g. "era_stone_age").
+        public let heroArtworkAsset: String
+
+        // Page 2 — Paywall
+        public let paywallTitle: String
+        public let paywallSubtitle: String
+        public let paywallBulletPoints: [String]
+        public let paywallSkipButton: String
+        public let paywallRestoreButton: String
+        public let paywallBestValueBadge: String
+        public let paywallNoProductsMessage: String
+        public let paywallMonthlyLabel: String
+        public let paywallAnnualLabel: String
+
+        public init(
+            welcomeTitle: String, welcomeTagline: String, beginButton: String, heroArtworkAsset: String,
+            paywallTitle: String, paywallSubtitle: String, paywallBulletPoints: [String],
+            paywallSkipButton: String, paywallRestoreButton: String, paywallBestValueBadge: String,
+            paywallNoProductsMessage: String, paywallMonthlyLabel: String, paywallAnnualLabel: String
+        ) {
+            self.welcomeTitle = welcomeTitle
+            self.welcomeTagline = welcomeTagline
+            self.beginButton = beginButton
+            self.heroArtworkAsset = heroArtworkAsset
+            self.paywallTitle = paywallTitle
+            self.paywallSubtitle = paywallSubtitle
+            self.paywallBulletPoints = paywallBulletPoints
+            self.paywallSkipButton = paywallSkipButton
+            self.paywallRestoreButton = paywallRestoreButton
+            self.paywallBestValueBadge = paywallBestValueBadge
+            self.paywallNoProductsMessage = paywallNoProductsMessage
+            self.paywallMonthlyLabel = paywallMonthlyLabel
+            self.paywallAnnualLabel = paywallAnnualLabel
+        }
+
+        public static let `default` = OnboardingCopy(
+            welcomeTitle: "Welcome",
+            welcomeTagline: "Your adventure begins now.",
+            beginButton: "Begin Your Journey",
+            heroArtworkAsset: "",
+            paywallTitle: "Go Premium",
+            paywallSubtitle: "Unlock the full experience.",
+            paywallBulletPoints: ["2× offline income", "Exclusive content", "Faster progression"],
+            paywallSkipButton: "Start for Free",
+            paywallRestoreButton: "Restore Purchases",
+            paywallBestValueBadge: "Best Value",
+            paywallNoProductsMessage: "Store unavailable. You can start for free.",
+            paywallMonthlyLabel: "Monthly",
+            paywallAnnualLabel: "Annual"
+        )
     }
 }
 

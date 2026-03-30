@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <filter id="ds" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="2" dy="3" stdDeviation="4" flood-color="#3A1500" flood-opacity="0.28"/>
+    </filter>
+    <linearGradient id="basinGrad" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#B0A890"/>
+      <stop offset="100%" stop-color="#7A7060"/>
+    </linearGradient>
+    <linearGradient id="wheelGrad" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#A8A090"/>
+      <stop offset="100%" stop-color="#6A6254"/>
+    </linearGradient>
+    <linearGradient id="oilGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ECC030" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#B08010" stop-opacity="0.7"/>
+    </linearGradient>
+    <linearGradient id="axleGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#A07040"/>
+      <stop offset="100%" stop-color="#6B4820"/>
+    </linearGradient>
+    <linearGradient id="beamGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#A07848"/>
+      <stop offset="100%" stop-color="#6B4820"/>
+    </linearGradient>
+    <radialGradient id="oilPoolGrad" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#F0D040" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#A07010" stop-opacity="0.6"/>
+    </radialGradient>
+  </defs>
+
+  <g filter="url(#ds)">
+
+    <!-- ── STONE BASIN (flat ellipse base) ── -->
+    <!-- Basin rim top -->
+    <ellipse cx="96" cy="128" rx="68" ry="18" fill="url(#basinGrad)" stroke="#6A6050" stroke-width="3"/>
+    <!-- Basin side wall (depth) -->
+    <path d="M28 128 Q28 148 96 150 Q164 148 164 128" fill="#8A8070" stroke="#6A6050" stroke-width="2.5"/>
+    <!-- Basin interior (top view when looking from front) -->
+    <ellipse cx="96" cy="126" rx="62" ry="14" fill="#7A7060" stroke="#5A5040" stroke-width="1.5"/>
+    <!-- Stone texture on basin -->
+    <path d="M34 130 Q96 126 158 130" fill="none" stroke="#5A5040" stroke-width="1" opacity="0.4"/>
+    <path d="M30 136 Q96 132 162 136" fill="none" stroke="#5A5040" stroke-width="1" opacity="0.3"/>
+
+    <!-- ── GOLDEN OIL POOL in basin ── -->
+    <ellipse cx="96" cy="128" rx="44" ry="10" fill="url(#oilPoolGrad)"/>
+    <!-- Oil shimmer highlights -->
+    <ellipse cx="84" cy="126" rx="12" ry="3" fill="#FFEE80" opacity="0.35"/>
+    <ellipse cx="108" cy="130" rx="8" ry="2" fill="#FFEE80" opacity="0.25"/>
+
+    <!-- ── OIL DRIP over basin edge ── -->
+    <path d="M148 134 Q152 140 150 150 Q149 156 151 162" fill="none" stroke="#D4A020" stroke-width="4" stroke-linecap="round" opacity="0.85"/>
+    <ellipse cx="151" cy="163" rx="5" ry="3" fill="#D4A020" opacity="0.7"/>
+    <!-- Drip trail -->
+    <path d="M149 138 Q153 142 151 148" fill="none" stroke="#ECC030" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+
+    <!-- ── VERTICAL GRINDING WHEEL ── -->
+    <!-- Wheel shadow/depth -->
+    <circle cx="98" cy="86" r="47" fill="#5A5248" opacity="0.3"/>
+    <!-- Main wheel body -->
+    <circle cx="96" cy="84" r="47" fill="url(#wheelGrad)" stroke="#4A4430" stroke-width="3"/>
+    <!-- Wheel face detail rings -->
+    <circle cx="96" cy="84" r="40" fill="none" stroke="#7A7260" stroke-width="1.5" opacity="0.6"/>
+    <circle cx="96" cy="84" r="30" fill="none" stroke="#7A7260" stroke-width="1.2" opacity="0.5"/>
+    <circle cx="96" cy="84" r="18" fill="none" stroke="#7A7260" stroke-width="1" opacity="0.4"/>
+    <!-- Wheel spoke-like surface details -->
+    <line x1="96" y1="37" x2="96" y2="131" stroke="#5A5448" stroke-width="1" opacity="0.3"/>
+    <line x1="49" y1="84" x2="143" y2="84" stroke="#5A5448" stroke-width="1" opacity="0.3"/>
+    <line x1="63" y1="51" x2="129" y2="117" stroke="#5A5448" stroke-width="1" opacity="0.3"/>
+    <line x1="63" y1="117" x2="129" y2="51" stroke="#5A5448" stroke-width="1" opacity="0.3"/>
+    <!-- Highlight on wheel (top-left light) -->
+    <path d="M62 52 Q50 72 54 96" fill="none" stroke="#C8C0A8" stroke-width="3" opacity="0.3"/>
+
+    <!-- ── WOODEN AXLE through wheel ── -->
+    <rect x="84" y="36" width="24" height="96" rx="5" fill="url(#axleGrad)" stroke="#4A2808" stroke-width="2"/>
+    <!-- Axle grain -->
+    <line x1="90" y1="38" x2="90" y2="130" stroke="#C09060" stroke-width="1" opacity="0.3"/>
+    <line x1="102" y1="38" x2="102" y2="130" stroke="#7A4820" stroke-width="1" opacity="0.2"/>
+    <!-- Axle center hub circle -->
+    <circle cx="96" cy="84" r="10" fill="#8B5E3C" stroke="#4A2808" stroke-width="2"/>
+    <circle cx="96" cy="84" r="5" fill="#6B4020"/>
+
+    <!-- ── WOODEN LEVER BEAM ── -->
+    <rect x="96" y="78" width="68" height="12" rx="4" fill="url(#beamGrad)" stroke="#4A2808" stroke-width="2"/>
+    <!-- Beam grain -->
+    <line x1="100" y1="81" x2="162" y2="81" stroke="#C09060" stroke-width="1" opacity="0.35"/>
+    <line x1="100" y1="87" x2="162" y2="87" stroke="#7A4820" stroke-width="0.8" opacity="0.25"/>
+    <!-- Beam end -->
+    <circle cx="162" cy="84" r="7" fill="#A07040" stroke="#4A2808" stroke-width="1.5"/>
+
+    <!-- ── OLIVE BRANCH (draped over left side of wheel) ── -->
+    <!-- Main branch stem -->
+    <path d="M30 62 Q44 70 48 84 Q52 98 44 112" fill="none" stroke="#5A6E28" stroke-width="3" stroke-linecap="round"/>
+    <!-- Sub-branch -->
+    <path d="M38 72 Q30 68 26 60" fill="none" stroke="#5A6E28" stroke-width="2" stroke-linecap="round"/>
+    <path d="M42 82 Q34 80 28 76" fill="none" stroke="#5A6E28" stroke-width="2" stroke-linecap="round"/>
+    <path d="M44 94 Q36 96 30 100" fill="none" stroke="#5A6E28" stroke-width="2" stroke-linecap="round"/>
+    <!-- Olive leaves (small ovals) -->
+    <ellipse cx="28" cy="60" rx="7" ry="3.5" fill="#6B8E23" stroke="#4A6A18" stroke-width="1" transform="rotate(-30 28 60)"/>
+    <ellipse cx="22" cy="68" rx="7" ry="3.5" fill="#7A9E30" stroke="#4A6A18" stroke-width="1" transform="rotate(15 22 68)"/>
+    <ellipse cx="27" cy="76" rx="7" ry="3.5" fill="#6B8E23" stroke="#4A6A18" stroke-width="1" transform="rotate(-20 27 76)"/>
+    <ellipse cx="24" cy="86" rx="7" ry="3.5" fill="#7A9E30" stroke="#4A6A18" stroke-width="1" transform="rotate(25 24 86)"/>
+    <ellipse cx="28" cy="100" rx="7" ry="3.5" fill="#6B8E23" stroke="#4A6A18" stroke-width="1" transform="rotate(-10 28 100)"/>
+    <ellipse cx="38" cy="64" rx="6" ry="3" fill="#8AAE38" stroke="#4A6A18" stroke-width="1" transform="rotate(40 38 64)"/>
+    <ellipse cx="36" cy="82" rx="6" ry="3" fill="#6B8E23" stroke="#4A6A18" stroke-width="1" transform="rotate(-40 36 82)"/>
+    <ellipse cx="32" cy="102" rx="6" ry="3" fill="#8AAE38" stroke="#4A6A18" stroke-width="1" transform="rotate(30 32 102)"/>
+    <!-- Olive fruits (small dark ovals) -->
+    <ellipse cx="34" cy="69" rx="4" ry="5.5" fill="#2A4020" stroke="#1A2810" stroke-width="1"/>
+    <ellipse cx="30" cy="88" rx="3.5" ry="5" fill="#364C28" stroke="#1A2810" stroke-width="1"/>
+    <ellipse cx="26" cy="105" rx="3.5" ry="5" fill="#2A4020" stroke="#1A2810" stroke-width="1"/>
+
+  </g>
+</svg>

@@ -60,6 +60,23 @@ export function generateSupportMetadata(game: GameConfig): Metadata {
   }
 }
 
+export function generateTermsMetadata(game: GameConfig): Metadata {
+  const url = `${BASE_URL}/games/${game.id}/terms/`
+  return {
+    title: `Terms of Use — ${game.displayName}`,
+    description: `Terms of use for ${game.displayName} by Idle Studio.`,
+    alternates: { canonical: url },
+    robots: { index: true, follow: true },
+    openGraph: {
+      title: `Terms of Use — ${game.displayName}`,
+      description: `Terms of use for ${game.displayName} by Idle Studio.`,
+      url,
+      siteName: 'Idle Studio',
+      type: 'website',
+    },
+  }
+}
+
 export function generatePrivacyMetadata(game: GameConfig): Metadata {
   const url = `${BASE_URL}/games/${game.id}/privacy/`
   return {

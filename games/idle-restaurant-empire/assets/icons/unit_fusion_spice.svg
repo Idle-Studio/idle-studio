@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <filter id="ds" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="2" dy="3" stdDeviation="4" flood-color="#3A1500" flood-opacity="0.28"/>
+    </filter>
+    <!-- Rack ambient glow -->
+    <radialGradient id="rackGlow" cx="50%" cy="55%" r="50%">
+      <stop offset="0%" stop-color="#6A1B9A" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#6A1B9A" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Rack frame gradient -->
+    <linearGradient id="rackGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#5A3080"/>
+      <stop offset="100%" stop-color="#2D0860"/>
+    </linearGradient>
+    <!-- Shelf wood gradient -->
+    <linearGradient id="shelfGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#A0703A"/>
+      <stop offset="100%" stop-color="#6A4020"/>
+    </linearGradient>
+    <!-- Glass jar body -->
+    <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#B3E5FC" stop-opacity="0.75"/>
+      <stop offset="40%" stop-color="#E8F8FF" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#B3E5FC" stop-opacity="0.45"/>
+    </linearGradient>
+    <!-- Lid gradient -->
+    <linearGradient id="lidGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5A4070"/>
+      <stop offset="100%" stop-color="#2D0860"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Ambient glow behind rack -->
+  <ellipse cx="96" cy="112" rx="72" ry="58" fill="url(#rackGlow)"/>
+
+  <g filter="url(#ds)">
+
+    <!-- ── RACK FRAME ── -->
+    <!-- Left vertical post -->
+    <rect x="34" y="52" width="9" height="112" rx="3" fill="url(#rackGrad)" stroke="#1E0640" stroke-width="2"/>
+    <!-- Right vertical post -->
+    <rect x="149" y="52" width="9" height="112" rx="3" fill="url(#rackGrad)" stroke="#1E0640" stroke-width="2"/>
+    <!-- Top bar -->
+    <rect x="34" y="52" width="124" height="9" rx="3" fill="url(#rackGrad)" stroke="#1E0640" stroke-width="2"/>
+    <!-- Bottom foot bar -->
+    <rect x="34" y="158" width="124" height="7" rx="3" fill="url(#rackGrad)" stroke="#1E0640" stroke-width="2"/>
+
+    <!-- ── UPPER SHELF PLANK ── -->
+    <rect x="36" y="88" width="120" height="10" rx="2" fill="url(#shelfGrad)" stroke="#4A2810" stroke-width="1.5"/>
+    <!-- Shelf edge shadow line -->
+    <rect x="36" y="96" width="120" height="2" rx="1" fill="#3A1A08" opacity="0.4"/>
+
+    <!-- ── LOWER SHELF PLANK ── -->
+    <rect x="36" y="138" width="120" height="10" rx="2" fill="url(#shelfGrad)" stroke="#4A2810" stroke-width="1.5"/>
+    <rect x="36" y="146" width="120" height="2" rx="1" fill="#3A1A08" opacity="0.4"/>
+
+    <!-- ══════════════════════
+         UPPER SHELF JARS (4)
+    ══════════════════════ -->
+
+    <!-- JAR 1 — Red spice (paprika) -->
+    <rect x="45" y="65" width="18" height="24" rx="2" fill="url(#glassGrad)" stroke="#80C8E8" stroke-width="1.5"/>
+    <ellipse cx="54" cy="82" rx="8" ry="4" fill="#D32020" opacity="0.75"/>
+    <ellipse cx="54" cy="65" rx="9" ry="3" fill="#5A4070" stroke="#2D0860" stroke-width="1.5"/>
+    <rect x="47" y="73" width="14" height="6" rx="1" fill="#F5EDD8" opacity="0.88"/>
+    <!-- Glass highlight -->
+    <rect x="47" y="67" width="4" height="14" rx="1" fill="white" opacity="0.28"/>
+
+    <!-- JAR 2 — Orange spice (turmeric) -->
+    <rect x="72" y="63" width="18" height="26" rx="2" fill="url(#glassGrad)" stroke="#80C8E8" stroke-width="1.5"/>
+    <ellipse cx="81" cy="82" rx="8" ry="4.5" fill="#E07820" opacity="0.80"/>
+    <ellipse cx="81" cy="63" rx="9" ry="3" fill="#5A4070" stroke="#2D0860" stroke-width="1.5"/>
+    <rect x="74" y="73" width="14" height="6" rx="1" fill="#F5EDD8" opacity="0.88"/>
+    <rect x="74" y="65" width="4" height="16" rx="1" fill="white" opacity="0.28"/>
+
+    <!-- JAR 3 — Yellow spice (saffron) -->
+    <rect x="99" y="65" width="18" height="24" rx="2" fill="url(#glassGrad)" stroke="#80C8E8" stroke-width="1.5"/>
+    <ellipse cx="108" cy="82" rx="8" ry="4" fill="#D8B820" opacity="0.80"/>
+    <ellipse cx="108" cy="65" rx="9" ry="3" fill="#5A4070" stroke="#2D0860" stroke-width="1.5"/>
+    <rect x="101" y="73" width="14" height="6" rx="1" fill="#F5EDD8" opacity="0.88"/>
+    <rect x="101" y="67" width="4" height="14" rx="1" fill="white" opacity="0.28"/>
+
+    <!-- JAR 4 — Purple spice (lavender) -->
+    <rect x="126" y="63" width="18" height="26" rx="2" fill="url(#glassGrad)" stroke="#80C8E8" stroke-width="1.5"/>
+    <ellipse cx="135" cy="82" rx="8" ry="4.5" fill="#8E24AA" opacity="0.80"/>
+    <ellipse cx="135" cy="63" rx="9" ry="3" fill="#5A4070" stroke="#2D0860" stroke-width="1.5"/>
+    <rect x="128" y="73" width="14" height="6" rx="1" fill="#F5EDD8" opacity="0.88"/>
+    <rect x="128" y="65" width="4" height="16" rx="1" fill="white" opacity="0.28"/>
+
+    <!-- ══════════════════════
+         LOWER SHELF JARS (4)
+    ══════════════════════ -->
+
+    <!-- JAR 5 — Green spice (cardamom) -->
+    <rect x="45" y="115" width="18" height="24" rx="2" fill="url(#glassGrad)" stroke="#80C8E8" stroke-width="1.5"/>
+    <ellipse cx="54" cy="132" rx="8" ry="4" fill="#2E8030" opacity="0.80"/>
+    <ellipse cx="54" cy="115" rx="9" ry="3" fill="#5A4070" stroke="#2D0860" stroke-width="1.5"/>
+    <rect x="47" y="123" width="14" height="6" rx="1" fill="#F5EDD8" opacity="0.88"/>
+    <rect x="47" y="117" width="4" height="14" rx="1" fill="white" opacity="0.28"/>
+
+    <!-- JAR 6 — Brown spice (cinnamon) -->
+    <rect x="72" y="113" width="18" height="26" rx="2" fill="url(#glassGrad)" stroke="#80C8E8" stroke-width="1.5"/>
+    <ellipse cx="81" cy="132" rx="8" ry="4.5" fill="#6A3A10" opacity="0.85"/>
+    <ellipse cx="81" cy="113" rx="9" ry="3" fill="#5A4070" stroke="#2D0860" stroke-width="1.5"/>
+    <rect x="74" y="123" width="14" height="6" rx="1" fill="#F5EDD8" opacity="0.88"/>
+    <rect x="74" y="115" width="4" height="16" rx="1" fill="white" opacity="0.28"/>
+
+    <!-- JAR 7 — Pink spice (rose) -->
+    <rect x="99" y="115" width="18" height="24" rx="2" fill="url(#glassGrad)" stroke="#80C8E8" stroke-width="1.5"/>
+    <ellipse cx="108" cy="132" rx="8" ry="4" fill="#D0507A" opacity="0.78"/>
+    <ellipse cx="108" cy="115" rx="9" ry="3" fill="#5A4070" stroke="#2D0860" stroke-width="1.5"/>
+    <rect x="101" y="123" width="14" height="6" rx="1" fill="#F5EDD8" opacity="0.88"/>
+    <rect x="101" y="117" width="4" height="14" rx="1" fill="white" opacity="0.28"/>
+
+    <!-- JAR 8 — Teal spice (matcha) -->
+    <rect x="126" y="113" width="18" height="26" rx="2" fill="url(#glassGrad)" stroke="#80C8E8" stroke-width="1.5"/>
+    <ellipse cx="135" cy="132" rx="8" ry="4.5" fill="#1A8060" opacity="0.80"/>
+    <ellipse cx="135" cy="113" rx="9" ry="3" fill="#5A4070" stroke="#2D0860" stroke-width="1.5"/>
+    <rect x="128" y="123" width="14" height="6" rx="1" fill="#F5EDD8" opacity="0.88"/>
+    <rect x="128" y="115" width="4" height="16" rx="1" fill="white" opacity="0.28"/>
+
+    <!-- ── NEON ACCENT glints ── -->
+    <circle cx="54"  cy="88" r="2" fill="#E040FB" opacity="0.55"/>
+    <circle cx="108" cy="88" r="2" fill="#E040FB" opacity="0.55"/>
+    <circle cx="81"  cy="138" r="2" fill="#E040FB" opacity="0.55"/>
+    <circle cx="135" cy="138" r="2" fill="#E040FB" opacity="0.55"/>
+
+  </g>
+</svg>

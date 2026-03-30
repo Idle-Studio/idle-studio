@@ -21,6 +21,8 @@ public final class GameplayViewModel {
     /// Pre-computed canAfford flag per upgrade ID.
     public private(set) var upgradeAffordability: [String: Bool] = [:]
 
+    var skipSuccessMessage: String? = nil
+
     @ObservationIgnored nonisolated(unsafe) private var streamTask: Task<Void, Never>?
     private var theme: (any ThemePackage)?
 
@@ -295,7 +297,28 @@ public struct GameplayScreen: View {
             ForEach(particles.particles) { p in
                 FloatingParticle(text: p.text, color: p.color, origin: p.origin)
             }
+
+            // Skip milestone success toast
+            if let name = viewModel.skipSuccessMessage {
+                VStack {
+                    HStack(spacing: 8) {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundStyle(.green)
+                        Text("\(name) Complete!")
+                            .font(Typography.subheadline.weight(.semibold))
+                            .foregroundStyle(theme.textPrimaryColor)
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 10)
+                    .background(theme.surfaceElevatedColor, in: Capsule())
+                    .shadow(color: .black.opacity(0.25), radius: 8, y: 4)
+                    .transition(.move(edge: .top).combined(with: .opacity))
+                    .padding(.top, 8)
+                    Spacer()
+                }
+            }
         }
+        .animation(.spring(response: 0.3), value: viewModel.skipSuccessMessage)
         .onReceive(NotificationCenter.default.publisher(for: .iapRewardReceived)) { note in
             let coins = note.userInfo?["gold"] as? Decimal ?? 0
             if !reduceMotion { triggerCoinRain(amount: coins) }
@@ -397,6 +420,11 @@ public struct GameplayScreen: View {
                                 let reward = try? await adService.showRewardedAd(placement: .skipMilestone)
                                 if reward != nil {
                                     viewModel.skipMilestoneConstruction(id: wonder.id)
+                                    withAnimation(.spring(response: 0.3)) {
+                                        viewModel.skipSuccessMessage = wonder.displayName
+                                    }
+                                    try? await Task.sleep(for: .seconds(2.5))
+                                    withAnimation { viewModel.skipSuccessMessage = nil }
                                 }
                             }
                         } label: {

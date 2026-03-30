@@ -13,15 +13,16 @@ import IdleEngine
 //   1. File > Add Package Dependency → https://github.com/googleads/swift-package-manager-google-mobile-ads
 //      Pin to version 11.x or later. Link GoogleMobileAds to the app target (NOT IdleEngine).
 //   2. Add GADApplicationIdentifier to Info.plist (value from AdMob dashboard).
-//   3. Replace the test ad unit IDs below with real IDs from AdMob once ready for production.
-//   4. Add NSUserTrackingUsageDescription to Info.plist for ATT prompt text.
+//   3. Add NSUserTrackingUsageDescription to Info.plist for ATT prompt text.
 
 final class GoogleMobileAdsService: AdService, @unchecked Sendable {
 
-    // MARK: - Test Ad Unit IDs (replace with real IDs from Remote Config in production)
+    // MARK: - Ad Unit IDs
 
-    private static let rewardedUnitID     = "ca-app-pub-3940256099942544/1712485313"
-    private static let interstitialUnitID = "ca-app-pub-3940256099942544/4411468910"
+    private static let rewardedOfflineUnitID     = "ca-app-pub-3827016404991252/2411199667"
+    private static let rewardedBottleneckUnitID  = "ca-app-pub-3827016404991252/1703683308"
+    private static let interstitialUnitID        = "ca-app-pub-3827016404991252/2062775957"
+    private static let bannerUnitID              = "ca-app-pub-3827016404991252/4082434635"
 
     // MARK: - State (all mutations happen on MainActor via Task { @MainActor in … })
 
@@ -37,6 +38,9 @@ final class GoogleMobileAdsService: AdService, @unchecked Sendable {
 
     // Keep the active delegate alive for the duration of interstitial presentation
     nonisolated(unsafe) private var activeInterstitialDelegate: InterstitialDelegate?
+
+    // Banner
+    nonisolated(unsafe) private var bannerView: GADBannerView?
 
     private let removeAdsProductID: String
 
@@ -63,13 +67,25 @@ final class GoogleMobileAdsService: AdService, @unchecked Sendable {
         // Initialize AdMob SDK
         await GADMobileAds.sharedInstance().start()
 
+        // Register test devices so AdMob serves test ads during development.
+        // The identifier is device-specific and logged by the SDK on first run.
+        // It resets on reinstall — update the list when the SDK logs a new one.
+        #if DEBUG
+        GADMobileAds.sharedInstance().requestConfiguration.testDeviceIdentifiers = [
+            "0751d0a5fc31375045771dd35b65c633",   // iPhone (logged by SDK on first run)
+        ]
+        #endif
+
         // Observe future transactions (e.g., remove-ads purchase completing mid-session)
         Task {
             for await result in Transaction.updates {
                 guard case .verified(let tx) = result,
                       tx.productID == removeAdsProductID,
                       tx.revocationDate == nil else { continue }
-                await MainActor.run { self.adsRemoved = true }
+                await MainActor.run {
+                    self.adsRemoved = true
+                    self.hideBanner()
+                }
             }
         }
     }
@@ -87,9 +103,10 @@ final class GoogleMobileAdsService: AdService, @unchecked Sendable {
     // MARK: - AdService: Rewarded
 
     func loadRewardedAd(placement: AdPlacement) async throws {
+        let unitID = placement == .doubleOfflineIncome ? Self.rewardedOfflineUnitID : Self.rewardedBottleneckUnitID
         let ad: GADRewardedAd = try await withCheckedThrowingContinuation { continuation in
             DispatchQueue.main.async {
-                GADRewardedAd.load(withAdUnitID: Self.rewardedUnitID, request: GADRequest()) { ad, error in
+                GADRewardedAd.load(withAdUnitID: unitID, request: GADRequest()) { ad, error in
                     if let error {
                         continuation.resume(throwing: error)
                     } else if let ad {
@@ -105,6 +122,11 @@ final class GoogleMobileAdsService: AdService, @unchecked Sendable {
 
     func showRewardedAd(placement: AdPlacement) async throws -> AdReward? {
         guard !adsRemoved else { return nil }
+
+        // Load on demand if not preloaded (mirrors showInterstitial pattern)
+        if loadedRewardedAds[placement] == nil {
+            try await loadRewardedAd(placement: placement)
+        }
         guard let ad = loadedRewardedAds[placement] else { throw AdServiceError.adNotReady }
         loadedRewardedAds[placement] = nil
 
@@ -180,6 +202,34 @@ final class GoogleMobileAdsService: AdService, @unchecked Sendable {
         Task { try? await self.loadInterstitial(placement: placement) }
     }
 
+    // MARK: - AdService: Banner
+
+    @MainActor
+    func showBanner(in viewController: UIViewController) {
+        guard !adsRemoved else { return }
+        if bannerView != nil { return }
+
+        let banner = GADBannerView(adSize: GADAdSizeBanner)
+        banner.adUnitID = Self.bannerUnitID
+        banner.rootViewController = viewController
+        banner.translatesAutoresizingMaskIntoConstraints = false
+        viewController.view.addSubview(banner)
+
+        NSLayoutConstraint.activate([
+            banner.bottomAnchor.constraint(equalTo: viewController.view.safeAreaLayoutGuide.bottomAnchor),
+            banner.centerXAnchor.constraint(equalTo: viewController.view.centerXAnchor)
+        ])
+
+        banner.load(GADRequest())
+        bannerView = banner
+    }
+
+    @MainActor
+    func hideBanner() {
+        bannerView?.removeFromSuperview()
+        bannerView = nil
+    }
+
     // MARK: - Rate Limiting
 
     private func canShowInterstitial() -> Bool {
@@ -201,13 +251,25 @@ final class GoogleMobileAdsService: AdService, @unchecked Sendable {
 
     // MARK: - Root View Controller
 
+    /// Returns the topmost presented view controller so AdMob can present over
+    /// whatever is currently on screen (sheets, full-screen covers, etc.).
+    /// Using the bare root VC fails silently when a sheet is already presented on it.
     @MainActor
     private var rootViewController: UIViewController? {
-        UIApplication.shared.connectedScenes
+        let root = UIApplication.shared.connectedScenes
             .compactMap { $0 as? UIWindowScene }
-            .first?
-            .keyWindow?
-            .rootViewController
+            .first?.keyWindow?.rootViewController
+        guard let root else { return nil }
+        return topmostViewController(from: root)
+    }
+
+    @MainActor
+    private func topmostViewController(from vc: UIViewController) -> UIViewController {
+        if let presented = vc.presentedViewController,
+           !presented.isBeingDismissed {
+            return topmostViewController(from: presented)
+        }
+        return vc
     }
 }
 

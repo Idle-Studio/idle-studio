@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <filter id="ds" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="2" dy="3" stdDeviation="4" flood-color="#3A1500" flood-opacity="0.28"/>
+    </filter>
+
+    <!-- Basket body gradient -->
+    <linearGradient id="basketGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D4A460"/>
+      <stop offset="100%" stop-color="#8B5E3C"/>
+    </linearGradient>
+
+    <!-- Basket rim gradient -->
+    <linearGradient id="rimGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#C49040"/>
+      <stop offset="100%" stop-color="#7A5020"/>
+    </linearGradient>
+
+    <!-- Baguette gradient -->
+    <linearGradient id="baguetteGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E8B840"/>
+      <stop offset="100%" stop-color="#B87820"/>
+    </linearGradient>
+
+    <!-- Roll gradient -->
+    <linearGradient id="rollGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#DCA030"/>
+      <stop offset="100%" stop-color="#A87020"/>
+    </linearGradient>
+
+    <!-- Clip for basket wicker pattern -->
+    <clipPath id="basketClip">
+      <ellipse cx="96" cy="128" rx="62" ry="38"/>
+    </clipPath>
+    <!-- Clip for basket upper body -->
+    <clipPath id="basketBodyClip">
+      <path d="M34 110 Q34 166 96 166 Q158 166 158 110 L150 98 Q126 92 96 92 Q66 92 42 98 Z"/>
+    </clipPath>
+
+    <!-- Liner gradient -->
+    <linearGradient id="linerGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F5EDD8"/>
+      <stop offset="60%" stop-color="#E8D8B8"/>
+    </linearGradient>
+  </defs>
+
+  <g filter="url(#ds)">
+
+    <!-- ── BAGUETTE (behind basket rim, extending above) ── -->
+    <!-- Baguette body: diagonal, lower-left to upper-right -->
+    <rect x="52" y="44" width="110" height="22" rx="11"
+          fill="url(#baguetteGrad)" stroke="#8B5A10" stroke-width="2.5"
+          transform="rotate(-22, 107, 55)"/>
+    <!-- Score marks on top of baguette -->
+    <g stroke="#C47820" stroke-width="1.5" stroke-linecap="round" opacity="0.8"
+       transform="rotate(-22, 107, 55)">
+      <line x1="72"  y1="44" x2="80"  y2="52"/>
+      <line x1="88"  y1="42" x2="96"  y2="50"/>
+      <line x1="104" y1="41" x2="112" y2="49"/>
+      <line x1="120" y1="41" x2="128" y2="49"/>
+      <line x1="136" y1="42" x2="144" y2="50"/>
+    </g>
+    <!-- Baguette highlight on top-left -->
+    <rect x="52" y="44" width="110" height="8" rx="4"
+          fill="white" opacity="0.18"
+          transform="rotate(-22, 107, 55)"/>
+
+    <!-- ── BASKET BODY ── -->
+    <path d="M34 112 Q34 168 96 168 Q158 168 158 112 L150 100 Q126 94 96 94 Q66 94 42 100 Z"
+          fill="url(#basketGrad)" stroke="#7A5020" stroke-width="3"/>
+
+    <!-- Wicker weave pattern clipped to basket body -->
+    <g clip-path="url(#basketBodyClip)" opacity="0.5">
+      <!-- Diagonal lines going one way -->
+      <line x1="20"  y1="80"  x2="100" y2="170" stroke="#5E3A10" stroke-width="1.5"/>
+      <line x1="40"  y1="80"  x2="120" y2="170" stroke="#5E3A10" stroke-width="1.5"/>
+      <line x1="60"  y1="80"  x2="140" y2="170" stroke="#5E3A10" stroke-width="1.5"/>
+      <line x1="80"  y1="80"  x2="160" y2="170" stroke="#5E3A10" stroke-width="1.5"/>
+      <line x1="100" y1="80"  x2="180" y2="170" stroke="#5E3A10" stroke-width="1.5"/>
+      <line x1="120" y1="80"  x2="200" y2="170" stroke="#5E3A10" stroke-width="1.5"/>
+      <!-- Diagonal lines going the other way -->
+      <line x1="20"  y1="170" x2="100" y2="80"  stroke="#5E3A10" stroke-width="1.5"/>
+      <line x1="40"  y1="170" x2="120" y2="80"  stroke="#5E3A10" stroke-width="1.5"/>
+      <line x1="60"  y1="170" x2="140" y2="80"  stroke="#5E3A10" stroke-width="1.5"/>
+      <line x1="80"  y1="170" x2="160" y2="80"  stroke="#5E3A10" stroke-width="1.5"/>
+      <line x1="100" y1="170" x2="180" y2="80"  stroke="#5E3A10" stroke-width="1.5"/>
+      <line x1="120" y1="170" x2="200" y2="80"  stroke="#5E3A10" stroke-width="1.5"/>
+    </g>
+
+    <!-- Basket rim band -->
+    <ellipse cx="96" cy="100" rx="62" ry="14"
+             fill="url(#rimGrad)" stroke="#7A5020" stroke-width="2.5"/>
+    <!-- Rim highlight -->
+    <ellipse cx="96" cy="97" rx="54" ry="7" fill="white" opacity="0.12"/>
+
+    <!-- Linen cloth inside basket peeking over rim -->
+    <ellipse cx="96" cy="99" rx="50" ry="10"
+             fill="url(#linerGrad)" stroke="#C8B890" stroke-width="1.5"/>
+
+    <!-- Small sesame roll in basket, right side -->
+    <ellipse cx="118" cy="108" rx="14" ry="10"
+             fill="url(#rollGrad)" stroke="#8B5A10" stroke-width="2"/>
+    <!-- Roll highlight -->
+    <ellipse cx="113" cy="104" rx="5" ry="3" fill="white" opacity="0.18"/>
+    <!-- Sesame seeds on roll -->
+    <g fill="#F5D880" opacity="0.9">
+      <ellipse cx="114" cy="107" rx="1.5" ry="1" transform="rotate(20,114,107)"/>
+      <ellipse cx="120" cy="106" rx="1.5" ry="1" transform="rotate(-15,120,106)"/>
+      <ellipse cx="118" cy="111" rx="1.5" ry="1" transform="rotate(10,118,111)"/>
+      <ellipse cx="109" cy="110" rx="1.5" ry="1" transform="rotate(-20,109,110)"/>
+    </g>
+
+    <!-- ── STEAM WISPS ── -->
+    <path d="M78 72 Q82 66 78 60 Q74 54 78 48"
+          fill="none" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
+    <path d="M90 68 Q94 62 90 56 Q86 50 90 44"
+          fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" opacity="0.35"/>
+
+  </g>
+</svg>

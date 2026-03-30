@@ -61,7 +61,7 @@ Distribute latest processed TestFlight build to all external groups
 [bundle exec] fastlane ios upload_metadata
 ```
 
-Upload App Store text metadata for GAME (no binary, no screenshots by default)
+Upload App Store text metadata and screenshots for GAME from metadata/ folder
 
 ### ios upload_screenshots
 
@@ -70,22 +70,6 @@ Upload App Store text metadata for GAME (no binary, no screenshots by default)
 ```
 
 Upload App Store screenshots for GAME
-
-### ios submit
-
-```sh
-[bundle exec] fastlane ios submit
-```
-
-Submit GAME for App Store review using the latest processed build
-
-### ios release
-
-```sh
-[bundle exec] fastlane ios release
-```
-
-Full release pipeline: build → TestFlight → metadata → submit
 
 ### ios sync_iap
 

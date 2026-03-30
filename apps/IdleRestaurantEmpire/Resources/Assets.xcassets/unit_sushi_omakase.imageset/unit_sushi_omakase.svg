@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <filter id="ds" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="2" dy="3" stdDeviation="4" flood-color="#3A1500" flood-opacity="0.28"/>
+    </filter>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#082060"/>
+      <stop offset="60%" stop-color="#0D47A1"/>
+      <stop offset="100%" stop-color="#1565C0"/>
+    </linearGradient>
+    <linearGradient id="counterGrad" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0%" stop-color="#8B6451"/>
+      <stop offset="40%" stop-color="#6D4C41"/>
+      <stop offset="100%" stop-color="#3A2018"/>
+    </linearGradient>
+    <linearGradient id="counterTopGrad" x1="0" y1="0" x2="0.2" y2="1">
+      <stop offset="0%" stop-color="#A07858"/>
+      <stop offset="100%" stop-color="#6D4C41"/>
+    </linearGradient>
+    <radialGradient id="spot1" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F5E8C0" stop-opacity="0.75"/>
+      <stop offset="60%" stop-color="#F5E8C0" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#F5E8C0" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="spot2" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F5E8C0" stop-opacity="0.65"/>
+      <stop offset="60%" stop-color="#F5E8C0" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#F5E8C0" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="spot3" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F5E8C0" stop-opacity="0.65"/>
+      <stop offset="60%" stop-color="#F5E8C0" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#F5E8C0" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <g filter="url(#ds)">
+
+    <!-- ── BACKGROUND WALL ── -->
+    <rect x="10" y="10" width="172" height="172" rx="8" fill="url(#bgGrad)"/>
+
+    <!-- Subtle wall texture / light horizontal bands -->
+    <rect x="10" y="10" width="172" height="2" rx="1" fill="#1976D2" opacity="0.4"/>
+    <rect x="10" y="30" width="172" height="1" fill="#1565C0" opacity="0.2"/>
+    <rect x="10" y="50" width="172" height="1" fill="#1565C0" opacity="0.15"/>
+
+    <!-- ── NOREN CURTAIN (hanging strips at top) ── -->
+    <!-- 5 fabric strips -->
+    <rect x="18"  y="10" width="22" height="38" rx="0" fill="#082060" stroke="#1565C0" stroke-width="1" opacity="0.9"/>
+    <rect x="44"  y="10" width="22" height="42" rx="0" fill="#0A2870" stroke="#1565C0" stroke-width="1" opacity="0.9"/>
+    <rect x="70"  y="10" width="22" height="38" rx="0" fill="#082060" stroke="#1565C0" stroke-width="1" opacity="0.9"/>
+    <rect x="96"  y="10" width="22" height="44" rx="0" fill="#0A2870" stroke="#1565C0" stroke-width="1" opacity="0.9"/>
+    <rect x="122" y="10" width="22" height="38" rx="0" fill="#082060" stroke="#1565C0" stroke-width="1" opacity="0.9"/>
+    <rect x="148" y="10" width="24" height="42" rx="0" fill="#0A2870" stroke="#1565C0" stroke-width="1" opacity="0.9"/>
+    <!-- Noren top rod -->
+    <rect x="12" y="10" width="168" height="5" rx="2" fill="#2A3A6A" stroke="#3A4A7A" stroke-width="1"/>
+    <!-- Noren kanji suggestion (white stripes on first strip) -->
+    <line x1="27" y1="16" x2="27" y2="44" stroke="#FFFFFF" stroke-width="1.5" opacity="0.25"/>
+    <line x1="22" y1="24" x2="32" y2="24" stroke="#FFFFFF" stroke-width="1.5" opacity="0.25"/>
+
+    <!-- ── OVERHEAD SPOTLIGHTS ── -->
+    <!-- Spotlight housing -->
+    <rect x="32" y="50" width="12" height="8" rx="2" fill="#1A1A2A" stroke="#2A2A3A" stroke-width="1"/>
+    <rect x="82" y="48" width="12" height="8" rx="2" fill="#1A1A2A" stroke="#2A2A3A" stroke-width="1"/>
+    <rect x="132" y="50" width="12" height="8" rx="2" fill="#1A1A2A" stroke="#2A2A3A" stroke-width="1"/>
+    <!-- Spotlight glow cones -->
+    <ellipse cx="38" cy="90" rx="32" ry="14" fill="url(#spot1)"/>
+    <ellipse cx="88" cy="88" rx="32" ry="14" fill="url(#spot2)"/>
+    <ellipse cx="138" cy="90" rx="32" ry="14" fill="url(#spot3)"/>
+    <!-- Light cone lines -->
+    <path d="M34 58 L16 88" fill="none" stroke="#F5E8C0" stroke-width="0.5" opacity="0.15"/>
+    <path d="M42 58 L60 88" fill="none" stroke="#F5E8C0" stroke-width="0.5" opacity="0.15"/>
+    <path d="M84 56 L66 86" fill="none" stroke="#F5E8C0" stroke-width="0.5" opacity="0.15"/>
+    <path d="M92 56 L110 86" fill="none" stroke="#F5E8C0" stroke-width="0.5" opacity="0.15"/>
+    <path d="M134 58 L116 88" fill="none" stroke="#F5E8C0" stroke-width="0.5" opacity="0.15"/>
+    <path d="M142 58 L160 88" fill="none" stroke="#F5E8C0" stroke-width="0.5" opacity="0.15"/>
+
+    <!-- ── SUSHI COUNTER (wood plank, horizontal) ── -->
+    <!-- Counter front face -->
+    <rect x="10" y="118" width="172" height="36" rx="0" fill="url(#counterGrad)" stroke="#2A1408" stroke-width="2"/>
+    <!-- Counter top surface -->
+    <rect x="10" y="106" width="172" height="16" rx="2" fill="url(#counterTopGrad)" stroke="#3A2018" stroke-width="2"/>
+    <!-- Counter top wood grain -->
+    <line x1="10" y1="110" x2="182" y2="110" stroke="#8B6040" stroke-width="1" opacity="0.4"/>
+    <line x1="10" y1="114" x2="182" y2="114" stroke="#5A3A20" stroke-width="0.8" opacity="0.4"/>
+    <!-- Counter front panel wood grain -->
+    <line x1="10" y1="128" x2="182" y2="128" stroke="#5A3820" stroke-width="1" opacity="0.35"/>
+    <line x1="10" y1="138" x2="182" y2="138" stroke="#5A3820" stroke-width="1" opacity="0.3"/>
+    <line x1="10" y1="148" x2="182" y2="148" stroke="#5A3820" stroke-width="0.8" opacity="0.25"/>
+    <!-- Counter highlight (left edge) -->
+    <rect x="10" y="108" width="5" height="44" fill="#A07858" opacity="0.3"/>
+
+    <!-- ── BAR STOOLS (12 semi-circles along counter front) ── -->
+    <!-- Row of stools at y=154+ -->
+    <ellipse cx="24"  cy="162" rx="9"  ry="5" fill="#2A2020" stroke="#1A1010" stroke-width="1.5"/>
+    <ellipse cx="40"  cy="162" rx="9"  ry="5" fill="#2A2020" stroke="#1A1010" stroke-width="1.5"/>
+    <ellipse cx="56"  cy="162" rx="9"  ry="5" fill="#2A2020" stroke="#1A1010" stroke-width="1.5"/>
+    <ellipse cx="72"  cy="162" rx="9"  ry="5" fill="#2A2020" stroke="#1A1010" stroke-width="1.5"/>
+    <ellipse cx="88"  cy="162" rx="9"  ry="5" fill="#2A2020" stroke="#1A1010" stroke-width="1.5"/>
+    <ellipse cx="104" cy="162" rx="9"  ry="5" fill="#2A2020" stroke="#1A1010" stroke-width="1.5"/>
+    <ellipse cx="120" cy="162" rx="9"  ry="5" fill="#2A2020" stroke="#1A1010" stroke-width="1.5"/>
+    <ellipse cx="136" cy="162" rx="9"  ry="5" fill="#2A2020" stroke="#1A1010" stroke-width="1.5"/>
+    <ellipse cx="152" cy="162" rx="9"  ry="5" fill="#2A2020" stroke="#1A1010" stroke-width="1.5"/>
+    <ellipse cx="168" cy="162" rx="9"  ry="5" fill="#2A2020" stroke="#1A1010" stroke-width="1.5"/>
+    <!-- Stool legs suggestion -->
+    <rect x="21" y="162" width="6" height="10" rx="1" fill="#1A1010"/>
+    <rect x="53" y="162" width="6" height="10" rx="1" fill="#1A1010"/>
+    <rect x="85" y="162" width="6" height="10" rx="1" fill="#1A1010"/>
+    <rect x="117" y="162" width="6" height="10" rx="1" fill="#1A1010"/>
+    <rect x="149" y="162" width="6" height="10" rx="1" fill="#1A1010"/>
+
+    <!-- ── PLATES ON COUNTER ── -->
+    <!-- 5 small elliptical white plates on counter top -->
+    <ellipse cx="32"  cy="110" rx="12" ry="5" fill="#F5EDD8" stroke="#D8D0B8" stroke-width="1.5"/>
+    <ellipse cx="68"  cy="109" rx="12" ry="5" fill="#F5EDD8" stroke="#D8D0B8" stroke-width="1.5"/>
+    <ellipse cx="96"  cy="110" rx="12" ry="5" fill="#F5EDD8" stroke="#D8D0B8" stroke-width="1.5"/>
+    <ellipse cx="130" cy="109" rx="12" ry="5" fill="#F5EDD8" stroke="#D8D0B8" stroke-width="1.5"/>
+    <ellipse cx="162" cy="110" rx="12" ry="5" fill="#F5EDD8" stroke="#D8D0B8" stroke-width="1.5"/>
+
+    <!-- ── NIGIRI ON PLATES (tiny salmon-orange blobs) ── -->
+    <ellipse cx="30"  cy="108" rx="5"  ry="2.5" fill="#FF7043" opacity="0.9"/>
+    <ellipse cx="36"  cy="108" rx="5"  ry="2.5" fill="#F5EDD8" opacity="0.8"/>
+    <ellipse cx="66"  cy="107" rx="5"  ry="2.5" fill="#FF7043" opacity="0.9"/>
+    <ellipse cx="72"  cy="107" rx="5"  ry="2.5" fill="#C62020" opacity="0.85"/>
+    <ellipse cx="94"  cy="108" rx="5"  ry="2.5" fill="#FF7043" opacity="0.9"/>
+    <ellipse cx="100" cy="108" rx="5"  ry="2.5" fill="#F5EDD8" opacity="0.8"/>
+    <ellipse cx="128" cy="107" rx="5"  ry="2.5" fill="#C62020" opacity="0.85"/>
+    <ellipse cx="134" cy="107" rx="5"  ry="2.5" fill="#FF7043" opacity="0.9"/>
+    <ellipse cx="160" cy="108" rx="5"  ry="2.5" fill="#F5EDD8" opacity="0.8"/>
+    <ellipse cx="166" cy="108" rx="5"  ry="2.5" fill="#FF7043" opacity="0.9"/>
+
+    <!-- Chopstick rests on counter -->
+    <rect x="50" y="112" width="8" height="3" rx="1.5" fill="#8B6451" opacity="0.7"/>
+    <rect x="114" y="112" width="8" height="3" rx="1.5" fill="#8B6451" opacity="0.7"/>
+
+  </g>
+</svg>

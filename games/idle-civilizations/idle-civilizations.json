@@ -1311,7 +1311,29 @@
         "body": "Collect enough gold to advance to the Bronze Age.",
         "highlightTarget": "advance_button"
       }
-    ]
+    ],
+    "onboardingCopy": {
+      "welcomeTitle": "Welcome, Great Leader",
+      "welcomeTagline": "Build your civilization from a campfire\nto a spacefaring empire.",
+      "beginButton": "Begin Your Journey",
+      "heroArtworkAsset": "era_stone_age",
+      "paywallTitle": "Rule Without Limits",
+      "paywallSubtitle": "Unlock the full power of your civilization with the Civ Pass.",
+      "paywallBulletPoints": [
+        "🌙 2× offline income — your empire grows while you sleep",
+        "👑 Exclusive leader skins and era artwork",
+        "⚡ Faster wonder construction speed",
+        "🏺 Early access to new eras and events"
+      ],
+      "paywallSkipButton": "Start for Free",
+      "paywallRestoreButton": "Restore Purchases",
+      "paywallBestValueBadge": "Best Value",
+      "paywallNoProductsMessage": "Store is temporarily unavailable. Start for free and subscribe later.",
+      "paywallMonthlyLabel": "Monthly",
+      "paywallAnnualLabel": "Annual"
+    },
+    "privacyPolicyURL": "https://idle-studio.vercel.app/games/idle-civilizations/privacy/",
+    "termsOfUseURL": "https://idle-studio.vercel.app/games/idle-civilizations/terms/"
   },
   "prestigeRequirementMilestoneID": "international_space_station",
   "achievements": [

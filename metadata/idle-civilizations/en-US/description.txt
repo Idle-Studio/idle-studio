@@ -27,3 +27,9 @@ PLAY YOUR WAY
 • No energy system — play as much as you want
 • Rewarded ads are optional — never forced
 • Optional Civ Pass subscription for bonus coins and exclusive perks
+
+SUBSCRIPTION INFORMATION
+Civ Pass is available as a monthly or annual auto-renewable subscription. Payment will be charged to your Apple ID account at confirmation of purchase. Subscriptions automatically renew unless cancelled at least 24 hours before the end of the current period. Your account will be charged for renewal within 24 hours prior to the end of the current period. Manage or cancel your subscription in your App Store account settings. No cancellation of the current subscription is allowed during the active subscription period.
+
+Terms of Use: https://idle-studio.vercel.app/games/idle-civilizations/terms/
+Privacy Policy: https://idle-studio.vercel.app/games/idle-civilizations/privacy/

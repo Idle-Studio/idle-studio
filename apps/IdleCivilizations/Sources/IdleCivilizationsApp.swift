@@ -10,8 +10,11 @@ struct IdleCivilizationsApp: App {
 
     var body: some Scene {
         WindowGroup {
-            IdleGameRoot(themeName: "idle-civilizations")
-                .environment(\.adService, adService)
+            IdleGameRoot(
+                themeName: "idle-civilizations",
+                cloudKitContainerID: "iCloud.com.idlestudio.idleciv"
+            )
+            .environment(\.adService, adService)
         }
     }
 }

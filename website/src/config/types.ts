@@ -76,6 +76,7 @@ export interface GameConfig {
   }
   supportEmail: string
   privacyPolicyLastUpdated: string
+  termsLastUpdated: string
   supportFAQ: SupportFAQ[]
 }
 

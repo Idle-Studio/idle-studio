@@ -1,0 +1,170 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <filter id="ds" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="2" dy="3" stdDeviation="4" flood-color="#3A1500" flood-opacity="0.28"/>
+    </filter>
+    <!-- Background kitchen dark -->
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2A3236"/>
+      <stop offset="100%" stop-color="#161E22"/>
+    </linearGradient>
+    <!-- Stainless steel counter -->
+    <linearGradient id="steelGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#CFD8DC"/>
+      <stop offset="40%" stop-color="#B0BEC5"/>
+      <stop offset="100%" stop-color="#78909C"/>
+    </linearGradient>
+    <!-- Steel side face -->
+    <linearGradient id="steelSide" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#78909C"/>
+      <stop offset="100%" stop-color="#546E7A"/>
+    </linearGradient>
+    <!-- Heat lamp warm gold -->
+    <radialGradient id="heatLamp" cx="50%" cy="0%" r="55%">
+      <stop offset="0%" stop-color="#F0C040" stop-opacity="0.45"/>
+      <stop offset="60%" stop-color="#F08020" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#F08020" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Plating ring content left -->
+    <linearGradient id="dishLeft" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E8D8B0"/>
+      <stop offset="50%" stop-color="#7CB342"/>
+      <stop offset="100%" stop-color="#D4622A"/>
+    </linearGradient>
+    <!-- Glove gradient -->
+    <linearGradient id="gloveGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F8F8F8"/>
+      <stop offset="100%" stop-color="#D8DCE0"/>
+    </linearGradient>
+    <!-- Tweezers metal -->
+    <linearGradient id="tweezerGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#CFD8DC"/>
+      <stop offset="50%" stop-color="#ECEFF1"/>
+      <stop offset="100%" stop-color="#90A4AE"/>
+    </linearGradient>
+  </defs>
+
+  <g filter="url(#ds)">
+
+    <!-- Dark kitchen background -->
+    <rect x="14" y="14" width="164" height="164" rx="7" fill="url(#bgGrad)"/>
+
+    <!-- Back wall stainless surface (suggestion) -->
+    <rect x="14" y="14" width="164" height="70" rx="7" fill="#263238" opacity="0.8"/>
+    <line x1="14" y1="48" x2="178" y2="48" stroke="#37474F" stroke-width="1" opacity="0.5"/>
+    <line x1="14" y1="64" x2="178" y2="64" stroke="#37474F" stroke-width="1" opacity="0.4"/>
+
+    <!-- Heat lamp glow from above center -->
+    <rect x="14" y="14" width="164" height="164" rx="7" fill="url(#heatLamp)"/>
+
+    <!-- Heat lamp fixture -->
+    <rect x="76" y="14" width="40" height="8" rx="3" fill="#546E7A" stroke="#37474F" stroke-width="1.5"/>
+    <!-- Lamp housing -->
+    <path d="M80 22 Q76 28 76 34 L116 34 Q116 28 112 22 Z" fill="#F0C040" stroke="#C09020" stroke-width="1.5"/>
+    <!-- Lamp inner glow disc -->
+    <ellipse cx="96" cy="30" rx="16" ry="6" fill="#FFF0A0" opacity="0.7"/>
+    <!-- Lamp guard bars -->
+    <line x1="82" y1="22" x2="82" y2="34" stroke="#C09020" stroke-width="1"/>
+    <line x1="89" y1="22" x2="89" y2="34" stroke="#C09020" stroke-width="1"/>
+    <line x1="96" y1="22" x2="96" y2="34" stroke="#C09020" stroke-width="1"/>
+    <line x1="103" y1="22" x2="103" y2="34" stroke="#C09020" stroke-width="1"/>
+    <line x1="110" y1="22" x2="110" y2="34" stroke="#C09020" stroke-width="1"/>
+
+    <!-- ── STAINLESS STEEL COUNTER ── -->
+    <!-- Counter top surface -->
+    <rect x="20" y="108" width="152" height="52" rx="4" fill="url(#steelGrad)"/>
+    <!-- Counter reflection lines (horizontal subtle) -->
+    <line x1="22" y1="114" x2="170" y2="114" stroke="white" stroke-width="0.8" opacity="0.3"/>
+    <line x1="22" y1="120" x2="170" y2="120" stroke="#90A4AE" stroke-width="0.6" opacity="0.2"/>
+    <line x1="22" y1="128" x2="170" y2="128" stroke="#90A4AE" stroke-width="0.5" opacity="0.15"/>
+    <!-- Counter front face -->
+    <rect x="20" y="158" width="152" height="20" rx="4" fill="url(#steelSide)"/>
+    <rect x="20" y="108" width="152" height="70" rx="4" fill="none" stroke="#546E7A" stroke-width="2.5"/>
+    <!-- Counter top edge highlight -->
+    <rect x="20" y="108" width="152" height="4" rx="2" fill="white" opacity="0.15"/>
+
+    <!-- ── LEFT PLATING RING (complete dish) ── -->
+    <!-- Ring shadow on counter -->
+    <ellipse cx="66" cy="136" rx="28" ry="5" fill="#37474F" opacity="0.4"/>
+    <!-- Ring cylinder -->
+    <ellipse cx="66" cy="120" rx="26" ry="4" fill="none" stroke="#90A4AE" stroke-width="2.5"/>
+    <rect x="40" y="120" width="52" height="16" fill="none" stroke="#90A4AE" stroke-width="2.5"/>
+    <ellipse cx="66" cy="136" rx="26" ry="4" fill="none" stroke="#90A4AE" stroke-width="2.5"/>
+
+    <!-- Dish contents (left ring — completed, layered) -->
+    <!-- Bottom layer: beige puree -->
+    <ellipse cx="66" cy="128" rx="22" ry="10" fill="#E8D8B0"/>
+    <!-- Middle layer: green component -->
+    <ellipse cx="66" cy="126" rx="16" ry="7" fill="#7CB342"/>
+    <!-- Red dot components (3 arranged) -->
+    <circle cx="58" cy="124" r="4" fill="#D4622A" stroke="#A03818" stroke-width="1"/>
+    <circle cx="66" cy="122" r="4" fill="#C8501A" stroke="#A03818" stroke-width="1"/>
+    <circle cx="74" cy="124" r="4" fill="#D4622A" stroke="#A03818" stroke-width="1"/>
+    <!-- Gold dots on top -->
+    <circle cx="62" cy="120" r="1.5" fill="#F0C040"/>
+    <circle cx="70" cy="120" r="1.5" fill="#F0C040"/>
+    <!-- Micro herb garnish -->
+    <path d="M64 118 Q65 115 67 116 Q66 119 64 118 Z" fill="#4CAF50"/>
+    <path d="M68 117 Q70 114 72 115 Q70 118 68 117 Z" fill="#66BB6A"/>
+
+    <!-- ── RIGHT PLATING RING (in progress, being worked) ── -->
+    <!-- Ring shadow -->
+    <ellipse cx="126" cy="136" rx="28" ry="5" fill="#37474F" opacity="0.4"/>
+    <!-- Ring -->
+    <ellipse cx="126" cy="120" rx="26" ry="4" fill="none" stroke="#90A4AE" stroke-width="2.5"/>
+    <rect x="100" y="120" width="52" height="16" fill="none" stroke="#90A4AE" stroke-width="2.5"/>
+    <ellipse cx="126" cy="136" rx="26" ry="4" fill="none" stroke="#90A4AE" stroke-width="2.5"/>
+
+    <!-- Dish contents (right ring — partial, being worked) -->
+    <!-- Base layer only so far -->
+    <ellipse cx="126" cy="130" rx="22" ry="8" fill="#E8D8B0" opacity="0.9"/>
+    <!-- Partial green layer being placed -->
+    <ellipse cx="126" cy="128" rx="12" ry="5" fill="#A5D66A"/>
+    <!-- One component placed -->
+    <circle cx="118" cy="126" r="4" fill="#D4622A" stroke="#A03818" stroke-width="1"/>
+    <!-- Second spot (empty, waiting) -->
+    <circle cx="126" cy="124" r="3" fill="none" stroke="#B0BEC5" stroke-width="1" stroke-dasharray="2,2" opacity="0.5"/>
+    <!-- Third spot (empty) -->
+    <circle cx="134" cy="126" r="3" fill="none" stroke="#B0BEC5" stroke-width="1" stroke-dasharray="2,2" opacity="0.5"/>
+
+    <!-- ── TWEEZERS (hovering over right ring) ── -->
+    <!-- Tweezers are two thin arms converging at a fine tip -->
+    <!-- Left arm -->
+    <path d="M112 80 Q114 96 120 110 Q122 115 123.5 118"
+          fill="none" stroke="url(#tweezerGrad)" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- Right arm -->
+    <path d="M132 80 Q130 96 128 110 Q126 115 124.5 118"
+          fill="none" stroke="url(#tweezerGrad)" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- Tweezers top grip spring -->
+    <path d="M112 80 Q122 76 132 80" fill="none" stroke="#CFD8DC" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- Joint highlight -->
+    <ellipse cx="122" cy="80" rx="6" ry="3" fill="none" stroke="#ECEFF1" stroke-width="1" opacity="0.6"/>
+    <!-- Tiny herb piece at tip of tweezers -->
+    <path d="M124 117 Q126 113 128 115 Q126 118 124 117 Z" fill="#4CAF50" opacity="0.9"/>
+
+    <!-- ── CHEF'S GLOVED HANDS (bottom, partial) ── -->
+    <!-- Left glove -->
+    <path d="M20 178 Q20 160 34 158 L56 158 Q62 158 66 164 L68 178 Z"
+          fill="url(#gloveGrad)" stroke="#C0C8CC" stroke-width="2"/>
+    <!-- Left glove finger detail -->
+    <path d="M30 160 L30 175" stroke="#D0D8DC" stroke-width="1" opacity="0.5"/>
+    <path d="M38 159 L38 175" stroke="#D0D8DC" stroke-width="1" opacity="0.5"/>
+    <path d="M46 159 L46 175" stroke="#D0D8DC" stroke-width="1" opacity="0.5"/>
+    <!-- Left glove top highlight -->
+    <path d="M22 162 Q40 158 64 160" fill="none" stroke="white" stroke-width="0.8" opacity="0.35"/>
+
+    <!-- Right glove (holding tweezers) -->
+    <path d="M172 178 Q172 155 158 152 L136 152 Q128 152 124 158 L122 178 Z"
+          fill="url(#gloveGrad)" stroke="#C0C8CC" stroke-width="2"/>
+    <!-- Right glove finger detail -->
+    <path d="M162 155 L162 175" stroke="#D0D8DC" stroke-width="1" opacity="0.5"/>
+    <path d="M154 153 L154 175" stroke="#D0D8DC" stroke-width="1" opacity="0.5"/>
+    <path d="M146 152 L146 175" stroke="#D0D8DC" stroke-width="1" opacity="0.5"/>
+    <!-- Right glove highlight -->
+    <path d="M130 156 Q148 151 170 154" fill="none" stroke="white" stroke-width="0.8" opacity="0.35"/>
+
+    <!-- Border -->
+    <rect x="14" y="14" width="164" height="164" rx="7" fill="none" stroke="#161E22" stroke-width="2.5"/>
+
+  </g>
+</svg>

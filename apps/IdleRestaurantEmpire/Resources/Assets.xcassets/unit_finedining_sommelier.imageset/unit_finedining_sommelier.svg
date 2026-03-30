@@ -1,0 +1,164 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <filter id="ds" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="2" dy="3" stdDeviation="4" flood-color="#3A1500" flood-opacity="0.28"/>
+    </filter>
+    <!-- Background gradient charcoal -->
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2E3C42"/>
+      <stop offset="100%" stop-color="#161E22"/>
+    </linearGradient>
+    <!-- Candlelight glow bottom-right -->
+    <radialGradient id="candleGlow" cx="75%" cy="85%" r="45%">
+      <stop offset="0%" stop-color="#F0A030" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#F0A030" stop-opacity="0"/>
+    </radialGradient>
+    <!-- White jacket gradient -->
+    <linearGradient id="jacketGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F0F0F0"/>
+      <stop offset="100%" stop-color="#C0C8CC"/>
+    </linearGradient>
+    <!-- Decanter glass gradient -->
+    <linearGradient id="decanterGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#D8E8F4" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#90A8C0" stop-opacity="0.6"/>
+    </linearGradient>
+    <!-- Wine (ruby red) gradient -->
+    <linearGradient id="wineGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#C01830"/>
+      <stop offset="100%" stop-color="#6A0010"/>
+    </linearGradient>
+    <!-- Silver tastevin gradient -->
+    <linearGradient id="silverGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ECEFF1"/>
+      <stop offset="100%" stop-color="#90A4AE"/>
+    </linearGradient>
+    <!-- Skin gradient -->
+    <linearGradient id="skinGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFCC99"/>
+      <stop offset="100%" stop-color="#CC9966"/>
+    </linearGradient>
+    <!-- Hair gradient -->
+    <linearGradient id="hairGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3A2A1A"/>
+      <stop offset="100%" stop-color="#1A1008"/>
+    </linearGradient>
+  </defs>
+
+  <g filter="url(#ds)">
+
+    <!-- Background -->
+    <rect x="14" y="14" width="164" height="164" rx="8" fill="url(#bgGrad)"/>
+    <rect x="14" y="14" width="164" height="164" rx="8" fill="url(#candleGlow)"/>
+    <rect x="14" y="14" width="164" height="164" rx="8" fill="none" stroke="#161E22" stroke-width="2"/>
+
+    <!-- ══ SOMMELIER BODY ══ -->
+
+    <!-- Jacket body (white double-breasted) -->
+    <path d="M38 192 L38 130 Q38 110 50 106 L70 100 L96 104 L122 100 L142 106 Q154 110 154 130 L154 192 Z"
+          fill="url(#jacketGrad)" stroke="#90A4AE" stroke-width="2"/>
+    <!-- Jacket top highlight -->
+    <path d="M50 108 Q70 102 96 105 Q122 102 142 108 Q134 100 96 98 Q58 100 50 108 Z" fill="white" opacity="0.25"/>
+
+    <!-- Double-breasted button line (left side) -->
+    <circle cx="80" cy="130" r="3.5" fill="url(#silverGrad)" stroke="#70808A" stroke-width="1"/>
+    <circle cx="80" cy="145" r="3.5" fill="url(#silverGrad)" stroke="#70808A" stroke-width="1"/>
+    <circle cx="80" cy="160" r="3.5" fill="url(#silverGrad)" stroke="#70808A" stroke-width="1"/>
+    <!-- Double-breasted button line (right side) -->
+    <circle cx="112" cy="130" r="3.5" fill="url(#silverGrad)" stroke="#70808A" stroke-width="1"/>
+    <circle cx="112" cy="145" r="3.5" fill="url(#silverGrad)" stroke="#70808A" stroke-width="1"/>
+    <circle cx="112" cy="160" r="3.5" fill="url(#silverGrad)" stroke="#70808A" stroke-width="1"/>
+
+    <!-- Jacket lapels -->
+    <path d="M96 104 L80 115 L80 125 Z" fill="#E0E8EC" stroke="#90A4AE" stroke-width="1.5"/>
+    <path d="M96 104 L112 115 L112 125 Z" fill="#E0E8EC" stroke="#90A4AE" stroke-width="1.5"/>
+    <!-- Shirt / tie center -->
+    <rect x="90" y="104" width="12" height="26" rx="2" fill="#F8F8F8"/>
+    <path d="M96 106 L92 118 L96 120 L100 118 Z" fill="#8B0000" stroke="#600000" stroke-width="1"/>
+
+    <!-- ── NECK AND HEAD ── -->
+
+    <!-- Neck -->
+    <rect x="88" y="82" width="20" height="24" rx="4" fill="url(#skinGrad)"/>
+
+    <!-- Head -->
+    <ellipse cx="96" cy="68" rx="26" ry="28" fill="url(#skinGrad)" stroke="#B07850" stroke-width="1.5"/>
+    <!-- Face highlight (top-left lit) -->
+    <ellipse cx="88" cy="60" rx="12" ry="10" fill="white" opacity="0.18"/>
+
+    <!-- Hair -->
+    <path d="M70 58 Q70 40 96 38 Q122 40 122 58 Q118 44 96 42 Q74 44 70 58 Z" fill="url(#hairGrad)"/>
+    <!-- Side hair -->
+    <path d="M70 58 Q68 68 70 76 Q74 70 74 62 Z" fill="url(#hairGrad)"/>
+    <path d="M122 58 Q124 68 122 76 Q118 70 118 62 Z" fill="url(#hairGrad)"/>
+
+    <!-- Face features -->
+    <!-- Eyebrows -->
+    <path d="M83 60 Q88 57 93 59" fill="none" stroke="#3A2A1A" stroke-width="2" stroke-linecap="round"/>
+    <path d="M99 59 Q104 57 109 60" fill="none" stroke="#3A2A1A" stroke-width="2" stroke-linecap="round"/>
+    <!-- Eyes -->
+    <ellipse cx="88" cy="64" rx="4" ry="3.5" fill="#2A1A0A"/>
+    <ellipse cx="104" cy="64" rx="4" ry="3.5" fill="#2A1A0A"/>
+    <circle cx="87" cy="63" r="1.2" fill="white" opacity="0.7"/>
+    <circle cx="103" cy="63" r="1.2" fill="white" opacity="0.7"/>
+    <!-- Nose -->
+    <path d="M94 68 Q92 74 94 76 Q98 78 100 76 Q102 74 98 68" fill="none" stroke="#C09060" stroke-width="1.2"/>
+    <!-- Mouth (slight professional expression) -->
+    <path d="M89 80 Q96 83 103 80" fill="none" stroke="#A07050" stroke-width="1.5" stroke-linecap="round"/>
+
+    <!-- ── TASTEVIN MEDAL ── -->
+    <!-- Chain -->
+    <path d="M82 98 Q78 110 76 120 Q74 128 76 134" fill="none" stroke="#CFD8DC" stroke-width="1.5" stroke-dasharray="2,2"/>
+    <!-- Tastevin cup (small shallow oval) -->
+    <ellipse cx="74" cy="138" rx="10" ry="6" fill="url(#silverGrad)" stroke="#90A4AE" stroke-width="1.5"/>
+    <!-- Tastevin radiating bump detail -->
+    <line x1="64" y1="138" x2="84" y2="138" stroke="#B0BEC5" stroke-width="0.8" opacity="0.6"/>
+    <path d="M66 135 Q74 132 82 135" fill="none" stroke="#ECEFF1" stroke-width="0.7" opacity="0.7"/>
+    <path d="M67 141 Q74 144 81 141" fill="none" stroke="#90A4AE" stroke-width="0.7" opacity="0.5"/>
+    <!-- Bump dots on tastevin -->
+    <circle cx="70" cy="136" r="1.2" fill="#ECEFF1" opacity="0.8"/>
+    <circle cx="74" cy="135" r="1.2" fill="#ECEFF1" opacity="0.8"/>
+    <circle cx="78" cy="136" r="1.2" fill="#ECEFF1" opacity="0.8"/>
+    <circle cx="72" cy="140" r="1.2" fill="#ECEFF1" opacity="0.7"/>
+    <circle cx="76" cy="140" r="1.2" fill="#ECEFF1" opacity="0.7"/>
+
+    <!-- ── DECANTING SCENE (right arm area) ── -->
+
+    <!-- Silver cloth over wrist (right arm) -->
+    <path d="M128 118 Q138 116 148 120 L146 126 Q136 122 126 124 Z" fill="#F0F0F0" stroke="#C0C8CC" stroke-width="1.5"/>
+    <!-- Fold lines on cloth -->
+    <path d="M130 120 Q138 118 146 122" fill="none" stroke="#D0D8DC" stroke-width="0.8"/>
+
+    <!-- Wine decanter -->
+    <!-- Wide base -->
+    <path d="M118 192 Q106 188 104 170 Q102 155 108 145 Q112 138 116 134 L116 125 Q116 118 122 116 Q128 114 130 120 L130 134 Q136 138 140 145 Q146 155 144 170 Q142 188 130 192 Z"
+          fill="url(#decanterGrad)" stroke="#7090A8" stroke-width="2"/>
+    <!-- Decanter wine fill (ruby, bottom 60%) -->
+    <path d="M120 192 Q108 188 106 172 Q104 158 110 148 L132 148 Q138 158 136 172 Q134 188 120 192 Z"
+          fill="url(#wineGrad)" opacity="0.85"/>
+    <!-- Decanter glass highlight -->
+    <path d="M112 148 Q108 162 108 176 Q109 168 114 158 Z" fill="white" opacity="0.3"/>
+    <path d="M120 118 Q116 122 116 130 L118 130 Q118 122 122 118 Z" fill="white" opacity="0.2"/>
+    <!-- Decanter neck -->
+    <rect x="116" y="116" width="14" height="18" rx="4" fill="url(#decanterGrad)" stroke="#7090A8" stroke-width="2"/>
+
+    <!-- Wine bottle (dark green, partially visible at top-right) -->
+    <rect x="140" y="14" width="24" height="64" rx="8" fill="#1A3010" stroke="#0A1A08" stroke-width="2"/>
+    <!-- Bottle neck -->
+    <rect x="146" y="14" width="12" height="20" rx="5" fill="#1A3010" stroke="#0A1A08" stroke-width="2"/>
+    <!-- Bottle shoulder highlight -->
+    <path d="M142 36 Q144 28 146 24" fill="none" stroke="#3A5028" stroke-width="1.5" opacity="0.7"/>
+    <!-- Bottle label suggestion -->
+    <rect x="141" y="44" width="22" height="18" rx="2" fill="#F5EDD8" stroke="#C0A060" stroke-width="1"/>
+    <line x1="144" y1="50" x2="160" y2="50" stroke="#A08040" stroke-width="0.8"/>
+    <line x1="144" y1="54" x2="160" y2="54" stroke="#A08040" stroke-width="0.6" opacity="0.7"/>
+
+    <!-- Wine stream pouring from bottle into decanter neck -->
+    <path d="M150 78 Q148 88 144 96 Q140 104 134 112 Q130 116 124 118"
+          fill="none" stroke="#8B0000" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+    <!-- Stream highlight -->
+    <path d="M149 80 Q147 90 143 98 Q139 106 133 114"
+          fill="none" stroke="#C03050" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+
+  </g>
+</svg>

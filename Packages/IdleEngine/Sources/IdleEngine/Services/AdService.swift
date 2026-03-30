@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import UIKit
 
 // MARK: - Types
 
@@ -40,6 +41,10 @@ public protocol AdService: Sendable {
     func loadInterstitial(placement: AdPlacement) async throws
     /// Show an interstitial ad.
     func showInterstitial(placement: AdPlacement) async throws
+    /// Show a banner ad anchored to the bottom of the screen.
+    @MainActor func showBanner(in viewController: UIViewController)
+    /// Hide and remove the banner ad.
+    @MainActor func hideBanner()
     /// True if the player has purchased ad removal.
     var adsRemoved: Bool { get }
 }
@@ -65,4 +70,6 @@ public struct NoOpAdService: AdService, Sendable {
     public func showRewardedAd(placement: AdPlacement) async throws -> AdReward? { nil }
     public func loadInterstitial(placement: AdPlacement) async throws {}
     public func showInterstitial(placement: AdPlacement) async throws {}
+    @MainActor public func showBanner(in viewController: UIViewController) {}
+    @MainActor public func hideBanner() {}
 }

@@ -1,0 +1,1430 @@
+{
+  "schemaVersion": "1.0",
+  "gameID": "idle-restaurant-empire",
+  "displayName": "Idle Restaurant Empire",
+  "bundleID": "com.idlestudio.idlerestaurant",
+  "primaryCurrency": "gold",
+  "primaryCurrencyIcon": "fork.knife.circle.fill",
+
+  "theme": {
+    "colors": {
+      "background":      "#1A0A08",
+      "surface":         "#2A1510",
+      "surfaceElevated": "#3A2018",
+      "textPrimary":     "#F5EDD8",
+      "textSecondary":   "#C4A882",
+      "goldAccent":      "#F0C040"
+    },
+    "levelColors": [
+      { "levelID": "street_food_cart",    "primary": "#D4622A", "secondary": "#A8421A" },
+      { "levelID": "french_bistro",       "primary": "#8B1A3A", "secondary": "#5E1028" },
+      { "levelID": "italian_trattoria",   "primary": "#2E7D32", "secondary": "#1B5E20" },
+      { "levelID": "dim_sum_palace",      "primary": "#C62828", "secondary": "#8C1010" },
+      { "levelID": "sushi_bar",           "primary": "#1565C0", "secondary": "#0D47A1" },
+      { "levelID": "fusion_kitchen",      "primary": "#6A1B9A", "secondary": "#4A148C" },
+      { "levelID": "michelin_fine_dining","primary": "#37474F", "secondary": "#263238" },
+      { "levelID": "global_empire",       "primary": "#B8860B", "secondary": "#8B6914" }
+    ]
+  },
+
+  "levels": [
+    {
+      "id": "street_food_cart",
+      "displayName": "Street Food Cart",
+      "order": 1,
+      "flavorText": "Every great empire started with a cart. Yours smells amazing.",
+      "artworkAsset": "level_street_food",
+      "soundAsset": "ambient_street_food",
+      "advanceRequirement": { "gold": 3000 },
+      "levelResources": ["foot_traffic"],
+
+      "units": [
+        {
+          "id": "street_cart",
+          "displayName": "Street Cart",
+          "description": "A humble cart on wheels — all empires begin with a single dream and a gas burner.",
+          "iconAsset": "unit_street_food_cart",
+          "baseCost": { "gold": 10 },
+          "costMultiplier": 1.15,
+          "baseProductionPerSecond": { "gold": 0.1 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "taco_stand",
+          "displayName": "Taco Stand",
+          "description": "Corn tortillas, secret salsa, and a queue that wraps around the block.",
+          "iconAsset": "unit_street_food_taco",
+          "baseCost": { "gold": 60 },
+          "costMultiplier": 1.15,
+          "baseProductionPerSecond": { "gold": 0.6 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "noodle_stall",
+          "displayName": "Noodle Stall",
+          "description": "Hand-pulled, boiling hot, and gone in sixty seconds flat.",
+          "iconAsset": "unit_street_food_noodles",
+          "baseCost": { "gold": 360 },
+          "costMultiplier": 1.15,
+          "baseProductionPerSecond": { "gold": 3.6, "foot_traffic": 0.01 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "dumpling_cart",
+          "displayName": "Dumpling Cart",
+          "description": "Steamed perfection in every bite, and yes, you do need twelve of them.",
+          "iconAsset": "unit_street_food_dumplings",
+          "baseCost": { "gold": 2160 },
+          "costMultiplier": 1.15,
+          "baseProductionPerSecond": { "gold": 21.6, "foot_traffic": 0.05 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "waffle_truck",
+          "displayName": "Waffle Truck",
+          "description": "Crispy, fluffy, sweet — the kind of line that makes adults shove each other politely.",
+          "iconAsset": "unit_street_food_waffle",
+          "baseCost": { "gold": 12960 },
+          "costMultiplier": 1.15,
+          "baseProductionPerSecond": { "gold": 129.6, "foot_traffic": 0.2 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        }
+      ],
+
+      "milestones": [
+        {
+          "id": "yelp_favorite",
+          "displayName": "Yelp Favorite",
+          "description": "Four and a half stars. The half star is from someone who couldn't find parking.",
+          "artworkAsset": "milestone_street_food_yelp_favorite",
+          "requirements": { "gold": 800, "foot_traffic": 50 },
+          "constructionSeconds": 1800,
+          "skipCostCoins": 30,
+          "canSkipWithAd": true,
+          "bonuses": [
+            { "type": "multiply", "scope": "level", "resource": "gold", "value": 1.5 }
+          ],
+          "isPermanentBonus": false
+        },
+        {
+          "id": "local_legend",
+          "displayName": "Local Legend",
+          "description": "You're on the neighborhood food map. Strangers now cross town just for your food.",
+          "artworkAsset": "milestone_street_food_local_legend",
+          "requirements": { "gold": 2000, "foot_traffic": 200 },
+          "constructionSeconds": 3600,
+          "skipCostCoins": 60,
+          "canSkipWithAd": true,
+          "bonuses": [
+            { "type": "multiply", "scope": "level", "resource": "gold", "value": 2.0 }
+          ],
+          "isPermanentBonus": false
+        }
+      ]
+    },
+
+    {
+      "id": "french_bistro",
+      "displayName": "French Bistro",
+      "order": 2,
+      "flavorText": "Butter, wine, and a maitre d' who definitely judges your shoes.",
+      "artworkAsset": "level_french_bistro",
+      "soundAsset": "ambient_french_bistro",
+      "advanceRequirement": { "gold": 150000 },
+      "levelResources": ["wine"],
+
+      "units": [
+        {
+          "id": "bread_basket",
+          "displayName": "Bread Basket",
+          "description": "Complimentary only in theory — charge by the refill and watch the gold roll in.",
+          "iconAsset": "unit_bistro_bread",
+          "baseCost": { "gold": 1000 },
+          "costMultiplier": 1.13,
+          "baseProductionPerSecond": { "gold": 10.0 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "escargot_station",
+          "displayName": "Escargot Station",
+          "description": "Snails in garlic butter — slow to prepare, but guests pay royally for the privilege.",
+          "iconAsset": "unit_bistro_escargot",
+          "baseCost": { "gold": 6000 },
+          "costMultiplier": 1.13,
+          "baseProductionPerSecond": { "gold": 60.0 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "wine_cellar",
+          "displayName": "Wine Cellar",
+          "description": "Every dusty bottle is a negotiation. Sommeliers love this. Your accountant loves it more.",
+          "iconAsset": "unit_bistro_wine",
+          "baseCost": { "gold": 36000 },
+          "costMultiplier": 1.13,
+          "baseProductionPerSecond": { "gold": 360.0, "wine": 0.05 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "french_kitchen",
+          "displayName": "French Kitchen",
+          "description": "Shouting in French makes every dish taste better. A statistical fact.",
+          "iconAsset": "unit_bistro_kitchen",
+          "baseCost": { "gold": 216000 },
+          "costMultiplier": 1.13,
+          "baseProductionPerSecond": { "gold": 2160.0, "wine": 0.2 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "brasserie_hall",
+          "displayName": "Brasserie Hall",
+          "description": "Red banquettes, jazz, and a prix-fixe menu that justifies the entire renovation.",
+          "iconAsset": "unit_bistro_brasserie",
+          "baseCost": { "gold": 1296000 },
+          "costMultiplier": 1.13,
+          "baseProductionPerSecond": { "gold": 12960.0, "wine": 1.0 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        }
+      ],
+
+      "milestones": [
+        {
+          "id": "bib_gourmand",
+          "displayName": "Bib Gourmand",
+          "description": "Michelin says you're excellent value for money. Your regulars already knew that.",
+          "artworkAsset": "milestone_bistro_bib_gourmand",
+          "requirements": { "gold": 60000, "wine": 150 },
+          "constructionSeconds": 3600,
+          "skipCostCoins": 60,
+          "canSkipWithAd": true,
+          "bonuses": [
+            { "type": "multiply", "scope": "level", "resource": "gold", "value": 1.5 }
+          ],
+          "isPermanentBonus": false
+        },
+        {
+          "id": "first_michelin_star",
+          "displayName": "First Michelin Star",
+          "description": "One star. It arrives quietly by post, and your reservation list explodes overnight.",
+          "artworkAsset": "milestone_bistro_first_star",
+          "requirements": { "gold": 120000, "wine": 500 },
+          "constructionSeconds": 7200,
+          "skipCostCoins": 120,
+          "canSkipWithAd": false,
+          "bonuses": [
+            { "type": "multiply", "scope": "level", "resource": "gold", "value": 2.5 }
+          ],
+          "isPermanentBonus": false
+        }
+      ]
+    },
+
+    {
+      "id": "italian_trattoria",
+      "displayName": "Italian Trattoria",
+      "order": 3,
+      "flavorText": "Nonnas have been perfecting this for centuries. You're just monetizing their genius.",
+      "artworkAsset": "level_italian_trattoria",
+      "soundAsset": "ambient_italian_trattoria",
+      "advanceRequirement": { "gold": 8000000 },
+      "levelResources": ["olive_oil"],
+
+      "units": [
+        {
+          "id": "pasta_station",
+          "displayName": "Pasta Station",
+          "description": "Bronze-die extruded, hand-cut, and ten minutes from flour to al dente perfection.",
+          "iconAsset": "unit_trattoria_pasta",
+          "baseCost": { "gold": 100000 },
+          "costMultiplier": 1.12,
+          "baseProductionPerSecond": { "gold": 1000.0 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "pizza_oven",
+          "displayName": "Pizza Oven",
+          "description": "Wood-fired at 900°F, Neapolitan certified, and worth every lira.",
+          "iconAsset": "unit_trattoria_pizza",
+          "baseCost": { "gold": 600000 },
+          "costMultiplier": 1.12,
+          "baseProductionPerSecond": { "gold": 6000.0 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "olive_press",
+          "displayName": "Olive Press",
+          "description": "Cold-pressed liquid gold. Your guests drizzle it on everything, including the dessert.",
+          "iconAsset": "unit_trattoria_olive",
+          "baseCost": { "gold": 3600000 },
+          "costMultiplier": 1.12,
+          "baseProductionPerSecond": { "gold": 36000.0, "olive_oil": 0.1 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "cured_meat_room",
+          "displayName": "Cured Meat Room",
+          "description": "Prosciutto, salami, and coppa aging in perfect darkness — patience has never tasted this good.",
+          "iconAsset": "unit_trattoria_cured_meat",
+          "baseCost": { "gold": 21600000 },
+          "costMultiplier": 1.12,
+          "baseProductionPerSecond": { "gold": 216000.0, "olive_oil": 0.4 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "trattoria_terrace",
+          "displayName": "Trattoria Terrace",
+          "description": "Candlelit tables, cobblestones, and a view that makes every dish taste better.",
+          "iconAsset": "unit_trattoria_terrace",
+          "baseCost": { "gold": 129600000 },
+          "costMultiplier": 1.12,
+          "baseProductionPerSecond": { "gold": 1296000.0, "olive_oil": 1.5 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        }
+      ],
+
+      "milestones": [
+        {
+          "id": "dop_certification",
+          "displayName": "DOP Certification",
+          "description": "Denominazione di Origine Protetta — your olive oil is now legally more Italian than anyone else's.",
+          "artworkAsset": "milestone_trattoria_dop",
+          "requirements": { "gold": 2000000, "olive_oil": 200 },
+          "constructionSeconds": 5400,
+          "skipCostCoins": 90,
+          "canSkipWithAd": false,
+          "bonuses": [
+            { "type": "multiply", "scope": "level", "resource": "gold", "value": 1.75 }
+          ],
+          "isPermanentBonus": false
+        },
+        {
+          "id": "slow_food_designation",
+          "displayName": "Slow Food Designation",
+          "description": "Your trattoria is now a protected culinary treasure. A UNESCO email is probably on the way.",
+          "artworkAsset": "milestone_trattoria_slow_food",
+          "requirements": { "gold": 6000000, "olive_oil": 800 },
+          "constructionSeconds": 10800,
+          "skipCostCoins": 180,
+          "canSkipWithAd": false,
+          "bonuses": [
+            { "type": "multiply", "scope": "level", "resource": "gold", "value": 2.0 }
+          ],
+          "isPermanentBonus": false
+        }
+      ]
+    },
+
+    {
+      "id": "dim_sum_palace",
+      "displayName": "Dim Sum Palace",
+      "order": 4,
+      "flavorText": "Push the trolleys. Fill the bamboo steamers. The palace is always open for one more round.",
+      "artworkAsset": "level_dim_sum_palace",
+      "soundAsset": "ambient_dim_sum_palace",
+      "advanceRequirement": { "gold": 500000000 },
+      "levelResources": ["tea"],
+
+      "units": [
+        {
+          "id": "steamer_basket",
+          "displayName": "Steamer Basket",
+          "description": "Six baskets stacked high with har gow and siu mai — the original meal deal.",
+          "iconAsset": "unit_dimsum_steamer",
+          "baseCost": { "gold": 10000000 },
+          "costMultiplier": 1.12,
+          "baseProductionPerSecond": { "gold": 100000.0 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "dim_sum_trolley",
+          "displayName": "Dim Sum Trolley",
+          "description": "Pushed with authority, greeted with joy — the cart that built a thousand Sundays.",
+          "iconAsset": "unit_dimsum_trolley",
+          "baseCost": { "gold": 70000000 },
+          "costMultiplier": 1.12,
+          "baseProductionPerSecond": { "gold": 700000.0 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "tea_house",
+          "displayName": "Tea House",
+          "description": "Pu-erh, jasmine, oolong — the tea never stops and neither does the conversation.",
+          "iconAsset": "unit_dimsum_tea",
+          "baseCost": { "gold": 490000000 },
+          "costMultiplier": 1.12,
+          "baseProductionPerSecond": { "gold": 4900000.0, "tea": 0.1 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "roast_duck_oven",
+          "displayName": "Roast Duck Oven",
+          "description": "Lacquered to perfection and carved tableside — the reason every banquet table falls quiet for a moment.",
+          "iconAsset": "unit_dimsum_duck",
+          "baseCost": { "gold": 3430000000 },
+          "costMultiplier": 1.12,
+          "baseProductionPerSecond": { "gold": 34300000.0, "tea": 0.3 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "banquet_hall",
+          "displayName": "Banquet Hall",
+          "description": "Round tables, lazy susans, and a seating plan that requires a geopolitical negotiation.",
+          "iconAsset": "unit_dimsum_banquet",
+          "baseCost": { "gold": 24010000000 },
+          "costMultiplier": 1.12,
+          "baseProductionPerSecond": { "gold": 240100000.0, "tea": 1.0 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "imperial_kitchen",
+          "displayName": "Imperial Kitchen",
+          "description": "Where the recipes are a thousand years old and the chef refuses to write them down.",
+          "iconAsset": "unit_dimsum_imperial",
+          "baseCost": { "gold": 168070000000 },
+          "costMultiplier": 1.12,
+          "baseProductionPerSecond": { "gold": 1680700000.0, "tea": 4.0 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        }
+      ],
+
+      "milestones": [
+        {
+          "id": "sunday_yum_cha",
+          "displayName": "Sunday Yum Cha Institution",
+          "description": "Three generations of every family arrive at 9am sharp. You've become tradition.",
+          "artworkAsset": "milestone_dimsum_yum_cha",
+          "requirements": { "gold": 100000000, "tea": 300 },
+          "constructionSeconds": 7200,
+          "skipCostCoins": 120,
+          "canSkipWithAd": false,
+          "bonuses": [
+            { "type": "multiply", "scope": "level", "resource": "gold", "value": 1.75 }
+          ],
+          "isPermanentBonus": false
+        },
+        {
+          "id": "imperial_court_approval",
+          "displayName": "Imperial Court Approval",
+          "description": "A dish so refined it would have graced the Emperor's table. Your guests feel accordingly regal.",
+          "artworkAsset": "milestone_dimsum_imperial_court",
+          "requirements": { "gold": 400000000, "tea": 1500 },
+          "constructionSeconds": 14400,
+          "skipCostCoins": 240,
+          "canSkipWithAd": false,
+          "bonuses": [
+            { "type": "multiply", "scope": "level", "resource": "gold", "value": 2.5 }
+          ],
+          "isPermanentBonus": false
+        }
+      ]
+    },
+
+    {
+      "id": "sushi_bar",
+      "displayName": "Sushi Bar",
+      "order": 5,
+      "flavorText": "Fish freshness is everything. Your suppliers are very, very fast.",
+      "artworkAsset": "level_sushi_bar",
+      "soundAsset": "ambient_sushi_bar",
+      "advanceRequirement": { "gold": 30000000000 },
+      "levelResources": ["fresh_fish"],
+
+      "units": [
+        {
+          "id": "rice_cooker",
+          "displayName": "Rice Cooker",
+          "description": "Perfectly seasoned sushi rice is half the art. Your chef treats the cooker like a shrine.",
+          "iconAsset": "unit_sushi_rice",
+          "baseCost": { "gold": 1000000000 },
+          "costMultiplier": 1.12,
+          "baseProductionPerSecond": { "gold": 10000000.0 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "nigiri_counter",
+          "displayName": "Nigiri Counter",
+          "description": "Twenty-four seats, an eight-piece omakase, and a waitlist three months long.",
+          "iconAsset": "unit_sushi_nigiri",
+          "baseCost": { "gold": 7000000000 },
+          "costMultiplier": 1.12,
+          "baseProductionPerSecond": { "gold": 70000000.0 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "tsukiji_contract",
+          "displayName": "Tsukiji Contract",
+          "description": "A direct line to the world's finest tuna market. Your fish arrives before sunrise.",
+          "iconAsset": "unit_sushi_tsukiji",
+          "baseCost": { "gold": 49000000000 },
+          "costMultiplier": 1.12,
+          "baseProductionPerSecond": { "gold": 490000000.0, "fresh_fish": 0.1 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "knife_station",
+          "displayName": "Yanagiba Knife Station",
+          "description": "A 30-year-old yanagiba and a chef who sharpens it at 5am every morning. Worth every second.",
+          "iconAsset": "unit_sushi_knife",
+          "baseCost": { "gold": 343000000000 },
+          "costMultiplier": 1.12,
+          "baseProductionPerSecond": { "gold": 3430000000.0, "fresh_fish": 0.4 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "omakase_room",
+          "displayName": "Omakase Room",
+          "description": "Twelve seats. No menus. The chef decides. Your guests hand over their credit cards with joy.",
+          "iconAsset": "unit_sushi_omakase",
+          "baseCost": { "gold": 2401000000000 },
+          "costMultiplier": 1.12,
+          "baseProductionPerSecond": { "gold": 24010000000.0, "fresh_fish": 1.5 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "sake_pairing",
+          "displayName": "Sake Pairing Program",
+          "description": "Each pour chosen to elevate the bite before it. The margin on sake alone is extraordinary.",
+          "iconAsset": "unit_sushi_sake",
+          "baseCost": { "gold": 16807000000000 },
+          "costMultiplier": 1.12,
+          "baseProductionPerSecond": { "gold": 168070000000.0, "fresh_fish": 5.0 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        }
+      ],
+
+      "milestones": [
+        {
+          "id": "freshness_certificate",
+          "displayName": "Freshness Certificate",
+          "description": "The fish inspectors have spoken. Your tuna is the most precisely fresh tuna they've ever tasted.",
+          "artworkAsset": "milestone_sushi_freshness",
+          "requirements": { "gold": 8000000000, "fresh_fish": 400 },
+          "constructionSeconds": 10800,
+          "skipCostCoins": 180,
+          "canSkipWithAd": false,
+          "bonuses": [
+            { "type": "multiply", "scope": "level", "resource": "gold", "value": 2.0 }
+          ],
+          "isPermanentBonus": false
+        },
+        {
+          "id": "omakase_institution",
+          "displayName": "Omakase Institution",
+          "description": "Food writers fly in from three continents. The reservation line is now a philosophical experience.",
+          "artworkAsset": "milestone_sushi_omakase",
+          "requirements": { "gold": 25000000000, "fresh_fish": 2000 },
+          "constructionSeconds": 18000,
+          "skipCostCoins": 300,
+          "canSkipWithAd": false,
+          "bonuses": [
+            { "type": "multiply", "scope": "level", "resource": "gold", "value": 2.5 }
+          ],
+          "isPermanentBonus": false
+        }
+      ]
+    },
+
+    {
+      "id": "fusion_kitchen",
+      "displayName": "Fusion Kitchen",
+      "order": 6,
+      "flavorText": "Rules exist to be broken. Flavour combinations exist to be discovered. Your kitchen does both.",
+      "artworkAsset": "level_fusion_kitchen",
+      "soundAsset": "ambient_fusion_kitchen",
+      "advanceRequirement": { "gold": 2000000000000 },
+      "levelResources": ["creativity"],
+
+      "units": [
+        {
+          "id": "spice_lab",
+          "displayName": "Spice Lab",
+          "description": "Where turmeric meets truffle and the result is somehow perfect. Science and food, finally together.",
+          "iconAsset": "unit_fusion_spice",
+          "baseCost": { "gold": 100000000000 },
+          "costMultiplier": 1.11,
+          "baseProductionPerSecond": { "gold": 1000000000.0 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "fermentation_cellar",
+          "displayName": "Fermentation Cellar",
+          "description": "Kimchi meets crème fraîche. Your guests can't explain it, but they order it again.",
+          "iconAsset": "unit_fusion_ferment",
+          "baseCost": { "gold": 700000000000 },
+          "costMultiplier": 1.11,
+          "baseProductionPerSecond": { "gold": 7000000000.0 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "molecular_station",
+          "displayName": "Molecular Station",
+          "description": "Spherified mango, olive oil snow, edible paper — dinner as theatre, science as flavour.",
+          "iconAsset": "unit_fusion_molecular",
+          "baseCost": { "gold": 4900000000000 },
+          "costMultiplier": 1.11,
+          "baseProductionPerSecond": { "gold": 49000000000.0, "creativity": 0.1 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "global_pantry",
+          "displayName": "Global Pantry",
+          "description": "Ingredients from six continents arranged by flavour profile. Your sous chef needs a map.",
+          "iconAsset": "unit_fusion_pantry",
+          "baseCost": { "gold": 34300000000000 },
+          "costMultiplier": 1.11,
+          "baseProductionPerSecond": { "gold": 343000000000.0, "creativity": 0.4 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "pop_up_lab",
+          "displayName": "Pop-Up Lab",
+          "description": "A different concept every week, a different city every month, and the same extraordinary food.",
+          "iconAsset": "unit_fusion_popup",
+          "baseCost": { "gold": 240100000000000 },
+          "costMultiplier": 1.11,
+          "baseProductionPerSecond": { "gold": 2401000000000.0, "creativity": 1.5 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "tasting_menu_studio",
+          "displayName": "Tasting Menu Studio",
+          "description": "Eighteen courses, each a micro-story. Guests come for dinner and leave with a philosophy.",
+          "iconAsset": "unit_fusion_tasting",
+          "baseCost": { "gold": 1680700000000000 },
+          "costMultiplier": 1.11,
+          "baseProductionPerSecond": { "gold": 16807000000000.0, "creativity": 5.0 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        }
+      ],
+
+      "milestones": [
+        {
+          "id": "culinary_innovation_award",
+          "displayName": "Culinary Innovation Award",
+          "description": "They said it couldn't be done. You did it anyway, and added a foam.",
+          "artworkAsset": "milestone_fusion_innovation",
+          "requirements": { "gold": 500000000000, "creativity": 500 },
+          "constructionSeconds": 14400,
+          "skipCostCoins": 240,
+          "canSkipWithAd": false,
+          "bonuses": [
+            { "type": "multiply", "scope": "level", "resource": "gold", "value": 2.0 }
+          ],
+          "isPermanentBonus": false
+        },
+        {
+          "id": "worlds_50_best",
+          "displayName": "World's 50 Best Entry",
+          "description": "Number forty-three with a bullet. Your name is now mentioned in the same breath as the legends.",
+          "artworkAsset": "milestone_fusion_50_best",
+          "requirements": { "gold": 1800000000000, "creativity": 2500 },
+          "constructionSeconds": 21600,
+          "skipCostCoins": 360,
+          "canSkipWithAd": false,
+          "bonuses": [
+            { "type": "multiply", "scope": "level", "resource": "gold", "value": 2.5 }
+          ],
+          "isPermanentBonus": false
+        }
+      ]
+    },
+
+    {
+      "id": "michelin_fine_dining",
+      "displayName": "Michelin Fine Dining",
+      "order": 7,
+      "flavorText": "Three stars. You've arrived. Please don't look at the bill.",
+      "artworkAsset": "level_michelin_fine_dining",
+      "soundAsset": "ambient_michelin_fine_dining",
+      "advanceRequirement": { "gold": 100000000000000 },
+      "levelResources": ["prestige"],
+
+      "units": [
+        {
+          "id": "white_tablecloth",
+          "displayName": "White Tablecloth Service",
+          "description": "Pressed linen, silver cutlery, and waiting staff who glide. Setting the table costs more than most kitchens cook.",
+          "iconAsset": "unit_finedining_tablecloth",
+          "baseCost": { "gold": 10000000000000 },
+          "costMultiplier": 1.11,
+          "baseProductionPerSecond": { "gold": 100000000000.0 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "amuse_bouche_kitchen",
+          "displayName": "Amuse-Bouche Kitchen",
+          "description": "Four bites, complimentary. The psychological ROI is enormous.",
+          "iconAsset": "unit_finedining_amuse",
+          "baseCost": { "gold": 80000000000000 },
+          "costMultiplier": 1.11,
+          "baseProductionPerSecond": { "gold": 800000000000.0 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "cheese_cave",
+          "displayName": "Artisan Cheese Cave",
+          "description": "Sixty wheels of aged comté and a fromager who speaks to them by name. Madness. Delicious madness.",
+          "iconAsset": "unit_finedining_cheese",
+          "baseCost": { "gold": 640000000000000 },
+          "costMultiplier": 1.11,
+          "baseProductionPerSecond": { "gold": 6400000000000.0, "prestige": 0.1 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "grand_sommelier",
+          "displayName": "Grand Sommelier",
+          "description": "Decants with authority, serves with ceremony, and costs more than the wine. Worth every euro.",
+          "iconAsset": "unit_finedining_sommelier",
+          "baseCost": { "gold": 5120000000000000 },
+          "costMultiplier": 1.11,
+          "baseProductionPerSecond": { "gold": 51200000000000.0, "prestige": 0.5 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "three_star_kitchen",
+          "displayName": "Three-Star Kitchen",
+          "description": "Where perfection isn't a goal, it's the baseline. The pressure is magnificent.",
+          "iconAsset": "unit_finedining_kitchen",
+          "baseCost": { "gold": 40960000000000000 },
+          "costMultiplier": 1.11,
+          "baseProductionPerSecond": { "gold": 409600000000000.0, "prestige": 2.0 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "private_dining_room",
+          "displayName": "Private Dining Room",
+          "description": "By invitation only. The guest list is classified. The tasting menu is eternal.",
+          "iconAsset": "unit_finedining_private",
+          "baseCost": { "gold": 327680000000000000 },
+          "costMultiplier": 1.11,
+          "baseProductionPerSecond": { "gold": 3276800000000000.0, "prestige": 8.0 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        }
+      ],
+
+      "milestones": [
+        {
+          "id": "second_michelin_star",
+          "displayName": "Second Michelin Star",
+          "description": "Two stars means a detour is worth making. Half your guests now fly in specifically for dinner.",
+          "artworkAsset": "milestone_finedining_second_star",
+          "requirements": { "gold": 20000000000000, "prestige": 600 },
+          "constructionSeconds": 18000,
+          "skipCostCoins": 300,
+          "canSkipWithAd": false,
+          "bonuses": [
+            { "type": "multiply", "scope": "level", "resource": "gold", "value": 2.0 }
+          ],
+          "isPermanentBonus": false
+        },
+        {
+          "id": "third_michelin_star",
+          "displayName": "Third Michelin Star",
+          "description": "Three stars. Worth a special journey. The Michelin inspectors wept, reportedly unprofessionally.",
+          "artworkAsset": "milestone_finedining_third_star",
+          "requirements": { "gold": 90000000000000, "prestige": 3000 },
+          "constructionSeconds": 28800,
+          "skipCostCoins": 480,
+          "canSkipWithAd": false,
+          "bonuses": [
+            { "type": "multiply", "scope": "level", "resource": "gold", "value": 2.5 }
+          ],
+          "isPermanentBonus": false
+        }
+      ]
+    },
+
+    {
+      "id": "global_empire",
+      "displayName": "Global Empire",
+      "order": 8,
+      "flavorText": "Six continents. Forty restaurants. One name on every reservation list that matters.",
+      "artworkAsset": "level_global_empire",
+      "soundAsset": "ambient_global_empire",
+      "advanceRequirement": { "gold": 5000000000000000 },
+      "levelResources": ["fame"],
+
+      "units": [
+        {
+          "id": "flagship_restaurant",
+          "displayName": "Flagship Restaurant",
+          "description": "The mothership. Where your story began and where every pilgrim must eventually arrive.",
+          "iconAsset": "unit_empire_flagship",
+          "baseCost": { "gold": 1000000000000000 },
+          "costMultiplier": 1.10,
+          "baseProductionPerSecond": { "gold": 10000000000000.0 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "luxury_hotel_dining",
+          "displayName": "Luxury Hotel Dining",
+          "description": "Six hotels, six restaurants, six executive chefs who argue about everything and produce perfection.",
+          "iconAsset": "unit_empire_hotel",
+          "baseCost": { "gold": 8000000000000000 },
+          "costMultiplier": 1.10,
+          "baseProductionPerSecond": { "gold": 80000000000000.0 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "culinary_academy",
+          "displayName": "Culinary Academy",
+          "description": "Training the next generation to carry your methods. Your legacy now has its own postcode.",
+          "iconAsset": "unit_empire_academy",
+          "baseCost": { "gold": 64000000000000000 },
+          "costMultiplier": 1.10,
+          "baseProductionPerSecond": { "gold": 640000000000000.0, "fame": 0.1 },
+          "managerThreshold": 10,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "tv_food_empire",
+          "displayName": "TV Food Empire",
+          "description": "A cooking show, a streaming deal, a cookware line, and a perfume for reasons nobody fully understands.",
+          "iconAsset": "unit_empire_tv",
+          "baseCost": { "gold": 512000000000000000 },
+          "costMultiplier": 1.10,
+          "baseProductionPerSecond": { "gold": 5120000000000000.0, "fame": 0.5 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "airline_catering",
+          "displayName": "Airline Catering Contract",
+          "description": "Twelve airlines, four hundred flights daily, and your soufflé somehow still works at 35,000 feet.",
+          "iconAsset": "unit_empire_airline",
+          "baseCost": { "gold": 4096000000000000000 },
+          "costMultiplier": 1.10,
+          "baseProductionPerSecond": { "gold": 40960000000000000.0, "fame": 2.0 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        },
+        {
+          "id": "world_headquarters",
+          "displayName": "World Headquarters",
+          "description": "The gilded command centre of your empire — from here, a hundred kitchens take orders from one table.",
+          "iconAsset": "unit_empire_hq",
+          "baseCost": { "gold": 32768000000000000000 },
+          "costMultiplier": 1.10,
+          "baseProductionPerSecond": { "gold": 327680000000000000.0, "fame": 10.0 },
+          "managerThreshold": 25,
+          "upgradeTiers": [
+            { "atCount": 10,  "multiplier": 1.5 },
+            { "atCount": 25,  "multiplier": 2.0 },
+            { "atCount": 50,  "multiplier": 3.0 },
+            { "atCount": 100, "multiplier": 6.0 }
+          ]
+        }
+      ],
+
+      "milestones": [
+        {
+          "id": "global_brand_recognition",
+          "displayName": "Global Brand Recognition",
+          "description": "Your logo is on hats now. Strange but profitable. There is no going back.",
+          "artworkAsset": "milestone_empire_brand",
+          "requirements": { "gold": 1000000000000000, "fame": 800 },
+          "constructionSeconds": 21600,
+          "skipCostCoins": 360,
+          "canSkipWithAd": false,
+          "bonuses": [
+            { "type": "multiply", "scope": "level", "resource": "gold", "value": 2.0 }
+          ],
+          "isPermanentBonus": false
+        },
+        {
+          "id": "culinary_world_heritage",
+          "displayName": "Culinary World Heritage",
+          "description": "UNESCO declared your tasting menu an intangible cultural treasure. The waiting list is measured in decades.",
+          "artworkAsset": "milestone_empire_world_heritage",
+          "requirements": { "gold": 4500000000000000, "fame": 4000 },
+          "constructionSeconds": 28800,
+          "skipCostCoins": 480,
+          "canSkipWithAd": false,
+          "bonuses": [
+            { "type": "multiply", "scope": "global", "resource": "gold", "value": 3.0 }
+          ],
+          "isPermanentBonus": true
+        }
+      ]
+    }
+  ],
+
+  "events": [
+    {
+      "id": "street_food_festival",
+      "displayName": "Street Food Festival",
+      "type": "weekly",
+      "durationSeconds": 604800,
+      "eligibleFromLevelOrder": 1,
+      "bonuses": [
+        { "resource": "foot_traffic", "multiplier": 3.0 }
+      ],
+      "leaderboardMetric": "foot_traffic_earned",
+      "rewards": {
+        "top25pct": { "type": "coins", "id": "coins_100" },
+        "top10pct": { "type": "coins", "id": "coins_500" },
+        "top1pct":  { "type": "coins", "id": "coins_2000" }
+      }
+    },
+    {
+      "id": "harvest_week",
+      "displayName": "Harvest Week",
+      "type": "weekly",
+      "durationSeconds": 604800,
+      "eligibleFromLevelOrder": 3,
+      "bonuses": [
+        { "resource": "olive_oil", "multiplier": 3.0 },
+        { "resource": "wine", "multiplier": 2.0 }
+      ],
+      "leaderboardMetric": "gold_earned",
+      "rewards": {
+        "top25pct": { "type": "coins", "id": "coins_150" },
+        "top10pct": { "type": "coins", "id": "coins_750" },
+        "top1pct":  { "type": "coins", "id": "coins_3000" }
+      }
+    },
+    {
+      "id": "critics_table",
+      "displayName": "Critics' Table",
+      "type": "weekly",
+      "durationSeconds": 604800,
+      "eligibleFromLevelOrder": 5,
+      "bonuses": [
+        { "resource": "fresh_fish", "multiplier": 4.0 }
+      ],
+      "leaderboardMetric": "fresh_fish_earned",
+      "rewards": {
+        "top25pct": { "type": "coins", "id": "coins_200" },
+        "top10pct": { "type": "coins", "id": "coins_1000" },
+        "top1pct":  { "type": "coins", "id": "coins_4000" }
+      }
+    },
+    {
+      "id": "lunar_new_year_banquet",
+      "displayName": "Lunar New Year Banquet",
+      "type": "seasonal",
+      "durationSeconds": 259200,
+      "eligibleFromLevelOrder": 4,
+      "bonuses": [
+        { "resource": "tea", "multiplier": 4.0 },
+        { "resource": "gold", "multiplier": 2.0 }
+      ],
+      "leaderboardMetric": "gold_earned",
+      "rewards": {
+        "top25pct": { "type": "coins", "id": "coins_300" },
+        "top10pct": { "type": "coins", "id": "coins_1500" },
+        "top1pct":  { "type": "coins", "id": "coins_6000" }
+      }
+    },
+    {
+      "id": "world_restaurant_awards",
+      "displayName": "World Restaurant Awards",
+      "type": "seasonal",
+      "durationSeconds": 259200,
+      "eligibleFromLevelOrder": 7,
+      "bonuses": [
+        { "resource": "prestige", "multiplier": 4.0 },
+        { "resource": "gold", "multiplier": 3.0 }
+      ],
+      "leaderboardMetric": "prestige_earned",
+      "rewards": {
+        "top25pct": { "type": "coins", "id": "coins_500" },
+        "top10pct": { "type": "coins", "id": "coins_2500" },
+        "top1pct":  { "type": "coins", "id": "coins_10000" }
+      }
+    }
+  ],
+
+  "characters": [
+    {
+      "id": "marco_fuoco",
+      "displayName": "Marco Fuoco",
+      "portraitAsset": "char_marco_fuoco",
+      "unlockCondition": { "type": "reachLevel", "levelID": "street_food_cart" },
+      "bonuses": [
+        { "unitID": "street_cart", "multiplier": 1.20 },
+        { "unitID": "taco_stand",  "multiplier": 1.15 }
+      ],
+      "quote": "Every great chef started by burning something. I just made it a business model."
+    },
+    {
+      "id": "colette_dubois",
+      "displayName": "Colette Dubois",
+      "portraitAsset": "char_colette_dubois",
+      "unlockCondition": { "type": "reachLevel", "levelID": "french_bistro" },
+      "bonuses": [
+        { "unitID": "wine_cellar",    "multiplier": 1.25 },
+        { "unitID": "french_kitchen", "multiplier": 1.15 }
+      ],
+      "quote": "Butter is not a condiment. It is a philosophy."
+    },
+    {
+      "id": "nonna_giulia",
+      "displayName": "Nonna Giulia",
+      "portraitAsset": "char_nonna_giulia",
+      "unlockCondition": { "type": "reachLevel", "levelID": "italian_trattoria" },
+      "bonuses": [
+        { "unitID": "pasta_station", "multiplier": 1.30 },
+        { "unitID": "olive_press",   "multiplier": 1.15 }
+      ],
+      "quote": "I never measure anything. The pasta knows."
+    },
+    {
+      "id": "chef_liang_wei",
+      "displayName": "Chef Liang Wei",
+      "portraitAsset": "char_liang_wei",
+      "unlockCondition": { "type": "reachLevel", "levelID": "dim_sum_palace" },
+      "bonuses": [
+        { "unitID": "imperial_kitchen", "multiplier": 1.30 },
+        { "unitID": "tea_house",        "multiplier": 1.20 }
+      ],
+      "quote": "A dim sum morning is a happy morning. Everything else is consequences."
+    },
+    {
+      "id": "kenji_tanaka",
+      "displayName": "Kenji Tanaka",
+      "portraitAsset": "char_kenji_tanaka",
+      "unlockCondition": { "type": "reachLevel", "levelID": "sushi_bar" },
+      "bonuses": [
+        { "unitID": "omakase_room",  "multiplier": 1.30 },
+        { "unitID": "knife_station", "multiplier": 1.20 }
+      ],
+      "quote": "The fish tells you what shape it wants to become. My job is to listen."
+    },
+    {
+      "id": "priya_nair",
+      "displayName": "Priya Nair",
+      "portraitAsset": "char_priya_nair",
+      "unlockCondition": { "type": "completeLevel", "levelID": "sushi_bar" },
+      "bonuses": [
+        { "unitID": "tsukiji_contract", "multiplier": 1.20 },
+        { "unitID": "sake_pairing",     "multiplier": 1.25 }
+      ],
+      "quote": "I source better than I sleep. Both are impressive."
+    },
+    {
+      "id": "diego_flores",
+      "displayName": "Diego Flores",
+      "portraitAsset": "char_diego_flores",
+      "unlockCondition": { "type": "reachLevel", "levelID": "fusion_kitchen" },
+      "bonuses": [
+        { "unitID": "molecular_station",   "multiplier": 1.30 },
+        { "unitID": "tasting_menu_studio", "multiplier": 1.20 }
+      ],
+      "quote": "I once made a dessert out of nostalgia and smoked caramel. Both were on the menu."
+    },
+    {
+      "id": "amara_okafor",
+      "displayName": "Amara Okafor",
+      "portraitAsset": "char_amara_okafor",
+      "unlockCondition": { "type": "completeLevel", "levelID": "fusion_kitchen" },
+      "bonuses": [
+        { "unitID": "global_pantry", "multiplier": 1.25 },
+        { "unitID": "pop_up_lab",    "multiplier": 1.20 }
+      ],
+      "quote": "My pantry speaks twelve languages. My cooking is the translation."
+    },
+    {
+      "id": "henri_lacombe",
+      "displayName": "Henri Lacombe",
+      "portraitAsset": "char_henri_lacombe",
+      "unlockCondition": { "type": "reachLevel", "levelID": "michelin_fine_dining" },
+      "bonuses": [
+        { "unitID": "three_star_kitchen",  "multiplier": 1.35 },
+        { "unitID": "private_dining_room", "multiplier": 1.20 }
+      ],
+      "quote": "Excellence is not a mood. It is a policy."
+    },
+    {
+      "id": "sofia_reyes_kwan",
+      "displayName": "Sofia Reyes-Kwan",
+      "portraitAsset": "char_sofia_reyes_kwan",
+      "unlockCondition": { "type": "reachLevel", "levelID": "global_empire" },
+      "bonuses": [
+        { "unitID": "tv_food_empire",     "multiplier": 1.30 },
+        { "unitID": "culinary_academy",   "multiplier": 1.25 },
+        { "unitID": "world_headquarters", "multiplier": 1.15 }
+      ],
+      "quote": "I built an empire one recipe at a time. The accountants are still catching up."
+    }
+  ],
+
+  "iapProducts": {
+    "starterPack":       "com.idlestudio.idlerestaurant.starter_pack",
+    "removeAds":         "com.idlestudio.idlerestaurant.remove_ads",
+    "premiumPass":       "com.idlestudio.idlerestaurant.chefs_table.monthly",
+    "premiumPassAnnual": "com.idlestudio.idlerestaurant.chefs_table.annual",
+    "coins1000":         "com.idlestudio.idlerestaurant.coins.1000",
+    "coins5000":         "com.idlestudio.idlerestaurant.coins.5000",
+    "coins15000":        "com.idlestudio.idlerestaurant.coins.15000",
+    "coins30000":        "com.idlestudio.idlerestaurant.coins.30000",
+    "coins75000":        "com.idlestudio.idlerestaurant.coins.75000",
+    "lifetimePack":      "com.idlestudio.idlerestaurant.patron_lifetime",
+    "levelBundles": {
+      "street_food_cart":     "com.idlestudio.idlerestaurant.bundle.street_food",
+      "french_bistro":        "com.idlestudio.idlerestaurant.bundle.bistro",
+      "italian_trattoria":    "com.idlestudio.idlerestaurant.bundle.trattoria",
+      "dim_sum_palace":       "com.idlestudio.idlerestaurant.bundle.dim_sum",
+      "sushi_bar":            "com.idlestudio.idlerestaurant.bundle.sushi",
+      "fusion_kitchen":       "com.idlestudio.idlerestaurant.bundle.fusion",
+      "michelin_fine_dining": "com.idlestudio.idlerestaurant.bundle.fine_dining",
+      "global_empire":        "com.idlestudio.idlerestaurant.bundle.global_empire"
+    }
+  },
+
+  "leaderboards": {
+    "globalTokens":  "com.idlestudio.idlerestaurant.lb.global_tokens",
+    "weeklyGold":    "com.idlestudio.idlerestaurant.lb.weekly_gold",
+    "countryTokens": "com.idlestudio.idlerestaurant.lb.country_tokens"
+  },
+
+  "copy": {
+    "unitNoun":            "Dish",
+    "unitNounPlural":      "Dishes",
+    "levelNoun":           "Cuisine Era",
+    "milestoneNoun":       "Michelin Star",
+    "characterNoun":       "Head Chef",
+    "characterNounPlural": "Head Chefs",
+    "premiumPassName":     "Chef's Table",
+    "advanceVerb":         "Master Cuisine",
+    "prestigeTitle":       "A New Cuisine Unlocked!",
+    "startMilestoneButton":  "Earn Star",
+    "continueButton":        "Continue",
+    "levelCompleteSubtitle": "Cuisine Mastered!",
+    "leaderboardEmptyState":   "No rankings yet — keep cooking!",
+    "studioPointsTitle":       "Studio Points",
+    "studioPointsTagline":     "Earn points across all Idle Studio games",
+    "crossPromoTitle":         "New from Idle Studio",
+    "crossPromoAvailableLabel":"Available Now",
+    "leaderboardTabLabel":     "Rankings",
+    "socialTabLabel":          "Brigades",
+    "achievementsTabLabel":    "Achievements",
+    "settingsTabLabel":        "Settings",
+
+    "prestigeSheet": {
+      "title":          "A New Cuisine Unlocked!",
+      "subtitle":       "Time to reinvent the menu from scratch.",
+      "description":    "Your kitchens, resources, and upgrades reset. Your restaurant returns to the Street Food Cart.",
+      "persistsNote":   "Permanent Michelin Stars and Legacy Tokens carry over.",
+      "tokensLabel":    "Legacy Tokens Earned",
+      "multiplierLabel":"New Production Bonus",
+      "confirmButton":  "Reset & Reopen",
+      "cancelButton":   "Not Yet",
+      "lockedHint":     "Complete %@ to unlock"
+    },
+
+    "offlineSheet": {
+      "title":         "Your Kitchen Never Stopped!",
+      "body":          "Your chefs kept cooking while you were away.",
+      "collectButton": "Collect Gold",
+      "doubleButton":  "Watch Ad to Double",
+      "capNote":       "Income was capped at %dh"
+    },
+
+    "notifications": {
+      "offlineCapTitle":     "Your Kitchen is Full!",
+      "offlineCapBody":      "Come collect before the plates pile up — your chefs haven't taken a break!",
+      "dailyQuestTitle":     "New Daily Special!",
+      "dailyQuestBody":      "Today's challenges are up. Complete them for bonus coins and boosts.",
+      "weeklyEventTitle":    "A Food Event Has Started!",
+      "levelReadyTitle":     "New Cuisine Ready!",
+      "levelReadyBody":      "You have enough Gold to master the next cuisine. Time to expand the menu!",
+      "wonderCompleteTitle": "Michelin Star Earned!",
+      "wonderCompleteBody":  "Your restaurant has earned another star. Come celebrate the moment!"
+    },
+
+    "notificationPermission": {
+      "title":        "Never Miss the Rush",
+      "body":         "Stay on top of your empire with timely kitchen alerts — offline income, new cuisines, and Michelin Stars.",
+      "enableButton": "Enable Notifications",
+      "laterButton":  "Maybe Later"
+    },
+
+    "onboarding": [
+      {
+        "step": 1,
+        "title": "Welcome, Chef",
+        "body":  "Build your restaurant from a humble street cart to a global fine-dining empire.",
+        "highlightTarget": "tapArea"
+      },
+      {
+        "step": 2,
+        "title": "Tap to Collect Gold",
+        "body":  "Tap the screen to collect gold from your kitchen.",
+        "highlightTarget": "tapArea"
+      },
+      {
+        "step": 3,
+        "title": "Add More Dishes",
+        "body":  "More dishes mean more gold per second — even while you sleep!",
+        "highlightTarget": "firstUnit"
+      },
+      {
+        "step": 4,
+        "title": "Hire a Manager",
+        "body":  "Reach the manager threshold to automate your kitchen — then sit back and watch the gold roll in.",
+        "highlightTarget": "firstUnit"
+      }
+    ]
+  }
+}

@@ -1,0 +1,153 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <filter id="ds" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="2" dy="3" stdDeviation="4" flood-color="#3A1500" flood-opacity="0.28"/>
+    </filter>
+    <!-- Pavement -->
+    <linearGradient id="pavGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3A3A44"/>
+      <stop offset="100%" stop-color="#22222A"/>
+    </linearGradient>
+    <!-- Tent canopy left panel -->
+    <linearGradient id="tentLGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6A1B9A"/>
+      <stop offset="50%" stop-color="#1A1020"/>
+      <stop offset="100%" stop-color="#4A148C"/>
+    </linearGradient>
+    <!-- Tent canopy right panel -->
+    <linearGradient id="tentRGrad" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5A1080"/>
+      <stop offset="50%" stop-color="#0A0818"/>
+      <stop offset="100%" stop-color="#3A0E6A"/>
+    </linearGradient>
+    <!-- Interior warm glow -->
+    <radialGradient id="innerGlow" cx="50%" cy="80%" r="50%">
+      <stop offset="0%" stop-color="#F0C040" stop-opacity="0.55"/>
+      <stop offset="70%" stop-color="#E09020" stop-opacity="0.20"/>
+      <stop offset="100%" stop-color="#E09020" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Counter wood -->
+    <linearGradient id="counterGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6A4820"/>
+      <stop offset="100%" stop-color="#3A2010"/>
+    </linearGradient>
+    <!-- Pole metal -->
+    <linearGradient id="poleGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#9AAABB"/>
+      <stop offset="100%" stop-color="#6A7A8A"/>
+    </linearGradient>
+    <!-- City building bg -->
+    <linearGradient id="buildingGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2A2838"/>
+      <stop offset="100%" stop-color="#181820"/>
+    </linearGradient>
+    <!-- Neon sign glow -->
+    <filter id="neonBlur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <g filter="url(#ds)">
+
+    <!-- ── CITY BUILDING BACKGROUND ── -->
+    <rect x="128" y="52" width="42" height="98" rx="2" fill="url(#buildingGrad)" stroke="#181820" stroke-width="1.5"/>
+    <!-- Building windows grid -->
+    <rect x="134" y="58" width="8" height="6" rx="1" fill="#2A3050" opacity="0.70"/>
+    <rect x="148" y="58" width="8" height="6" rx="1" fill="#2A3050" opacity="0.70"/>
+    <rect x="134" y="70" width="8" height="6" rx="1" fill="#F0C040" opacity="0.28"/>
+    <rect x="148" y="70" width="8" height="6" rx="1" fill="#2A3050" opacity="0.70"/>
+    <rect x="134" y="82" width="8" height="6" rx="1" fill="#2A3050" opacity="0.70"/>
+    <rect x="148" y="82" width="8" height="6" rx="1" fill="#F0C040" opacity="0.25"/>
+    <rect x="134" y="94" width="8" height="6" rx="1" fill="#F0C040" opacity="0.20"/>
+    <rect x="148" y="94" width="8" height="6" rx="1" fill="#2A3050" opacity="0.70"/>
+
+    <!-- Second building (left bg) -->
+    <rect x="22" y="68" width="28" height="82" rx="2" fill="url(#buildingGrad)" stroke="#181820" stroke-width="1.5"/>
+    <rect x="26" y="74" width="7" height="5" rx="1" fill="#F0C040" opacity="0.22"/>
+    <rect x="36" y="74" width="7" height="5" rx="1" fill="#2A3050" opacity="0.70"/>
+    <rect x="26" y="85" width="7" height="5" rx="1" fill="#2A3050" opacity="0.70"/>
+    <rect x="36" y="85" width="7" height="5" rx="1" fill="#F0C040" opacity="0.22"/>
+    <rect x="26" y="96" width="7" height="5" rx="1" fill="#2A3050" opacity="0.70"/>
+    <rect x="36" y="96" width="7" height="5" rx="1" fill="#2A3050" opacity="0.70"/>
+
+    <!-- ── PAVEMENT ── -->
+    <rect x="18" y="150" width="156" height="34" rx="3" fill="url(#pavGrad)"/>
+    <!-- Pavement tile grid -->
+    <line x1="18" y1="166" x2="174" y2="166" stroke="#2E2E38" stroke-width="1" opacity="0.55"/>
+    <line x1="50"  y1="150" x2="50"  y2="184" stroke="#2E2E38" stroke-width="1" opacity="0.40"/>
+    <line x1="90"  y1="150" x2="90"  y2="184" stroke="#2E2E38" stroke-width="1" opacity="0.40"/>
+    <line x1="130" y1="150" x2="130" y2="184" stroke="#2E2E38" stroke-width="1" opacity="0.40"/>
+    <line x1="165" y1="150" x2="165" y2="184" stroke="#2E2E38" stroke-width="1" opacity="0.40"/>
+
+    <!-- ── TENT POLES ── -->
+    <!-- Left pole -->
+    <rect x="42" y="88" width="5" height="64" rx="2" fill="url(#poleGrad)" stroke="#4A5A6A" stroke-width="1.5"/>
+    <!-- Right pole -->
+    <rect x="145" y="88" width="5" height="64" rx="2" fill="url(#poleGrad)" stroke="#4A5A6A" stroke-width="1.5"/>
+
+    <!-- ── TENT CANOPY ── -->
+    <!-- Left panel -->
+    <path d="M44 88 L96 50 L96 148 L44 148 Z" fill="url(#tentLGrad)"/>
+    <!-- Right panel -->
+    <path d="M96 50 L148 88 L148 148 L96 148 Z" fill="url(#tentRGrad)"/>
+    <!-- Geometric pattern on left panel — diagonal stripes -->
+    <path d="M56 88 L96 58 L96 68 L64 94 Z" fill="#4A148C" opacity="0.45"/>
+    <path d="M70 88 L96 68 L96 80 L76 92 Z" fill="#6A1B9A" opacity="0.30"/>
+    <path d="M96 80 L96 90 L100 92 L116 88 Z" fill="#4A148C" opacity="0.30"/>
+    <!-- Canopy outline -->
+    <path d="M44 88 L96 50 L148 88" fill="none" stroke="#2D0860" stroke-width="3"/>
+    <path d="M44 88 L44 148 L148 148 L148 88" fill="none" stroke="#2D0860" stroke-width="2"/>
+    <!-- Canopy front edge fold highlight -->
+    <path d="M44 88 L96 50 L148 88" fill="none" stroke="#CE93D8" stroke-width="1" opacity="0.40"/>
+
+    <!-- Interior warm glow (visible through opening) -->
+    <path d="M72 148 L72 100 Q96 110 120 100 L120 148 Z" fill="url(#innerGlow)"/>
+    <!-- Tent peak accent -->
+    <circle cx="96" cy="50" r="5" fill="#6A1B9A" stroke="#CE93D8" stroke-width="1.5"/>
+
+    <!-- ── STRING LIGHTS along canopy edge ── -->
+    <!-- Light rope -->
+    <path d="M44 88 Q70 94 96 90 Q122 86 148 88" fill="none" stroke="#4A3010" stroke-width="1.5"/>
+    <!-- Light dots -->
+    <circle cx="53"  cy="90" r="3" fill="#F0E040" opacity="0.90"/>
+    <circle cx="64"  cy="92" r="3" fill="#F0C040" opacity="0.85"/>
+    <circle cx="76"  cy="93" r="3" fill="#F0E040" opacity="0.90"/>
+    <circle cx="88"  cy="91" r="3" fill="#F0C040" opacity="0.85"/>
+    <circle cx="100" cy="90" r="3" fill="#F0E040" opacity="0.90"/>
+    <circle cx="112" cy="89" r="3" fill="#F0C040" opacity="0.85"/>
+    <circle cx="124" cy="88" r="3" fill="#F0E040" opacity="0.90"/>
+    <circle cx="137" cy="88" r="3" fill="#F0C040" opacity="0.85"/>
+    <!-- Light glows -->
+    <circle cx="76"  cy="93" r="5" fill="#F0E040" opacity="0.25"/>
+    <circle cx="100" cy="90" r="5" fill="#F0E040" opacity="0.25"/>
+    <circle cx="124" cy="88" r="5" fill="#F0E040" opacity="0.20"/>
+
+    <!-- ── SERVING COUNTER ── -->
+    <rect x="64" y="132" width="64" height="18" rx="3" fill="url(#counterGrad)" stroke="#2A1000" stroke-width="2"/>
+    <!-- Counter top surface -->
+    <rect x="64" y="132" width="64" height="5" rx="2" fill="#7A5828" opacity="0.60"/>
+    <!-- Counter edge trim -->
+    <line x1="66" y1="137" x2="126" y2="137" stroke="#5A3A10" stroke-width="1" opacity="0.50"/>
+
+    <!-- ── PLATE ON COUNTER ── -->
+    <ellipse cx="96" cy="132" rx="13" ry="5" fill="white" stroke="#D0D0D0" stroke-width="1.5"/>
+    <!-- Food on plate (colorful dot arrangement) -->
+    <circle cx="92" cy="131" r="3" fill="#E07830" stroke="#A04010" stroke-width="1"/>
+    <circle cx="99" cy="130" r="2.5" fill="#3A8C40" stroke="#1B5E20" stroke-width="1"/>
+    <circle cx="96" cy="133" r="2" fill="#D04060" stroke="#801020" stroke-width="1"/>
+    <!-- Plate rim shadow -->
+    <ellipse cx="96" cy="133" rx="11" ry="3" fill="none" stroke="#C0C0C0" stroke-width="1" opacity="0.50"/>
+
+    <!-- ── NEON SIGN on tent front ── -->
+    <g filter="url(#neonBlur)">
+      <!-- Neon squiggle (abstract) -->
+      <path d="M80 118 Q84 114 88 118 Q92 122 96 118 Q100 114 104 118 Q108 122 112 118"
+            fill="none" stroke="#E040FB" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Neon glow halo -->
+      <path d="M80 118 Q84 114 88 118 Q92 122 96 118 Q100 114 104 118 Q108 122 112 118"
+            fill="none" stroke="#E040FB" stroke-width="5" stroke-linecap="round" opacity="0.20"/>
+    </g>
+
+  </g>
+</svg>

@@ -1,0 +1,205 @@
+{
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
+  "identifier" : "C3A91B52",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : false,
+      "internalID" : "CC000001",
+      "localizations" : [
+        {
+          "description" : "Remove all ads forever",
+          "displayName" : "Remove Ads",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.idlestudio.idlerestaurant.remove_ads",
+      "referenceName" : "Remove Ads",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "29.99",
+      "familyShareable" : false,
+      "internalID" : "CC000002",
+      "localizations" : [
+        {
+          "description" : "Lifetime access to Chef's Table, ad-free forever",
+          "displayName" : "Patron Pack (Lifetime)",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.idlestudio.idlerestaurant.patron_lifetime",
+      "referenceName" : "Patron Lifetime",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "0.99",
+      "familyShareable" : false,
+      "internalID" : "CC000003",
+      "localizations" : [
+        {
+          "description" : "1,200 Coins to jumpstart your restaurant empire",
+          "displayName" : "Starter Pack",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.idlestudio.idlerestaurant.starter_pack",
+      "referenceName" : "Starter Pack",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "0.99",
+      "familyShareable" : false,
+      "internalID" : "CC000004",
+      "localizations" : [
+        {
+          "description" : "1,000 Coins",
+          "displayName" : "Small Coin Pack",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.idlestudio.idlerestaurant.coins.1000",
+      "referenceName" : "Coins 1000",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : false,
+      "internalID" : "CC000005",
+      "localizations" : [
+        {
+          "description" : "5,000 Coins",
+          "displayName" : "Medium Coin Pack",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.idlestudio.idlerestaurant.coins.5000",
+      "referenceName" : "Coins 5000",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "9.99",
+      "familyShareable" : false,
+      "internalID" : "CC000006",
+      "localizations" : [
+        {
+          "description" : "15,000 Coins",
+          "displayName" : "Large Coin Pack",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.idlestudio.idlerestaurant.coins.15000",
+      "referenceName" : "Coins 15000",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "19.99",
+      "familyShareable" : false,
+      "internalID" : "CC00000F",
+      "localizations" : [
+        {
+          "description" : "30,000 Coins — covers 15 late-era Star skips",
+          "displayName" : "XL Coin Pack",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.idlestudio.idlerestaurant.coins.30000",
+      "referenceName" : "Coins 30000",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "39.99",
+      "familyShareable" : false,
+      "internalID" : "CC000010",
+      "localizations" : [
+        {
+          "description" : "75,000 Coins — best value, 37 late-era Star skips",
+          "displayName" : "Mega Coin Pack",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.idlestudio.idlerestaurant.coins.75000",
+      "referenceName" : "Coins 75000",
+      "type" : "Consumable"
+    }
+  ],
+  "settings" : {
+    "_askToBuyEnabled" : false,
+    "_billingGracePeriodEnabled" : false,
+    "_billingIssuesEnabled" : false,
+    "_disableDialogs" : false,
+    "_failTransactionsEnabled" : false,
+    "_locale" : "en_US",
+    "_renewalBillingIssuesEnabled" : false,
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+
+    ],
+    "_timeRate" : 0
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "DD000001",
+      "localizations" : [
+
+      ],
+      "name" : "Chef's Table",
+      "subscriptions" : [
+        {
+          "adHocOfferCodesEnabled" : false,
+          "displayPrice" : "2.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "DD000002",
+          "localizations" : [
+            {
+              "description" : "Double production speed, exclusive Michelin Stars, and ad-free play",
+              "displayName" : "Chef's Table",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.idlestudio.idlerestaurant.chefs_table.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Chef's Table Monthly",
+          "subscriptionGroupID" : "DD000001",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOfferCodesEnabled" : false,
+          "displayPrice" : "19.99",
+          "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "DD000003",
+          "localizations" : [
+            {
+              "description" : "Double production speed, exclusive stars, ad-free — save 40%",
+              "displayName" : "Chef's Table (Annual)",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.idlestudio.idlerestaurant.chefs_table.annual",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Chef's Table Annual",
+          "subscriptionGroupID" : "DD000001",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

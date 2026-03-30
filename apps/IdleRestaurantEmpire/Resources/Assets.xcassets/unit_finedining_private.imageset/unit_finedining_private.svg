@@ -1,0 +1,240 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <filter id="ds" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="2" dy="3" stdDeviation="4" flood-color="#3A1500" flood-opacity="0.28"/>
+    </filter>
+    <!-- Room background wall gradient -->
+    <linearGradient id="wallGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2A3036"/>
+      <stop offset="100%" stop-color="#161E22"/>
+    </linearGradient>
+    <!-- Fireplace surround -->
+    <linearGradient id="stoneGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#5A5650"/>
+      <stop offset="100%" stop-color="#3A3830"/>
+    </linearGradient>
+    <!-- Fire gradient -->
+    <radialGradient id="fireGrad" cx="50%" cy="90%" r="60%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9"/>
+      <stop offset="25%" stop-color="#F0C040" stop-opacity="0.95"/>
+      <stop offset="60%" stop-color="#F07020" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#8B1A00" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Fireplace warm glow spill -->
+    <radialGradient id="fireGlow" cx="50%" cy="52%" r="30%">
+      <stop offset="0%" stop-color="#F07020" stop-opacity="0.30"/>
+      <stop offset="100%" stop-color="#F07020" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Left curtain gradient -->
+    <linearGradient id="curtainLeftGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1A1020"/>
+      <stop offset="100%" stop-color="#2A1830"/>
+    </linearGradient>
+    <!-- Right curtain gradient -->
+    <linearGradient id="curtainRightGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#2A1830"/>
+      <stop offset="100%" stop-color="#1A1020"/>
+    </linearGradient>
+    <!-- Table linen gradient -->
+    <linearGradient id="linenGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FAFAFA"/>
+      <stop offset="100%" stop-color="#D8DCE0"/>
+    </linearGradient>
+    <!-- Silver candelabra -->
+    <linearGradient id="silverGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ECEFF1"/>
+      <stop offset="100%" stop-color="#90A4AE"/>
+    </linearGradient>
+    <!-- Chandelier warm glow -->
+    <radialGradient id="chandelierGlow" cx="50%" cy="0%" r="30%">
+      <stop offset="0%" stop-color="#F5E080" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#F5E080" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Flame glow at candles -->
+    <radialGradient id="candleFlameGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F5C040" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#F5C040" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <g filter="url(#ds)">
+
+    <!-- ── BACKGROUND WALLS ── -->
+    <rect x="14" y="14" width="164" height="164" rx="7" fill="url(#wallGrad)"/>
+
+    <!-- Chandelier glow from top -->
+    <rect x="14" y="14" width="164" height="164" rx="7" fill="url(#chandelierGlow)"/>
+
+    <!-- Fire glow radiating from center -->
+    <rect x="14" y="14" width="164" height="164" rx="7" fill="url(#fireGlow)"/>
+
+    <!-- Wainscoting / chair rail suggestion -->
+    <rect x="14" y="118" width="164" height="4" rx="1" fill="#3A4248" stroke="#263238" stroke-width="1"/>
+    <rect x="14" y="122" width="164" height="3" rx="0" fill="#2A3238" opacity="0.6"/>
+
+    <!-- Floor (dark hardwood) -->
+    <rect x="14" y="155" width="164" height="23" rx="4" fill="#1E1410"/>
+    <line x1="14" y1="162" x2="178" y2="162" stroke="#2E2018" stroke-width="1" opacity="0.7"/>
+    <line x1="14" y1="168" x2="178" y2="168" stroke="#2E2018" stroke-width="0.8" opacity="0.5"/>
+
+    <!-- ── CHANDELIER (top center) ── -->
+    <!-- Chain from ceiling -->
+    <line x1="96" y1="14" x2="96" y2="28" stroke="#B0BEC5" stroke-width="2"/>
+    <!-- Central disc -->
+    <ellipse cx="96" cy="30" rx="10" ry="5" fill="url(#silverGrad)" stroke="#90A4AE" stroke-width="1.5"/>
+    <!-- Arms radiating -->
+    <line x1="86" y1="30" x2="74" y2="36" stroke="#CFD8DC" stroke-width="1.5"/>
+    <line x1="106" y1="30" x2="118" y2="36" stroke="#CFD8DC" stroke-width="1.5"/>
+    <line x1="96" y1="25" x2="96" y2="16" stroke="#CFD8DC" stroke-width="1.2"/>
+    <!-- Crystal drops -->
+    <ellipse cx="72" cy="40" rx="3" ry="5" fill="#D8EEF8" stroke="#A0C8D8" stroke-width="1" opacity="0.85"/>
+    <ellipse cx="120" cy="40" rx="3" ry="5" fill="#D8EEF8" stroke="#A0C8D8" stroke-width="1" opacity="0.85"/>
+    <ellipse cx="82" cy="43" rx="2.5" ry="4" fill="#D8EEF8" stroke="#A0C8D8" stroke-width="0.8" opacity="0.7"/>
+    <ellipse cx="110" cy="43" rx="2.5" ry="4" fill="#D8EEF8" stroke="#A0C8D8" stroke-width="0.8" opacity="0.7"/>
+    <ellipse cx="96" cy="44" rx="3" ry="5" fill="#D8EEF8" stroke="#A0C8D8" stroke-width="1" opacity="0.75"/>
+    <!-- Chandelier candle points -->
+    <ellipse cx="72" cy="36" rx="3" ry="2" fill="#F5E080" opacity="0.8"/>
+    <ellipse cx="120" cy="36" rx="3" ry="2" fill="#F5E080" opacity="0.8"/>
+
+    <!-- ── STONE FIREPLACE (back center) ── -->
+    <!-- Fireplace surround outer -->
+    <rect x="62" y="46" width="68" height="68" rx="3" fill="url(#stoneGrad)" stroke="#2A2820" stroke-width="2.5"/>
+    <!-- Stone texture marks -->
+    <rect x="64" y="48" width="30" height="14" rx="1" fill="none" stroke="#4A4840" stroke-width="0.8" opacity="0.5"/>
+    <rect x="96" y="48" width="32" height="14" rx="1" fill="none" stroke="#4A4840" stroke-width="0.8" opacity="0.5"/>
+    <rect x="64" y="64" width="20" height="12" rx="1" fill="none" stroke="#4A4840" stroke-width="0.7" opacity="0.4"/>
+    <rect x="86" y="64" width="22" height="12" rx="1" fill="none" stroke="#4A4840" stroke-width="0.7" opacity="0.4"/>
+    <rect x="110" y="64" width="18" height="12" rx="1" fill="none" stroke="#4A4840" stroke-width="0.7" opacity="0.4"/>
+    <!-- Mantelpiece top -->
+    <rect x="56" y="44" width="80" height="8" rx="2" fill="#4A4840" stroke="#2A2820" stroke-width="2"/>
+    <!-- Mantel highlight -->
+    <rect x="58" y="45" width="76" height="3" rx="1" fill="white" opacity="0.08"/>
+
+    <!-- Firebox opening (dark arch) -->
+    <path d="M72 78 Q72 62 96 60 Q120 62 120 78 L120 112 L72 112 Z" fill="#1A1208"/>
+    <!-- Firebox inner shadow -->
+    <path d="M74 110 L74 82 Q74 66 96 64 Q118 66 118 82 L118 110 Z" fill="#0E0C06"/>
+
+    <!-- FIRE inside firebox -->
+    <!-- Main flame body -->
+    <path d="M80 112 Q78 98 82 90 Q85 84 88 90 Q90 80 92 74 Q94 68 96 66 Q98 68 100 74 Q102 80 104 90 Q107 84 110 90 Q114 98 112 112 Z"
+          fill="url(#fireGrad)"/>
+    <!-- Inner bright core -->
+    <path d="M88 112 Q86 102 88 94 Q90 88 93 84 Q95 80 96 78 Q97 80 99 84 Q102 88 104 94 Q106 102 104 112 Z"
+          fill="#F0C040" opacity="0.7"/>
+    <!-- Embers glow on firebox floor -->
+    <ellipse cx="96" cy="111" rx="24" ry="4" fill="#F07020" opacity="0.5"/>
+
+    <!-- ── LEFT VELVET CURTAIN ── -->
+    <!-- Curtain panel -->
+    <path d="M14 14 Q14 14 28 14 L34 14 L34 155 Q34 158 28 158 L14 158 Z"
+          fill="url(#curtainLeftGrad)"/>
+    <!-- Curtain pleat folds (curved vertical lines) -->
+    <path d="M20 16 Q22 40 20 70 Q18 100 20 130 Q22 145 20 155" fill="none" stroke="#3A2848" stroke-width="1" opacity="0.8"/>
+    <path d="M26 16 Q28 40 26 70 Q24 100 26 130 Q28 145 26 155" fill="none" stroke="#3A2848" stroke-width="1" opacity="0.7"/>
+    <path d="M32 16 Q34 40 32 70 Q30 100 32 130 Q34 145 32 155" fill="none" stroke="#3A2848" stroke-width="1" opacity="0.6"/>
+    <!-- Curtain edge highlight -->
+    <path d="M33 14 Q35 80 33 155" fill="none" stroke="#4A3060" stroke-width="1.5" opacity="0.5"/>
+    <!-- Gold tassel tie-back -->
+    <ellipse cx="30" cy="104" rx="8" ry="5" fill="#F0C040" stroke="#C09020" stroke-width="1.5"/>
+    <line x1="28" y1="108" x2="26" y2="116" stroke="#C09020" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="30" y1="109" x2="30" y2="118" stroke="#F0C040" stroke-width="1" stroke-linecap="round"/>
+    <line x1="32" y1="108" x2="34" y2="116" stroke="#C09020" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- Tassel fringe ends -->
+    <circle cx="26" cy="118" r="2" fill="#C09020"/>
+    <circle cx="30" cy="119" r="2" fill="#F0C040"/>
+    <circle cx="34" cy="118" r="2" fill="#C09020"/>
+
+    <!-- ── RIGHT VELVET CURTAIN ── -->
+    <path d="M158 14 L164 14 Q178 14 178 14 L178 158 Q178 158 164 158 L158 158 L158 14 Z"
+          fill="url(#curtainRightGrad)"/>
+    <!-- Pleat folds -->
+    <path d="M160 16 Q158 40 160 70 Q162 100 160 130 Q158 145 160 155" fill="none" stroke="#3A2848" stroke-width="1" opacity="0.8"/>
+    <path d="M166 16 Q164 40 166 70 Q168 100 166 130 Q164 145 166 155" fill="none" stroke="#3A2848" stroke-width="1" opacity="0.7"/>
+    <path d="M172 16 Q170 40 172 70 Q174 100 172 130 Q170 145 172 155" fill="none" stroke="#3A2848" stroke-width="1" opacity="0.6"/>
+    <!-- Edge highlight -->
+    <path d="M159 14 Q157 80 159 155" fill="none" stroke="#4A3060" stroke-width="1.5" opacity="0.5"/>
+    <!-- Gold tassel tie-back -->
+    <ellipse cx="162" cy="104" rx="8" ry="5" fill="#F0C040" stroke="#C09020" stroke-width="1.5"/>
+    <line x1="160" y1="108" x2="158" y2="116" stroke="#C09020" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="162" y1="109" x2="162" y2="118" stroke="#F0C040" stroke-width="1" stroke-linecap="round"/>
+    <line x1="164" y1="108" x2="166" y2="116" stroke="#C09020" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="158" cy="118" r="2" fill="#C09020"/>
+    <circle cx="162" cy="119" r="2" fill="#F0C040"/>
+    <circle cx="166" cy="118" r="2" fill="#C09020"/>
+
+    <!-- ── DINING TABLE (foreground center) ── -->
+    <!-- Table oval shadow on floor -->
+    <ellipse cx="96" cy="172" rx="54" ry="8" fill="#0A0808" opacity="0.4"/>
+    <!-- Table pedestal/leg -->
+    <rect x="90" y="158" width="12" height="14" rx="3" fill="#3A2A1A" stroke="#1A1208" stroke-width="1.5"/>
+    <!-- Table base spread -->
+    <path d="M76 172 Q82 175 96 176 Q110 175 116 172 L112 169 Q104 172 96 172 Q88 172 80 169 Z" fill="#2A1A0A"/>
+    <!-- Table top (ellipse) -->
+    <ellipse cx="96" cy="148" rx="56" ry="20" fill="url(#linenGrad)" stroke="#B0BAC0" stroke-width="2"/>
+    <!-- Tablecloth highlight (top-left light) -->
+    <path d="M50 138 Q60 132 80 130 Q96 128 114 130 Q100 128 80 134 Q62 138 50 144 Z" fill="white" opacity="0.18"/>
+
+    <!-- ── PLACE SETTINGS ── -->
+
+    <!-- Left place setting -->
+    <!-- Plate (left) -->
+    <circle cx="72" cy="148" r="13" fill="#F0F0F0" stroke="#C0C8CC" stroke-width="1.5"/>
+    <circle cx="72" cy="148" r="9" fill="white" stroke="#D8DCE0" stroke-width="0.8"/>
+    <!-- Cutlery left (fork, knife) -->
+    <line x1="56" y1="140" x2="56" y2="158" stroke="#B0BEC5" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="60" y1="140" x2="60" y2="158" stroke="#B0BEC5" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="84" y1="140" x2="84" y2="158" stroke="#B0BEC5" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- Wine glass (left) -->
+    <path d="M66 134 Q62 126 63 122 L71 122 Q72 126 68 134 Z" fill="#D8EEF8" stroke="#90A4AE" stroke-width="1" opacity="0.75"/>
+    <line x1="67" y1="134" x2="67" y2="138" stroke="#90A4AE" stroke-width="1"/>
+    <path d="M63 138 L71 138" stroke="#90A4AE" stroke-width="1.2" stroke-linecap="round"/>
+
+    <!-- Right place setting -->
+    <!-- Plate (right) -->
+    <circle cx="120" cy="148" r="13" fill="#F0F0F0" stroke="#C0C8CC" stroke-width="1.5"/>
+    <circle cx="120" cy="148" r="9" fill="white" stroke="#D8DCE0" stroke-width="0.8"/>
+    <!-- Cutlery right -->
+    <line x1="104" y1="140" x2="104" y2="158" stroke="#B0BEC5" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="108" y1="140" x2="108" y2="158" stroke="#B0BEC5" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="132" y1="140" x2="132" y2="158" stroke="#B0BEC5" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- Wine glass (right) -->
+    <path d="M114 134 Q110 126 111 122 L119 122 Q120 126 116 134 Z" fill="#D8EEF8" stroke="#90A4AE" stroke-width="1" opacity="0.75"/>
+    <line x1="115" y1="134" x2="115" y2="138" stroke="#90A4AE" stroke-width="1"/>
+    <path d="M111 138 L119 138" stroke="#90A4AE" stroke-width="1.2" stroke-linecap="round"/>
+
+    <!-- ── CANDELABRAS on table ── -->
+
+    <!-- Left candelabra -->
+    <g transform="translate(84, 130)">
+      <!-- Base -->
+      <ellipse cx="0" cy="6" rx="5" ry="2" fill="url(#silverGrad)" stroke="#90A4AE" stroke-width="1"/>
+      <!-- Stem -->
+      <rect x="-1.5" y="-10" width="3" height="16" rx="1.5" fill="url(#silverGrad)" stroke="#90A4AE" stroke-width="1"/>
+      <!-- Candle cup -->
+      <ellipse cx="0" cy="-10" rx="3.5" ry="2" fill="url(#silverGrad)" stroke="#90A4AE" stroke-width="1"/>
+      <!-- Candle -->
+      <rect x="-2" y="-22" width="4" height="12" rx="1" fill="#F5EDD8" stroke="#D0C8B0" stroke-width="0.8"/>
+      <!-- Flame glow -->
+      <circle cx="0" cy="-23" r="5" fill="url(#candleFlameGlow)"/>
+      <!-- Flame -->
+      <path d="M0 -22 Q2 -26 1.5 -28 Q0 -30 -1.5 -28 Q-2 -26 0 -22 Z" fill="#F07020"/>
+      <path d="M0 -22 Q1.5 -25 1 -27 Q0 -28 -1 -27 Q-1.5 -25 0 -22 Z" fill="#F0C040"/>
+    </g>
+
+    <!-- Right candelabra -->
+    <g transform="translate(108, 130)">
+      <ellipse cx="0" cy="6" rx="5" ry="2" fill="url(#silverGrad)" stroke="#90A4AE" stroke-width="1"/>
+      <rect x="-1.5" y="-10" width="3" height="16" rx="1.5" fill="url(#silverGrad)" stroke="#90A4AE" stroke-width="1"/>
+      <ellipse cx="0" cy="-10" rx="3.5" ry="2" fill="url(#silverGrad)" stroke="#90A4AE" stroke-width="1"/>
+      <rect x="-2" y="-22" width="4" height="12" rx="1" fill="#F5EDD8" stroke="#D0C8B0" stroke-width="0.8"/>
+      <circle cx="0" cy="-23" r="5" fill="url(#candleFlameGlow)"/>
+      <path d="M0 -22 Q2 -26 1.5 -28 Q0 -30 -1.5 -28 Q-2 -26 0 -22 Z" fill="#F07020"/>
+      <path d="M0 -22 Q1.5 -25 1 -27 Q0 -28 -1 -27 Q-1.5 -25 0 -22 Z" fill="#F0C040"/>
+    </g>
+
+    <!-- Canvas border -->
+    <rect x="14" y="14" width="164" height="164" rx="7" fill="none" stroke="#161E22" stroke-width="2.5"/>
+
+  </g>
+</svg>

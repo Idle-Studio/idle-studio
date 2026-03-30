@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <filter id="ds" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="2" dy="3" stdDeviation="4" flood-color="#3A1500" flood-opacity="0.28"/>
+    </filter>
+    <!-- Stone wall bg gradient -->
+    <linearGradient id="wallGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3A3028"/>
+      <stop offset="100%" stop-color="#282018"/>
+    </linearGradient>
+    <!-- Shelf wood -->
+    <linearGradient id="shelfGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#A07040"/>
+      <stop offset="100%" stop-color="#6A4020"/>
+    </linearGradient>
+    <!-- Ceramic crock -->
+    <linearGradient id="crockGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#8A6040"/>
+      <stop offset="100%" stop-color="#4A2E10"/>
+    </linearGradient>
+    <!-- Crock lid -->
+    <linearGradient id="lidGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7A5030"/>
+      <stop offset="100%" stop-color="#3A1C08"/>
+    </linearGradient>
+    <!-- Glass jar -->
+    <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#B3E5FC" stop-opacity="0.70"/>
+      <stop offset="40%" stop-color="#E8F8FF" stop-opacity="0.50"/>
+      <stop offset="100%" stop-color="#B3E5FC" stop-opacity="0.40"/>
+    </linearGradient>
+    <!-- Purple ambient -->
+    <radialGradient id="purpleGlow" cx="50%" cy="60%" r="45%">
+      <stop offset="0%" stop-color="#6A1B9A" stop-opacity="0.20"/>
+      <stop offset="100%" stop-color="#6A1B9A" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Ground plank -->
+    <linearGradient id="groundGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4A3020"/>
+      <stop offset="100%" stop-color="#2A1808"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Stone cellar background -->
+  <rect x="20" y="30" width="152" height="132" rx="6" fill="url(#wallGrad)"/>
+
+  <!-- Stone block lines (horizontal) -->
+  <line x1="20" y1="62" x2="172" y2="62" stroke="#4A3A2A" stroke-width="1.5" opacity="0.6"/>
+  <line x1="20" y1="94" x2="172" y2="94" stroke="#4A3A2A" stroke-width="1.5" opacity="0.6"/>
+  <line x1="20" y1="126" x2="172" y2="126" stroke="#4A3A2A" stroke-width="1.5" opacity="0.6"/>
+  <!-- Stone block vertical offsets -->
+  <line x1="60"  y1="30" x2="60"  y2="62" stroke="#4A3A2A" stroke-width="1" opacity="0.5"/>
+  <line x1="112" y1="30" x2="112" y2="62" stroke="#4A3A2A" stroke-width="1" opacity="0.5"/>
+  <line x1="44"  y1="62" x2="44"  y2="94" stroke="#4A3A2A" stroke-width="1" opacity="0.5"/>
+  <line x1="96"  y1="62" x2="96"  y2="94" stroke="#4A3A2A" stroke-width="1" opacity="0.5"/>
+  <line x1="148" y1="62" x2="148" y2="94" stroke="#4A3A2A" stroke-width="1" opacity="0.5"/>
+  <line x1="72"  y1="94" x2="72"  y2="126" stroke="#4A3A2A" stroke-width="1" opacity="0.5"/>
+  <line x1="130" y1="94" x2="130" y2="126" stroke="#4A3A2A" stroke-width="1" opacity="0.5"/>
+
+  <!-- Purple ambient glow overlay -->
+  <rect x="20" y="30" width="152" height="132" rx="6" fill="url(#purpleGlow)"/>
+
+  <g filter="url(#ds)">
+
+    <!-- ── WOODEN SHELF ── -->
+    <rect x="28" y="108" width="136" height="12" rx="3" fill="url(#shelfGrad)" stroke="#4A2810" stroke-width="2"/>
+    <rect x="28" y="118" width="136" height="2" rx="1" fill="#2A1000" opacity="0.45"/>
+    <!-- Shelf bracket left -->
+    <path d="M36 108 L36 130" stroke="#5A3818" stroke-width="3" stroke-linecap="round"/>
+    <!-- Shelf bracket right -->
+    <path d="M156 108 L156 130" stroke="#5A3818" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- ── GROUND BOARD ── -->
+    <rect x="28" y="148" width="136" height="8" rx="2" fill="url(#groundGrad)" stroke="#2A1000" stroke-width="1.5"/>
+
+    <!-- ── CABBAGE LEAF remnants on ground ── -->
+    <!-- Leaf 1 -->
+    <ellipse cx="50" cy="148" rx="14" ry="6" fill="#3A7A28" opacity="0.75" transform="rotate(-15 50 148)"/>
+    <line x1="44" y1="145" x2="56" y2="151" stroke="#2A5A18" stroke-width="1" opacity="0.6"/>
+    <!-- Leaf 2 -->
+    <ellipse cx="78" cy="146" rx="11" ry="5" fill="#4A8C34" opacity="0.65" transform="rotate(10 78 146)"/>
+    <!-- Leaf 3 -->
+    <ellipse cx="144" cy="148" rx="9" ry="4" fill="#3A7A28" opacity="0.60" transform="rotate(-8 144 148)"/>
+
+    <!-- ══════════
+         LEFT MASON JAR (kimchi — reddish)
+    ══════════ -->
+    <rect x="36" y="68" width="32" height="40" rx="3" fill="url(#glassGrad)" stroke="#80C8E8" stroke-width="2"/>
+    <!-- Kimchi contents -->
+    <rect x="38" y="82" width="28" height="26" rx="2" fill="#C03020" opacity="0.62"/>
+    <!-- Content texture lines -->
+    <line x1="42" y1="85" x2="62" y2="85" stroke="#901808" stroke-width="1" opacity="0.5"/>
+    <line x1="40" y1="91" x2="64" y2="91" stroke="#901808" stroke-width="1" opacity="0.5"/>
+    <line x1="42" y1="97" x2="62" y2="97" stroke="#901808" stroke-width="1" opacity="0.5"/>
+    <!-- Jar glass highlight -->
+    <rect x="38" y="70" width="6" height="30" rx="2" fill="white" opacity="0.22"/>
+    <!-- Jar neck -->
+    <rect x="40" y="64" width="24" height="6" rx="2" fill="url(#glassGrad)" stroke="#80C8E8" stroke-width="1.5"/>
+    <!-- Cloth cover -->
+    <ellipse cx="52" cy="64" rx="16" ry="5" fill="#D4B080" stroke="#A07840" stroke-width="1.5"/>
+    <!-- Cloth tie string -->
+    <path d="M40 66 Q52 72 64 66" fill="none" stroke="#7A5020" stroke-width="1.5"/>
+    <!-- Jar lip outline -->
+    <rect x="36" y="68" width="32" height="40" rx="3" fill="none" stroke="#80C8E8" stroke-width="2"/>
+
+    <!-- ══════════
+         CENTER CERAMIC CROCK
+    ══════════ -->
+    <!-- Crock body (squat wide cylinder) -->
+    <rect x="76" y="74" width="40" height="34" rx="5" fill="url(#crockGrad)" stroke="#3A1C08" stroke-width="2.5"/>
+    <!-- Crock top ellipse -->
+    <ellipse cx="96" cy="74" rx="20" ry="6" fill="#7A5030" stroke="#3A1C08" stroke-width="2"/>
+    <!-- Crock texture ring lines -->
+    <line x1="78" y1="83" x2="114" y2="83" stroke="#3A1808" stroke-width="1" opacity="0.5"/>
+    <line x1="78" y1="91" x2="114" y2="91" stroke="#3A1808" stroke-width="1" opacity="0.5"/>
+    <line x1="78" y1="99" x2="114" y2="99" stroke="#3A1808" stroke-width="1" opacity="0.5"/>
+    <!-- Lid disc -->
+    <ellipse cx="96" cy="68" rx="18" ry="5.5" fill="url(#lidGrad)" stroke="#2A1000" stroke-width="2"/>
+    <!-- Lid handle -->
+    <ellipse cx="96" cy="65" rx="7" ry="3" fill="#6A4020" stroke="#2A1000" stroke-width="1.5"/>
+    <rect x="92" y="60" width="8" height="6" rx="2" fill="#5A3010" stroke="#2A1000" stroke-width="1.5"/>
+    <!-- Airlock glass dome on lid -->
+    <ellipse cx="96" cy="60" rx="5" ry="3" fill="#B3E5FC" stroke="#80C8E8" stroke-width="1.5" opacity="0.80"/>
+    <!-- Bubble in airlock -->
+    <circle cx="95" cy="59" r="1.5" fill="white" opacity="0.60"/>
+    <circle cx="98" cy="61" r="1" fill="white" opacity="0.45"/>
+    <!-- Crock highlight -->
+    <path d="M80 80 Q82 74 88 76" fill="none" stroke="white" stroke-width="1.5" opacity="0.20"/>
+
+    <!-- ══════════
+         RIGHT MASON JAR (sauerkraut — pale yellow)
+    ══════════ -->
+    <rect x="124" y="68" width="32" height="40" rx="3" fill="url(#glassGrad)" stroke="#80C8E8" stroke-width="2"/>
+    <!-- Sauerkraut contents -->
+    <rect x="126" y="82" width="28" height="26" rx="2" fill="#D0C060" opacity="0.60"/>
+    <!-- Content texture -->
+    <line x1="130" y1="86" x2="150" y2="86" stroke="#A09030" stroke-width="1" opacity="0.5"/>
+    <line x1="128" y1="92" x2="152" y2="92" stroke="#A09030" stroke-width="1" opacity="0.5"/>
+    <line x1="130" y1="98" x2="150" y2="98" stroke="#A09030" stroke-width="1" opacity="0.5"/>
+    <!-- Glass highlight -->
+    <rect x="126" y="70" width="6" height="30" rx="2" fill="white" opacity="0.22"/>
+    <!-- Jar neck -->
+    <rect x="128" y="64" width="24" height="6" rx="2" fill="url(#glassGrad)" stroke="#80C8E8" stroke-width="1.5"/>
+    <!-- Metal band lid -->
+    <ellipse cx="140" cy="64" rx="14" ry="4" fill="#8090A0" stroke="#607080" stroke-width="1.5"/>
+    <rect x="126" y="68" width="32" height="40" rx="3" fill="none" stroke="#80C8E8" stroke-width="2"/>
+
+    <!-- ── Neon accent glow dot on crock airlock ── -->
+    <circle cx="96" cy="58" r="3" fill="#E040FB" opacity="0.50"/>
+
+  </g>
+</svg>

@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <filter id="ds" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="2" dy="3" stdDeviation="4" flood-color="#3A1500" flood-opacity="0.28"/>
+    </filter>
+    <!-- Table surface gradient -->
+    <linearGradient id="tableGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2E3C42"/>
+      <stop offset="100%" stop-color="#161E22"/>
+    </linearGradient>
+    <!-- Napkin gradient -->
+    <linearGradient id="napkinGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FAFAFA"/>
+      <stop offset="100%" stop-color="#D8DDE0"/>
+    </linearGradient>
+    <!-- Gold charger gradient -->
+    <linearGradient id="chargerGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F5D060"/>
+      <stop offset="100%" stop-color="#B07A10"/>
+    </linearGradient>
+    <!-- Silver cutlery gradient -->
+    <linearGradient id="silverGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ECEFF1"/>
+      <stop offset="50%" stop-color="#CFD8DC"/>
+      <stop offset="100%" stop-color="#90A4AE"/>
+    </linearGradient>
+    <!-- Candlelight background glow -->
+    <radialGradient id="candleGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F0B040" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#F0B040" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <g filter="url(#ds)">
+
+    <!-- Table surface -->
+    <rect x="22" y="60" width="148" height="112" rx="8" fill="url(#tableGrad)"/>
+    <!-- Table top-left sheen -->
+    <path d="M30 60 Q22 60 22 68 L22 90 Q50 68 170 66 L170 60 Z" fill="white" opacity="0.06"/>
+    <!-- Table edge highlight -->
+    <rect x="22" y="60" width="148" height="112" rx="8" fill="none" stroke="#161E22" stroke-width="3"/>
+
+    <!-- Subtle candlelight wash on table -->
+    <ellipse cx="96" cy="116" rx="72" ry="56" fill="url(#candleGlow)"/>
+
+    <!-- Gold charger plate (behind napkin) -->
+    <circle cx="96" cy="118" r="46" fill="url(#chargerGrad)" opacity="0.9"/>
+    <circle cx="96" cy="118" r="46" fill="none" stroke="#C09020" stroke-width="2.5"/>
+    <circle cx="96" cy="118" r="40" fill="none" stroke="#F5D060" stroke-width="1" opacity="0.6"/>
+    <!-- Table cloth / inner plate area -->
+    <circle cx="96" cy="118" r="34" fill="#1E282C" opacity="0.6"/>
+
+    <!-- ── BISHOP'S HAT NAPKIN ── -->
+    <!-- Napkin body base (triangle) -->
+    <path d="M96 62 L128 138 L64 138 Z" fill="url(#napkinGrad)" stroke="#B0BAC0" stroke-width="1.5" stroke-linejoin="round"/>
+    <!-- Left fold shadow -->
+    <path d="M96 62 L64 138 L80 138 Z" fill="#C8CDD0" opacity="0.4"/>
+    <!-- Center fold crease -->
+    <line x1="96" y1="62" x2="96" y2="138" stroke="#B0BAC0" stroke-width="1" opacity="0.6"/>
+    <!-- Left point of bishop's hat -->
+    <path d="M75 80 Q80 62 96 62 L78 95 Z" fill="url(#napkinGrad)" stroke="#B0BAC0" stroke-width="1.5" stroke-linejoin="round"/>
+    <!-- Right point of bishop's hat -->
+    <path d="M117 80 Q112 62 96 62 L114 95 Z" fill="#ECEFF1" stroke="#B0BAC0" stroke-width="1.5" stroke-linejoin="round"/>
+    <!-- Left point highlight -->
+    <path d="M77 82 Q81 66 94 64 L79 92 Z" fill="white" opacity="0.35"/>
+    <!-- Right point highlight -->
+    <path d="M115 82 Q111 66 98 64 L113 92 Z" fill="white" opacity="0.25"/>
+    <!-- Horizontal fold lines on napkin body -->
+    <path d="M80 105 Q96 102 112 105" fill="none" stroke="#C0C8CC" stroke-width="1" opacity="0.7"/>
+    <path d="M75 118 Q96 114 117 118" fill="none" stroke="#C0C8CC" stroke-width="1" opacity="0.6"/>
+    <!-- Napkin base fold -->
+    <path d="M64 138 Q96 132 128 138" fill="#D0D8DC" stroke="#B0BAC0" stroke-width="1.5"/>
+
+    <!-- ── SILVER FORK (left) ── -->
+    <g transform="translate(52, 75)">
+      <!-- Handle -->
+      <rect x="-3" y="30" width="6" height="50" rx="3" fill="url(#silverGrad)" stroke="#90A4AE" stroke-width="1.5"/>
+      <!-- Handle highlight -->
+      <rect x="-1" y="32" width="2" height="46" rx="1" fill="white" opacity="0.4"/>
+      <!-- Neck -->
+      <rect x="-2" y="18" width="4" height="14" rx="2" fill="url(#silverGrad)" stroke="#90A4AE" stroke-width="1.5"/>
+      <!-- Tines base -->
+      <rect x="-5" y="6" width="10" height="14" rx="1" fill="url(#silverGrad)" stroke="#90A4AE" stroke-width="1.5"/>
+      <!-- 4 Tines -->
+      <line x1="-4" y1="6" x2="-4.5" y2="-6" stroke="#CFD8DC" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="-1.3" y1="6" x2="-1.5" y2="-8" stroke="#CFD8DC" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="1.3" y1="6" x2="1.5" y2="-8" stroke="#CFD8DC" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="4" y1="6" x2="4.5" y2="-6" stroke="#CFD8DC" stroke-width="1.8" stroke-linecap="round"/>
+    </g>
+
+    <!-- ── SILVER KNIFE (right of napkin, inner) ── -->
+    <g transform="translate(140, 75)">
+      <!-- Handle -->
+      <rect x="-3" y="30" width="6" height="50" rx="3" fill="url(#silverGrad)" stroke="#90A4AE" stroke-width="1.5"/>
+      <rect x="-1" y="32" width="2" height="46" rx="1" fill="white" opacity="0.4"/>
+      <!-- Bolster -->
+      <rect x="-3.5" y="22" width="7" height="10" rx="1" fill="#B0BEC5" stroke="#90A4AE" stroke-width="1.5"/>
+      <!-- Blade -->
+      <path d="M-2 22 L-2 -8 Q-1 -12 0 -12 Q3 -10 3 -4 L3 22 Z" fill="url(#silverGrad)" stroke="#90A4AE" stroke-width="1.5" stroke-linejoin="round"/>
+      <!-- Blade edge highlight -->
+      <line x1="-1" y1="20" x2="-1" y2="-8" stroke="white" stroke-width="0.8" opacity="0.5"/>
+    </g>
+
+    <!-- ── SILVER SPOON (outer right) ── -->
+    <g transform="translate(158, 75)">
+      <!-- Handle -->
+      <rect x="-2.5" y="30" width="5" height="52" rx="2.5" fill="url(#silverGrad)" stroke="#90A4AE" stroke-width="1.5"/>
+      <rect x="-0.5" y="32" width="1.5" height="48" rx="0.75" fill="white" opacity="0.4"/>
+      <!-- Neck taper -->
+      <path d="M-2 30 Q-3 16 -4 8 L4 8 Q3 16 2 30 Z" fill="url(#silverGrad)" stroke="#90A4AE" stroke-width="1.5"/>
+      <!-- Spoon bowl -->
+      <ellipse cx="0" cy="4" rx="7" ry="10" fill="url(#silverGrad)" stroke="#90A4AE" stroke-width="1.5"/>
+      <!-- Bowl inner highlight -->
+      <ellipse cx="-1" cy="2" rx="4" ry="6" fill="white" opacity="0.25"/>
+    </g>
+
+  </g>
+</svg>

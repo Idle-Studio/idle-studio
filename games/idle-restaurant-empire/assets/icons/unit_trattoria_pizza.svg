@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <filter id="ds" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="2" dy="3" stdDeviation="4" flood-color="#3A1500" flood-opacity="0.28"/>
+    </filter>
+    <linearGradient id="domeGrad" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#B0A890"/>
+      <stop offset="60%" stop-color="#8A8070"/>
+      <stop offset="100%" stop-color="#6A6050"/>
+    </linearGradient>
+    <linearGradient id="archGlowGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D04010" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#800000" stop-opacity="0.3"/>
+    </linearGradient>
+    <linearGradient id="handleGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#A07040"/>
+      <stop offset="100%" stop-color="#6B4820"/>
+    </linearGradient>
+    <linearGradient id="baseGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7A7060"/>
+      <stop offset="100%" stop-color="#504840"/>
+    </linearGradient>
+    <radialGradient id="glowGrad" cx="50%" cy="70%" r="50%">
+      <stop offset="0%" stop-color="#F04010" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#800000" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="archClip">
+      <ellipse cx="90" cy="112" rx="30" ry="20"/>
+    </clipPath>
+  </defs>
+
+  <g filter="url(#ds)">
+
+    <!-- ── OVEN BASE ── -->
+    <rect x="28" y="118" width="136" height="24" rx="5" fill="url(#baseGrad)" stroke="#4A4030" stroke-width="2.5"/>
+    <!-- Base stone lines -->
+    <line x1="28" y1="126" x2="164" y2="126" stroke="#3A3020" stroke-width="1" opacity="0.5"/>
+    <line x1="60" y1="118" x2="60" y2="142" stroke="#3A3020" stroke-width="1" opacity="0.4"/>
+    <line x1="96" y1="118" x2="96" y2="142" stroke="#3A3020" stroke-width="1" opacity="0.4"/>
+    <line x1="132" y1="118" x2="132" y2="142" stroke="#3A3020" stroke-width="1" opacity="0.4"/>
+
+    <!-- ── DOME BODY ── -->
+    <path d="M24 120 Q24 44 96 40 Q168 44 168 120 Z" fill="url(#domeGrad)" stroke="#4A4030" stroke-width="3"/>
+
+    <!-- Stone texture horizontal lines on dome -->
+    <path d="M36 112 Q96 108 156 112" fill="none" stroke="#6A6050" stroke-width="1.2" opacity="0.5"/>
+    <path d="M30 100 Q96 94 162 100" fill="none" stroke="#6A6050" stroke-width="1.2" opacity="0.5"/>
+    <path d="M28 88 Q96 80 164 88" fill="none" stroke="#6A6050" stroke-width="1.2" opacity="0.45"/>
+    <path d="M30 76 Q96 67 162 76" fill="none" stroke="#6A6050" stroke-width="1.2" opacity="0.4"/>
+    <path d="M34 64 Q96 54 158 64" fill="none" stroke="#6A6050" stroke-width="1.2" opacity="0.35"/>
+    <path d="M44 54 Q96 44 148 54" fill="none" stroke="#6A6050" stroke-width="1.2" opacity="0.3"/>
+    <!-- Vertical crack lines suggesting brickwork -->
+    <line x1="56" y1="72" x2="52" y2="100" stroke="#6A6050" stroke-width="0.8" opacity="0.3"/>
+    <line x1="76" y1="60" x2="74" y2="76" stroke="#6A6050" stroke-width="0.8" opacity="0.3"/>
+    <line x1="116" y1="60" x2="118" y2="76" stroke="#6A6050" stroke-width="0.8" opacity="0.3"/>
+    <line x1="136" y1="72" x2="140" y2="100" stroke="#6A6050" stroke-width="0.8" opacity="0.3"/>
+    <line x1="66" y1="88" x2="64" y2="112" stroke="#6A6050" stroke-width="0.8" opacity="0.3"/>
+    <line x1="126" y1="88" x2="128" y2="112" stroke="#6A6050" stroke-width="0.8" opacity="0.3"/>
+
+    <!-- ── OVEN ARCH OPENING ── -->
+    <ellipse cx="90" cy="112" rx="30" ry="20" fill="#1A1010"/>
+    <path d="M60 112 Q60 84 90 82 Q120 84 120 112" fill="#1A1010" stroke="#4A4030" stroke-width="2.5"/>
+    <!-- Interior glow -->
+    <ellipse cx="90" cy="112" rx="27" ry="17" fill="url(#glowGrad)"/>
+    <path d="M63 112 Q63 87 90 85 Q117 87 117 112" fill="url(#archGlowGrad)" opacity="0.4"/>
+
+    <!-- ── FLAMES inside arch ── -->
+    <!-- Flame 1 (left) -->
+    <path d="M76 112 Q72 104 76 97 Q78 92 80 97 Q82 104 78 112 Z" fill="#F07020" opacity="0.9"/>
+    <path d="M76 112 Q74 106 77 100 Q79 95 80 100 Q81 106 78 112 Z" fill="#F0C040" opacity="0.8"/>
+    <!-- Flame 2 (center, tallest) -->
+    <path d="M87 112 Q83 101 87 91 Q90 84 93 91 Q97 101 93 112 Z" fill="#F07020" opacity="0.9"/>
+    <path d="M87 112 Q84 103 88 93 Q90 87 92 93 Q95 103 93 112 Z" fill="#F0C040" opacity="0.85"/>
+    <path d="M89 112 Q87 106 89 98 Q90 94 91 98 Q93 106 91 112 Z" fill="#FFEE80" opacity="0.7"/>
+    <!-- Flame 3 (right) -->
+    <path d="M100 112 Q96 104 100 97 Q102 92 105 97 Q107 104 103 112 Z" fill="#F07020" opacity="0.9"/>
+    <path d="M101 112 Q98 105 101 99 Q103 95 104 99 Q106 105 103 112 Z" fill="#F0C040" opacity="0.8"/>
+
+    <!-- Ash glow at arch base -->
+    <ellipse cx="90" cy="114" rx="22" ry="6" fill="#D04010" opacity="0.35"/>
+
+    <!-- ── ARCH SURROUND (decorative stonework) ── -->
+    <path d="M60 112 Q60 84 90 82 Q120 84 120 112" fill="none" stroke="#4A4030" stroke-width="3"/>
+    <!-- Keystone at arch top -->
+    <path d="M86 82 L90 78 L94 82 Z" fill="#7A7060" stroke="#4A4030" stroke-width="1.5"/>
+
+    <!-- ── PIZZA PEEL / PADDLE ── -->
+    <!-- Handle (long, angled bottom-right) -->
+    <line x1="120" y1="130" x2="166" y2="158" stroke="url(#handleGrad)" stroke-width="7" stroke-linecap="round"/>
+    <!-- Handle wood grain -->
+    <line x1="122" y1="132" x2="164" y2="156" stroke="#C09060" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+    <!-- Paddle head (flat round, entering oven) -->
+    <ellipse cx="113" cy="125" rx="14" ry="7" fill="#C09060" stroke="#6B4820" stroke-width="2" transform="rotate(-30 113 125)"/>
+    <!-- Pizza on paddle -->
+    <ellipse cx="113" cy="125" rx="11" ry="5.5" fill="#E8C870" transform="rotate(-30 113 125)"/>
+    <ellipse cx="113" cy="125" rx="8" ry="4" fill="#C84818" opacity="0.7" transform="rotate(-30 113 125)"/>
+
+    <!-- ── CHIMNEY / VENT top of dome ── -->
+    <rect x="88" y="32" width="16" height="14" rx="3" fill="#7A7060" stroke="#4A4030" stroke-width="2"/>
+    <rect x="85" y="30" width="22" height="6" rx="2" fill="#8A8070" stroke="#4A4030" stroke-width="1.5"/>
+    <!-- Smoke wisps from chimney -->
+    <path d="M94 30 Q90 22 94 14 Q98 6 94 0" fill="none" stroke="#C0B8A8" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+    <path d="M100 30 Q104 22 100 14 Q96 8 100 2" fill="none" stroke="#C0B8A8" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+
+  </g>
+</svg>

@@ -1,0 +1,169 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <filter id="ds" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="2" dy="3" stdDeviation="4" flood-color="#3A1500" flood-opacity="0.28"/>
+    </filter>
+
+    <!-- Rack wood gradient -->
+    <linearGradient id="woodGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8B6030"/>
+      <stop offset="100%" stop-color="#4A2A0A"/>
+    </linearGradient>
+    <linearGradient id="woodLight" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#A07840"/>
+      <stop offset="100%" stop-color="#5E3A18"/>
+    </linearGradient>
+
+    <!-- Dark green bottle gradient -->
+    <linearGradient id="greenBottleGrad" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#4A8030"/>
+      <stop offset="100%" stop-color="#1A3A10"/>
+    </linearGradient>
+
+    <!-- Burgundy bottle gradient -->
+    <linearGradient id="burgBottleGrad" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#8B1A3A"/>
+      <stop offset="100%" stop-color="#3A0818"/>
+    </linearGradient>
+
+    <!-- Cork gradient -->
+    <linearGradient id="corkGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#D4A860"/>
+      <stop offset="100%" stop-color="#A87830"/>
+    </linearGradient>
+
+    <!-- Label gradient -->
+    <linearGradient id="labelGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFAF0"/>
+      <stop offset="100%" stop-color="#E8D8B8"/>
+    </linearGradient>
+
+    <!-- Rack back panel -->
+    <linearGradient id="backGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6A4020"/>
+      <stop offset="100%" stop-color="#3A1A08"/>
+    </linearGradient>
+  </defs>
+
+  <g filter="url(#ds)">
+
+    <!-- ── RACK BACK PANEL ── -->
+    <rect x="24" y="28" width="144" height="136" rx="6"
+          fill="url(#backGrad)" stroke="#3A1A08" stroke-width="2.5"/>
+    <!-- Back panel grain lines -->
+    <g stroke="#5A3018" stroke-width="1" opacity="0.4">
+      <line x1="24" y1="50"  x2="168" y2="50"/>
+      <line x1="24" y1="72"  x2="168" y2="72"/>
+      <line x1="24" y1="94"  x2="168" y2="94"/>
+      <line x1="24" y1="116" x2="168" y2="116"/>
+      <line x1="24" y1="138" x2="168" y2="138"/>
+    </g>
+
+    <!-- ── RACK HORIZONTAL BARS ── -->
+    <!-- Top bar -->
+    <rect x="22" y="26" width="148" height="11" rx="4" fill="url(#woodLight)" stroke="#3A1A08" stroke-width="2"/>
+    <!-- Row 1 divider -->
+    <rect x="22" y="72" width="148" height="11" rx="4" fill="url(#woodLight)" stroke="#3A1A08" stroke-width="2"/>
+    <!-- Row 2 divider -->
+    <rect x="22" y="116" width="148" height="11" rx="4" fill="url(#woodLight)" stroke="#3A1A08" stroke-width="2"/>
+    <!-- Bottom bar -->
+    <rect x="22" y="154" width="148" height="11" rx="4" fill="url(#woodLight)" stroke="#3A1A08" stroke-width="2"/>
+
+    <!-- ── RACK VERTICAL BARS ── -->
+    <!-- Far left -->
+    <rect x="22" y="26" width="11" height="140" rx="4" fill="url(#woodGrad)" stroke="#3A1A08" stroke-width="2"/>
+    <!-- Center divider -->
+    <rect x="90" y="26" width="11" height="140" rx="4" fill="url(#woodGrad)" stroke="#3A1A08" stroke-width="2"/>
+    <!-- Far right -->
+    <rect x="159" y="26" width="11" height="140" rx="4" fill="url(#woodGrad)" stroke="#3A1A08" stroke-width="2"/>
+
+    <!-- Highlight edge on vertical bars -->
+    <rect x="23" y="27" width="3" height="138" rx="1.5" fill="white" opacity="0.12"/>
+    <rect x="91" y="27" width="3" height="138" rx="1.5" fill="white" opacity="0.12"/>
+    <rect x="160" y="27" width="3" height="138" rx="1.5" fill="white" opacity="0.12"/>
+
+    <!-- ── WINE BOTTLES — stored diagonally (horizontal, slight tilt) ── -->
+
+    <!-- Row 1 Left cell (green bottle) -->
+    <g transform="rotate(-8, 56, 54)">
+      <!-- Bottle body -->
+      <rect x="30" y="46" width="52" height="16" rx="8"
+            fill="url(#greenBottleGrad)" stroke="#1A3A10" stroke-width="2"/>
+      <!-- Bottle neck -->
+      <rect x="78" y="49" width="14" height="10" rx="5"
+            fill="url(#greenBottleGrad)" stroke="#1A3A10" stroke-width="1.5"/>
+      <!-- Cork -->
+      <rect x="90" y="50" width="7" height="8" rx="3"
+            fill="url(#corkGrad)" stroke="#8B6020" stroke-width="1.2"/>
+      <!-- Label -->
+      <rect x="42" y="48" width="22" height="12" rx="2"
+            fill="url(#labelGrad)" stroke="#C8A870" stroke-width="1"/>
+      <!-- Label line detail -->
+      <line x1="45" y1="52" x2="61" y2="52" stroke="#8B6030" stroke-width="0.8" opacity="0.7"/>
+      <line x1="45" y1="55" x2="61" y2="55" stroke="#8B6030" stroke-width="0.8" opacity="0.5"/>
+      <!-- Bottle shine -->
+      <rect x="32" y="47" width="10" height="6" rx="3" fill="white" opacity="0.15"/>
+    </g>
+
+    <!-- Row 1 Right cell (burgundy bottle) -->
+    <g transform="rotate(6, 130, 54)">
+      <rect x="104" y="46" width="52" height="16" rx="8"
+            fill="url(#burgBottleGrad)" stroke="#3A0818" stroke-width="2"/>
+      <rect x="152" y="49" width="14" height="10" rx="5"
+            fill="url(#burgBottleGrad)" stroke="#3A0818" stroke-width="1.5"/>
+      <rect x="164" y="50" width="7" height="8" rx="3"
+            fill="url(#corkGrad)" stroke="#8B6020" stroke-width="1.2"/>
+      <rect x="116" y="48" width="22" height="12" rx="2"
+            fill="url(#labelGrad)" stroke="#C8A870" stroke-width="1"/>
+      <line x1="119" y1="52" x2="135" y2="52" stroke="#8B6030" stroke-width="0.8" opacity="0.7"/>
+      <line x1="119" y1="55" x2="135" y2="55" stroke="#8B6030" stroke-width="0.8" opacity="0.5"/>
+      <rect x="106" y="47" width="10" height="6" rx="3" fill="white" opacity="0.15"/>
+    </g>
+
+    <!-- Row 2 Left cell (burgundy bottle) -->
+    <g transform="rotate(-5, 56, 98)">
+      <rect x="30" y="90" width="52" height="16" rx="8"
+            fill="url(#burgBottleGrad)" stroke="#3A0818" stroke-width="2"/>
+      <rect x="78" y="93" width="14" height="10" rx="5"
+            fill="url(#burgBottleGrad)" stroke="#3A0818" stroke-width="1.5"/>
+      <rect x="90" y="94" width="7" height="8" rx="3"
+            fill="url(#corkGrad)" stroke="#8B6020" stroke-width="1.2"/>
+      <rect x="42" y="92" width="22" height="12" rx="2"
+            fill="url(#labelGrad)" stroke="#C8A870" stroke-width="1"/>
+      <line x1="45" y1="96" x2="61" y2="96" stroke="#8B6030" stroke-width="0.8" opacity="0.7"/>
+      <line x1="45" y1="99" x2="61" y2="99" stroke="#8B6030" stroke-width="0.8" opacity="0.5"/>
+      <rect x="32" y="91" width="10" height="6" rx="3" fill="white" opacity="0.15"/>
+    </g>
+
+    <!-- Row 2 Right cell (green bottle) -->
+    <g transform="rotate(4, 130, 98)">
+      <rect x="104" y="90" width="52" height="16" rx="8"
+            fill="url(#greenBottleGrad)" stroke="#1A3A10" stroke-width="2"/>
+      <rect x="152" y="93" width="14" height="10" rx="5"
+            fill="url(#greenBottleGrad)" stroke="#1A3A10" stroke-width="1.5"/>
+      <rect x="164" y="94" width="7" height="8" rx="3"
+            fill="url(#corkGrad)" stroke="#8B6020" stroke-width="1.2"/>
+      <rect x="116" y="92" width="22" height="12" rx="2"
+            fill="url(#labelGrad)" stroke="#C8A870" stroke-width="1"/>
+      <line x1="119" y1="96" x2="135" y2="96" stroke="#8B6030" stroke-width="0.8" opacity="0.7"/>
+      <line x1="119" y1="99" x2="135" y2="99" stroke="#8B6030" stroke-width="0.8" opacity="0.5"/>
+      <rect x="106" y="91" width="10" height="6" rx="3" fill="white" opacity="0.15"/>
+    </g>
+
+    <!-- Row 3 Center — single burgundy accent bottle -->
+    <g transform="rotate(-3, 96, 140)">
+      <rect x="68" y="132" width="56" height="16" rx="8"
+            fill="url(#burgBottleGrad)" stroke="#3A0818" stroke-width="2"/>
+      <rect x="120" y="135" width="14" height="10" rx="5"
+            fill="url(#burgBottleGrad)" stroke="#3A0818" stroke-width="1.5"/>
+      <rect x="132" y="136" width="7" height="8" rx="3"
+            fill="url(#corkGrad)" stroke="#8B6020" stroke-width="1.2"/>
+      <rect x="80" y="134" width="24" height="12" rx="2"
+            fill="url(#labelGrad)" stroke="#C8A870" stroke-width="1"/>
+      <line x1="83" y1="138" x2="101" y2="138" stroke="#8B1A3A" stroke-width="0.8" opacity="0.7"/>
+      <line x1="83" y1="141" x2="101" y2="141" stroke="#8B1A3A" stroke-width="0.8" opacity="0.5"/>
+      <rect x="70" y="133" width="10" height="6" rx="3" fill="white" opacity="0.15"/>
+    </g>
+
+  </g>
+</svg>

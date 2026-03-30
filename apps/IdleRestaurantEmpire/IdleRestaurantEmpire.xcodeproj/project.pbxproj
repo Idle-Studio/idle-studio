@@ -1,0 +1,402 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		52209FC3AD65B2F2D0113E5F /* IdleEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 513B8865E50158A3B7541948 /* IdleEngine */; };
+		936ACC2A5EB75624CDD7CD68 /* IdleRestaurantEmpire.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 7420658A678E2B7AD70C5ED8 /* IdleRestaurantEmpire.storekit */; };
+		B37105AD90B5783C0C85A897 /* IdleRestaurantEmpireApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4BAD42D741C11D1A37A543 /* IdleRestaurantEmpireApp.swift */; };
+		C15DA8E106F29159C29303D2 /* GoogleMobileAdsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E85904A1FD27F63E379EAA /* GoogleMobileAdsService.swift */; };
+		E17AB0FB6EC937606CAF035A /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 331A8BF68EB62E701455C410 /* GoogleMobileAds */; };
+		F0ED7DC773AF826259BC45BB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A7B5C8EC8C5BFB55FE20561 /* Assets.xcassets */; };
+		F9C0C3345AE1AFFFD6105D03 /* idle-restaurant-empire.json in Resources */ = {isa = PBXBuildFile; fileRef = 991AA6C223FE305346F31621 /* idle-restaurant-empire.json */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0A7B5C8EC8C5BFB55FE20561 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1DA963B53739C17ECE759348 /* IdleEngine */ = {isa = PBXFileReference; lastKnownFileType = folder; name = IdleEngine; path = ../../Packages/IdleEngine; sourceTree = SOURCE_ROOT; };
+		359E22DDC5A14978EE26C1A0 /* IdleRestaurantEmpire.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = IdleRestaurantEmpire.entitlements; sourceTree = "<group>"; };
+		4A8B25F8D82B6826525AF7EA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		7420658A678E2B7AD70C5ED8 /* IdleRestaurantEmpire.storekit */ = {isa = PBXFileReference; path = IdleRestaurantEmpire.storekit; sourceTree = "<group>"; };
+		991AA6C223FE305346F31621 /* idle-restaurant-empire.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "idle-restaurant-empire.json"; sourceTree = "<group>"; };
+		A6E85904A1FD27F63E379EAA /* GoogleMobileAdsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleMobileAdsService.swift; sourceTree = "<group>"; };
+		BA4BAD42D741C11D1A37A543 /* IdleRestaurantEmpireApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdleRestaurantEmpireApp.swift; sourceTree = "<group>"; };
+		BA6079374B5A7D61A6EE9077 /* IdleRestaurantEmpire.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = IdleRestaurantEmpire.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A0E2959DDDFCAB607CF0DD65 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				52209FC3AD65B2F2D0113E5F /* IdleEngine in Frameworks */,
+				E17AB0FB6EC937606CAF035A /* GoogleMobileAds in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0A9B0E9D61FD90B531A25D8F /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				1DA963B53739C17ECE759348 /* IdleEngine */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		36E84914A70CB063D5C1FAB1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BA6079374B5A7D61A6EE9077 /* IdleRestaurantEmpire.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8D7E63647EBD0D1401AAAF15 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				A6E85904A1FD27F63E379EAA /* GoogleMobileAdsService.swift */,
+				BA4BAD42D741C11D1A37A543 /* IdleRestaurantEmpireApp.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		9355EEF75C957DB90AEEC1A5 = {
+			isa = PBXGroup;
+			children = (
+				0A9B0E9D61FD90B531A25D8F /* Packages */,
+				EDC210A77B919D9AD6001CB1 /* Resources */,
+				8D7E63647EBD0D1401AAAF15 /* Sources */,
+				36E84914A70CB063D5C1FAB1 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		EDC210A77B919D9AD6001CB1 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				0A7B5C8EC8C5BFB55FE20561 /* Assets.xcassets */,
+				991AA6C223FE305346F31621 /* idle-restaurant-empire.json */,
+				359E22DDC5A14978EE26C1A0 /* IdleRestaurantEmpire.entitlements */,
+				7420658A678E2B7AD70C5ED8 /* IdleRestaurantEmpire.storekit */,
+				4A8B25F8D82B6826525AF7EA /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5BCB3FD236286955B7971CB1 /* IdleRestaurantEmpire */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F1DB2BFE68B4B31D9465B3D4 /* Build configuration list for PBXNativeTarget "IdleRestaurantEmpire" */;
+			buildPhases = (
+				BC1A42DEE6C1293AF089FA28 /* Sources */,
+				C129FA92EE1333BC033A3C01 /* Resources */,
+				A0E2959DDDFCAB607CF0DD65 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = IdleRestaurantEmpire;
+			packageProductDependencies = (
+				513B8865E50158A3B7541948 /* IdleEngine */,
+				331A8BF68EB62E701455C410 /* GoogleMobileAds */,
+			);
+			productName = IdleRestaurantEmpire;
+			productReference = BA6079374B5A7D61A6EE9077 /* IdleRestaurantEmpire.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6B9729E7A213280C518DB1CF /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					5BCB3FD236286955B7971CB1 = {
+						DevelopmentTeam = JL84E9GK95;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 3AEA5AB59456BCFCBD8E9F40 /* Build configuration list for PBXProject "IdleRestaurantEmpire" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 9355EEF75C957DB90AEEC1A5;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				098C0A07542A1B3835A4EB3A /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+				759A26E3713DD56756D35D5B /* XCLocalSwiftPackageReference "../../Packages/IdleEngine" */,
+			);
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5BCB3FD236286955B7971CB1 /* IdleRestaurantEmpire */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C129FA92EE1333BC033A3C01 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F0ED7DC773AF826259BC45BB /* Assets.xcassets in Resources */,
+				936ACC2A5EB75624CDD7CD68 /* IdleRestaurantEmpire.storekit in Resources */,
+				F9C0C3345AE1AFFFD6105D03 /* idle-restaurant-empire.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		BC1A42DEE6C1293AF089FA28 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C15DA8E106F29159C29303D2 /* GoogleMobileAdsService.swift in Sources */,
+				B37105AD90B5783C0C85A897 /* IdleRestaurantEmpireApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		2A5B942C9071264422D579BC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = IdleRestaurantEmpire;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = Resources/IdleRestaurantEmpire.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JL84E9GK95;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.idlestudio.idlerestaurant;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2B837DF8AD5BED589F15E483 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		5A662B061C38CE198D109BC3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = IdleRestaurantEmpire;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = Resources/IdleRestaurantEmpire.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JL84E9GK95;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.idlestudio.idlerestaurant;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		CE16BE3A4D4BA31D0F7FC99A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3AEA5AB59456BCFCBD8E9F40 /* Build configuration list for PBXProject "IdleRestaurantEmpire" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2B837DF8AD5BED589F15E483 /* Debug */,
+				CE16BE3A4D4BA31D0F7FC99A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F1DB2BFE68B4B31D9465B3D4 /* Build configuration list for PBXNativeTarget "IdleRestaurantEmpire" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2A5B942C9071264422D579BC /* Debug */,
+				5A662B061C38CE198D109BC3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		759A26E3713DD56756D35D5B /* XCLocalSwiftPackageReference "../../Packages/IdleEngine" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../Packages/IdleEngine;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		098C0A07542A1B3835A4EB3A /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 11.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		331A8BF68EB62E701455C410 /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 098C0A07542A1B3835A4EB3A /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
+		};
+		513B8865E50158A3B7541948 /* IdleEngine */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = IdleEngine;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 6B9729E7A213280C518DB1CF /* Project object */;
+}
