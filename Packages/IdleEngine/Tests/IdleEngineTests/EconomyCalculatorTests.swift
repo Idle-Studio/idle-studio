@@ -206,29 +206,45 @@ struct EconomyCalculatorTests {
         #expect(tokens == 0)
     }
 
-    @Test("Legacy tokens return 1 at exactly 1 trillion gold")
+    @Test("Legacy tokens return 1 at exactly the threshold")
     func legacyTokensAtThreshold() {
-        let tokens = EconomyCalculator.legacyTokens(totalGold: 1_000_000_000_000)
+        let tokens = EconomyCalculator.legacyTokens(totalGold: EconomyCalculator.legacyTokenThreshold)
         #expect(tokens == 1)
     }
 
-    @Test("Legacy tokens return 2 at 4 trillion gold (sqrt(4) = 2)")
-    func legacyTokensFourTrillion() {
-        let tokens = EconomyCalculator.legacyTokens(totalGold: 4_000_000_000_000)
-        #expect(tokens == 2)
-    }
-
-    @Test("Legacy tokens return 3 at 9 trillion gold (sqrt(9) = 3)")
-    func legacyTokensNineTrillion() {
-        let tokens = EconomyCalculator.legacyTokens(totalGold: 9_000_000_000_000)
-        #expect(tokens == 3)
+    @Test("Legacy tokens follow floor(sqrt(gold / threshold))",
+          arguments: [(1, 1), (2, 1), (4, 2), (9, 3), (16, 4), (25, 5), (100, 10)])
+    func legacyTokensFollowSquareRoot(multiple: Int, expected: Int) {
+        let gold = EconomyCalculator.legacyTokenThreshold * Decimal(multiple)
+        #expect(EconomyCalculator.legacyTokens(totalGold: gold) == Decimal(expected))
     }
 
     @Test("Legacy tokens are always whole numbers (floor applied)")
     func legacyTokensAreWholeNumbers() {
-        // 2 trillion → sqrt(2) ≈ 1.41 → floor = 1
-        let tokens = EconomyCalculator.legacyTokens(totalGold: 2_000_000_000_000)
+        // 2× threshold → sqrt(2) ≈ 1.41 → floor = 1
+        let tokens = EconomyCalculator.legacyTokens(totalGold: EconomyCalculator.legacyTokenThreshold * 2)
         #expect(tokens == 1)
+    }
+
+    /// `Int(_: Double)` traps rather than saturating once the value passes `Int.max`.
+    /// `legacyTokens` guarded `ratio.isFinite`, which is the wrong quantity — the trap fired
+    /// at totalGold ≈ 2.552e50 (sqrt(ratio) crossing 9.22e18). Because this is called during
+    /// SwiftUI body evaluation and the state is persisted, the result was a crash on every
+    /// launch with no way out.
+    /// 1e120 is near the top of what `Decimal` can represent; `Decimal(string:)` returns nil
+    /// beyond roughly 1e128, so there is no point testing past it.
+    @Test("Absurd lifetime totals clamp instead of trapping",
+          arguments: ["1e50", "2.56e50", "1e60", "1e100", "1e120"])
+    func legacyTokensDoNotTrapAtExtremeValues(literal: String) throws {
+        let gold = try #require(Decimal(string: literal))
+        let tokens = EconomyCalculator.legacyTokens(totalGold: gold)
+        #expect(tokens >= 0)
+        #expect(!tokens.isNaN)
+    }
+
+    @Test("A NaN lifetime total yields zero tokens rather than trapping")
+    func legacyTokensHandleNaN() {
+        #expect(EconomyCalculator.legacyTokens(totalGold: .nan) == 0)
     }
 
     // MARK: - Prestige Multiplier

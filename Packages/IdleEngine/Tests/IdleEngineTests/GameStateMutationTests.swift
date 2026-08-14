@@ -49,29 +49,29 @@ struct GameStateMutationTests {
     @Test("Applying production adds gold to resources")
     func applyingProductionAddsGold() {
         let state = GameState.initial(firstLevelID: "test")
-        let newState = state.applying(production: ResourceBundle(["gold": 500]))
+        let newState = state.applying(production: ResourceBundle(["gold": 500]), primaryCurrency: "gold")
         #expect(newState.resources["gold"] == 500)
     }
 
     @Test("Applying production increments totalLifetimeGold")
     func applyingProductionIncrementsLifetimeGold() {
         let state = GameState.initial(firstLevelID: "test")
-        let newState = state.applying(production: ResourceBundle(["gold": 100]))
+        let newState = state.applying(production: ResourceBundle(["gold": 100]), primaryCurrency: "gold")
         #expect(newState.totalLifetimeGold == 100)
     }
 
     @Test("Lifetime gold accumulates across multiple production ticks")
     func lifetimeGoldAccumulates() {
         let state = GameState.initial(firstLevelID: "test")
-            .applying(production: ResourceBundle(["gold": 100]))
-            .applying(production: ResourceBundle(["gold": 200]))
+            .applying(production: ResourceBundle(["gold": 100]), primaryCurrency: "gold")
+            .applying(production: ResourceBundle(["gold": 200]), primaryCurrency: "gold")
         #expect(state.totalLifetimeGold == 300)
     }
 
     @Test("Non-gold resources do not affect totalLifetimeGold")
     func nonGoldDoesNotAffectLifetimeGold() {
         let state = GameState.initial(firstLevelID: "test")
-            .applying(production: ResourceBundle(["population": 50]))
+            .applying(production: ResourceBundle(["population": 50]), primaryCurrency: "gold")
         #expect(state.totalLifetimeGold == 0)
         #expect(state.resources["population"] == 50)
     }
@@ -79,7 +79,7 @@ struct GameStateMutationTests {
     @Test("Applying production is immutable — original state unchanged")
     func applyingProductionIsImmutable() {
         let original = GameState.initial(firstLevelID: "test")
-        _ = original.applying(production: ResourceBundle(["gold": 999]))
+        _ = original.applying(production: ResourceBundle(["gold": 999]), primaryCurrency: "gold")
         #expect(original.resources == .zero)
         #expect(original.totalLifetimeGold == 0)
     }

@@ -7,10 +7,23 @@ REPO_ROOT    := $(shell pwd)
 RELEASE_DIR  := $(REPO_ROOT)/tools/release
 DEFAULT_GAME ?= idle-civilizations
 GAME         ?= $(DEFAULT_GAME)
-# Use Homebrew Ruby (stable symlink) — macOS system Ruby is read-only
-BREW_RUBY    := /opt/homebrew/opt/ruby/bin
-FASTLANE     := cd $(RELEASE_DIR) && PATH="$(BREW_RUBY):$$PATH" bundle exec fastlane
+
+# Prefer Homebrew Ruby — macOS system Ruby is read-only. Resolved via `brew
+# --prefix` so this works on Intel (/usr/local) and Apple Silicon
+# (/opt/homebrew) alike, and collapses to an unmodified PATH where brew is
+# absent (e.g. GitHub-hosted runners, Linux).
+BREW_RUBY_PREFIX := $(shell brew --prefix ruby 2>/dev/null)
+RUBY_PATH_PREFIX := $(if $(BREW_RUBY_PREFIX),$(BREW_RUBY_PREFIX)/bin:,)
+FASTLANE     := cd $(RELEASE_DIR) && PATH="$(RUBY_PATH_PREFIX)$$PATH" bundle exec fastlane
+
 PYTHON       := $(RELEASE_DIR)/.venv/bin/python3
+# Reading config/games.yml must also work before `make setup` has built the venv.
+CFG_PYTHON   := $(shell [ -x "$(RELEASE_DIR)/.venv/bin/python3" ] && echo "$(RELEASE_DIR)/.venv/bin/python3" || command -v python3)
+
+# Query a key out of the current GAME's entry in config/games.yml.
+# Usage: $(call game_cfg,xcode_scheme)
+game_cfg = $(shell $(CFG_PYTHON) -c "import yaml;print(yaml.safe_load(open('$(REPO_ROOT)/config/games.yml'))['games']['$(GAME)'].get('$(1)','') or '')" 2>/dev/null)
+
 SKIP_MATCH   ?= false   # set to true for local builds without a cert repo configured
 
 # ── One-time setup ─────────────────────────────────────────────────────────────
@@ -81,6 +94,33 @@ beta: ## Build GAME and upload to TestFlight (internal testers)
 distribute-beta: ## Push latest processed TestFlight build to external groups
 	$(FASTLANE) distribute_beta game:$(GAME)
 
+# ── Release ────────────────────────────────────────────────────────────────────
+
+.PHONY: submit
+submit: ## Submit the prepared App Store version of GAME for review
+	$(FASTLANE) submit game:$(GAME)
+
+.PHONY: release
+release: ## Full pipeline for GAME: build → TestFlight → metadata → submit for review
+	@test -n "$(CHANGELOG)" || (echo "ERROR: pass CHANGELOG=\"...\""; exit 1)
+	$(FASTLANE) release game:$(GAME) skip_match:$(SKIP_MATCH) changelog:"$(CHANGELOG)"
+
+.PHONY: bump-version
+bump-version: ## Set the marketing version for GAME (usage: make bump-version VERSION=1.2.0)
+	@test -n "$(VERSION)" || (echo "ERROR: pass VERSION=1.2.0"; exit 1)
+	@echo "MARKETING_VERSION is owned by apps/$(notdir $(patsubst %/,%,$(dir $(call game_cfg,xcode_project))))/project.yml,"
+	@echo "which XcodeGen regenerates the .xcodeproj from — writing it into the .xcodeproj here"
+	@echo "would be discarded on the next 'xcodegen generate'."
+	@echo ""
+	@echo "Set it at the source instead:"
+	@echo "  1. $(dir $(call game_cfg,xcode_project))project.yml  → settings.MARKETING_VERSION: $(VERSION)"
+	@echo "  2. $(dir $(call game_cfg,xcode_project))Resources/Info.plist → CFBundleShortVersionString"
+	@echo "     (should be \$$(MARKETING_VERSION); it is currently hardcoded)"
+	@echo ""
+	@echo "Those files are outside this Makefile's ownership — see the build-number"
+	@echo "comment in tools/release/fastlane/Fastfile for the same conflict."
+	@exit 1
+
 # ── Metadata & screenshots ─────────────────────────────────────────────────────
 
 .PHONY: upload-metadata
@@ -122,26 +162,37 @@ games: ## List all configured games
 # ── Website ────────────────────────────────────────────────────────────────────
 
 .PHONY: copy-web-assets
-copy-web-assets: ## Copy game artwork into website/public/assets for GAME (default: idle-civilizations)
+copy-web-assets: ## Copy GAME's artwork into website/public/assets/GAME (default: idle-civilizations)
 	@GAME_ID=$(GAME); \
+	APP_DIR="$(REPO_ROOT)/$(patsubst %/,%,$(dir $(call game_cfg,xcode_project)))"; \
+	ASSETS="$$APP_DIR/Resources/Assets.xcassets"; \
+	SCHEME="$(call game_cfg,xcode_scheme)"; \
 	DEST=$(REPO_ROOT)/website/public/assets/$$GAME_ID; \
+	test -d "$$ASSETS" || { echo "ERROR: no asset catalog for $$GAME_ID at $$ASSETS"; exit 1; }; \
+	echo "→ Source: $$ASSETS"; \
 	mkdir -p $$DEST/eras $$DEST/wonders $$DEST/leaders $$DEST/buildings; \
-	echo "→ Copying era artwork..."; \
-	cp $(REPO_ROOT)/artworks/*.png $$DEST/eras/ 2>/dev/null || true; \
-	echo "→ Copying wonder artwork..."; \
-	for dir in $(REPO_ROOT)/apps/IdleCivilizations/Resources/Assets.xcassets/ms_*.imageset; do \
+	echo "→ Copying level/era artwork..."; \
+	if [ -d "$(REPO_ROOT)/artworks/$$GAME_ID" ]; then \
+	  cp $(REPO_ROOT)/artworks/$$GAME_ID/*.png $$DEST/eras/ 2>/dev/null || true; \
+	elif [ "$$GAME_ID" = "$(DEFAULT_GAME)" ]; then \
+	  cp $(REPO_ROOT)/artworks/*.png $$DEST/eras/ 2>/dev/null || true; \
+	else \
+	  echo "  (none — expected $(REPO_ROOT)/artworks/$$GAME_ID/)"; \
+	fi; \
+	echo "→ Copying milestone artwork..."; \
+	for dir in "$$ASSETS"/ms_*.imageset; do \
 	  cp "$$dir"/*.png $$DEST/wonders/ 2>/dev/null || true; \
 	done; \
-	echo "→ Copying leader portraits..."; \
-	for dir in $(REPO_ROOT)/apps/IdleCivilizations/Resources/Assets.xcassets/char_*.imageset; do \
+	echo "→ Copying character portraits..."; \
+	for dir in "$$ASSETS"/char_*.imageset; do \
 	  cp "$$dir"/*.png $$DEST/leaders/ 2>/dev/null || true; \
 	done; \
-	echo "→ Copying building icons..."; \
-	for dir in $(REPO_ROOT)/apps/IdleCivilizations/Resources/Assets.xcassets/unit_*.imageset; do \
+	echo "→ Copying unit icons..."; \
+	for dir in "$$ASSETS"/unit_*.imageset; do \
 	  cp "$$dir"/*.png $$DEST/buildings/ 2>/dev/null || true; \
 	done; \
 	echo "→ Copying app icon..."; \
-	cp $(REPO_ROOT)/apps/IdleCivilizations/Resources/Assets.xcassets/IdleCivilizations.appiconset/AppIcon-1024.png $$DEST/ 2>/dev/null || true; \
+	cp "$$ASSETS/$$SCHEME.appiconset/AppIcon-1024.png" $$DEST/ 2>/dev/null || true; \
 	echo "✓ Assets copied to $$DEST"
 
 .PHONY: web-dev

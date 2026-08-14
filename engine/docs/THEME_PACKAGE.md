@@ -33,7 +33,7 @@ ThemePackage
   "schemaVersion": "1.0",            // engine validates this matches its version
   "gameID": "idle-civilizations",    // unique, kebab-case, permanent
   "displayName": "Idle Civilizations",
-  "bundleID": "com.yourstudio.idleciv",
+  "bundleID": "com.idlestudio.idleciv",
   "primaryCurrency": "Gold",         // always shown in resource bar
   "primaryCurrencyIcon": "coin",     // SF Symbol or asset name
 
@@ -153,26 +153,26 @@ ThemePackage
   // ─── IAP Mapping ────────────────────────────────────────────────────────────
   // Engine handles all StoreKit 2 logic. Theme provides the product IDs.
   "iapProducts": {
-    "starterPack":      "com.yourstudio.idleciv.starter_pack",
-    "removeAds":        "com.yourstudio.idleciv.remove_ads",
-    "premiumPass":      "com.yourstudio.idleciv.civ_pass.monthly",
-    "premiumPassAnnual":"com.yourstudio.idleciv.civ_pass.annual",
-    "coins1000":        "com.yourstudio.idleciv.coins.1000",
-    "coins5000":        "com.yourstudio.idleciv.coins.5000",
-    "coins15000":       "com.yourstudio.idleciv.coins.15000",
-    "lifetimePack":     "com.yourstudio.idleciv.patron_lifetime",
+    "starterPack":      "com.idlestudio.idleciv.starter_pack",
+    "removeAds":        "com.idlestudio.idleciv.remove_ads",
+    "premiumPass":      "com.idlestudio.idleciv.civ_pass.monthly",
+    "premiumPassAnnual":"com.idlestudio.idleciv.civ_pass.annual",
+    "coins1000":        "com.idlestudio.idleciv.coins.1000",
+    "coins5000":        "com.idlestudio.idleciv.coins.5000",
+    "coins15000":       "com.idlestudio.idleciv.coins.15000",
+    "lifetimePack":     "com.idlestudio.idleciv.patron_lifetime",
     "levelBundles": {
-      "stone_age":   "com.yourstudio.idleciv.bundle.stone_age",
-      "bronze_age":  "com.yourstudio.idleciv.bundle.bronze_age"
+      "stone_age":   "com.idlestudio.idleciv.bundle.stone_age",
+      "bronze_age":  "com.idlestudio.idleciv.bundle.bronze_age"
       // ... one per level
     }
   },
 
   // ─── Game Center ────────────────────────────────────────────────────────────
   "leaderboards": {
-    "globalTokens":  "com.yourstudio.idleciv.lb.global_tokens",
-    "weeklyGold":    "com.yourstudio.idleciv.lb.weekly_gold",
-    "countryTokens": "com.yourstudio.idleciv.lb.country_tokens"
+    "globalTokens":  "com.idlestudio.idleciv.lb.global_tokens",
+    "weeklyGold":    "com.idlestudio.idleciv.lb.weekly_gold",
+    "countryTokens": "com.idlestudio.idleciv.lb.country_tokens"
   },
 
   // ─── Copy ───────────────────────────────────────────────────────────────────

@@ -9,24 +9,48 @@ public struct UnitCard: View {
     public let ownedCount: Int
     public let canAfford: Bool
     public let discountMultiplier: Decimal
+    /// Quantity mode selected for the whole list. Was `@State private` and never mutated —
+    /// no picker, no long-press, no cycle — so `×10` and `MAX` were unreachable dead code
+    /// and players could only buy one unit at a time. Bulk buy is table stakes in this
+    /// genre and the engine supported it all along.
+    public let buyQuantity: BuyQuantity
+    /// Resolved quantity for `.max`, supplied by the owner via `GameEngine.maxAffordable`.
+    /// The `.max` sentinel must never reach `purchaseUnit`.
+    public let maxAffordable: Int
     public let onPurchase: (Int) -> Void
 
     @Environment(\.theme) private var theme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @State private var buyQuantity: BuyQuantity = .one
 
     public init(
         unit: ThemeUnit,
         ownedCount: Int,
         canAfford: Bool,
         discountMultiplier: Decimal = 1,
+        buyQuantity: BuyQuantity = .one,
+        maxAffordable: Int = 0,
         onPurchase: @escaping (Int) -> Void
     ) {
         self.unit = unit
         self.ownedCount = ownedCount
         self.canAfford = canAfford
         self.discountMultiplier = discountMultiplier
+        self.buyQuantity = buyQuantity
+        self.maxAffordable = maxAffordable
         self.onPurchase = onPurchase
+    }
+
+    /// Concrete quantity to purchase for the current mode.
+    private var resolvedQuantity: Int {
+        switch buyQuantity {
+        case .one: return 1
+        case .ten: return 10
+        case .max: return max(1, maxAffordable)
+        }
+    }
+
+    private var isPurchasable: Bool {
+        buyQuantity == .max ? maxAffordable > 0 : canAfford
     }
 
     public var body: some View {
@@ -80,27 +104,33 @@ public struct UnitCard: View {
 
             // Buy button
             Button {
+                // Fires only on a purchase the engine will accept. The haptic used to run
+                // before `onPurchase`, so a rejected purchase still felt successful.
+                guard isPurchasable else { return }
                 HapticsService.impact(.medium)
-                onPurchase(buyQuantity.rawValue)
+                onPurchase(resolvedQuantity)
             } label: {
                 HStack(spacing: 4) {
-                    if !canAfford {
+                    if !isPurchasable {
                         Image(systemName: "lock.fill")
                             .font(.caption2)
                             .accessibilityHidden(true)
                     }
                     Text(buyButtonLabel)
                         .font(Typography.subheadline.weight(.semibold))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
                 }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 5)
+                .padding(.horizontal, 14)
+                // The primary action in a game built on repeated purchases was a ~26pt
+                // target. Apple's minimum is 44pt.
+                .frame(minWidth: 64, minHeight: 44)
                 .background(buyButtonBackground)
-                .foregroundStyle(canAfford ? .black : theme.textSecondaryColor)
+                .foregroundStyle(isPurchasable ? .black : theme.textSecondaryColor)
                 .clipShape(.capsule)
             }
-            .disabled(!canAfford)
+            .disabled(!isPurchasable)
             .accessibilityLabel(buyAccessibilityLabel)
-            .accessibilityHint("Double-tap to purchase")
         }
     }
 
@@ -135,18 +165,27 @@ public struct UnitCard: View {
 
     private var buyButtonLabel: String {
         switch buyQuantity {
-        case .one:  return nextCost.idleFormatted()
-        case .ten:  return "×10"
-        case .max:  return "MAX"
+        case .one: return totalCost.idleFormatted()
+        case .ten: return "×10  \(totalCost.idleFormatted())"
+        case .max: return maxAffordable > 0 ? "MAX ×\(maxAffordable)" : "MAX"
         }
     }
 
     private var buyAccessibilityLabel: String {
-        "Buy \(buyQuantity.rawValue) \(unit.displayName) for \(nextCost.idleFormatted()) \(theme.primaryCurrency)"
+        let quantity = resolvedQuantity
+        let noun = quantity == 1 ? unit.displayName : "\(unit.displayName), \(quantity)"
+        return "Buy \(noun) for \(totalCost.idleFormatted())"
     }
 
-    private var nextCost: Decimal {
-        EconomyCalculator.unitCost(unit: unit, currentCount: ownedCount, discountMultiplier: discountMultiplier)["gold"]
+    /// Cost of the whole batch for the current mode — the button used to show only the cost
+    /// of a single unit regardless of quantity.
+    private var totalCost: Decimal {
+        EconomyCalculator.bulkBuyCost(
+            unit: unit,
+            currentCount: ownedCount,
+            quantity: resolvedQuantity,
+            discountMultiplier: discountMultiplier
+        )[theme.primaryCurrency]
     }
 }
 
@@ -159,14 +198,32 @@ extension UnitCard: Equatable {
         lhs.unit.id == rhs.unit.id &&
         lhs.ownedCount == rhs.ownedCount &&
         lhs.canAfford == rhs.canAfford &&
-        lhs.discountMultiplier == rhs.discountMultiplier
+        lhs.discountMultiplier == rhs.discountMultiplier &&
+        lhs.buyQuantity == rhs.buyQuantity &&
+        lhs.maxAffordable == rhs.maxAffordable
     }
 }
 
 // MARK: - Buy Quantity
 
-enum BuyQuantity: Int, CaseIterable {
-    case one = 1
-    case ten = 10
-    case max = -1 // sentinel — caller resolves via maxAffordable
+/// Bulk-purchase mode. Deliberately NOT backed by an `Int` raw value any more.
+///
+/// `.max` used to be `rawValue = -1` and that sentinel was passed straight through to
+/// `GameEngine.purchaseUnit`, where `bulkBuyCost` returned `.zero` for it, an empty bundle
+/// was trivially affordable, and the unit count went negative — after which `decimalPow` on
+/// a negative exponent returned 0 and every later purchase of that unit was free.
+public enum BuyQuantity: String, CaseIterable, Sendable, Identifiable {
+    case one
+    case ten
+    case max
+
+    public var id: String { rawValue }
+
+    public var label: String {
+        switch self {
+        case .one: return "×1"
+        case .ten: return "×10"
+        case .max: return "MAX"
+        }
+    }
 }

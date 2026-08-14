@@ -32,7 +32,13 @@ export function GameCard({ game, index }: GameCardProps) {
           className="w-full h-full"
         >
           {isLive ? (
-            <Image src={heroSrc} alt={game.displayName} fill className="object-cover" />
+            <Image
+              src={heroSrc}
+              alt={game.displayName}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 624px"
+              className="object-cover"
+            />
           ) : (
             <div
               className="w-full h-full flex items-center justify-center"
@@ -49,7 +55,7 @@ export function GameCard({ game, index }: GameCardProps) {
         <div className="flex items-center gap-4 mb-4">
           {isLive && (
             <div className="relative w-12 h-12 rounded-2xl overflow-hidden flex-shrink-0 shadow-lg">
-              <Image src={iconSrc} alt={`${game.displayName} icon`} fill className="object-cover" />
+              <Image src={iconSrc} alt={`${game.displayName} icon`} fill sizes="48px" className="object-cover" />
             </div>
           )}
           <div>

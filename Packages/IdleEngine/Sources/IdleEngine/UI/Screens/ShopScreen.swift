@@ -20,6 +20,9 @@ public struct ShopScreen: View {
                             ProgressView()
                                 .tint(theme.goldAccentColor)
                                 .padding(.top, 60)
+                                .accessibilityLabel(Text("Loading store"))
+                        } else if let error = viewModel.loadErrorMessage {
+                            storeUnavailableState(error)
                         } else if viewModel.hasNoProducts {
                             sandboxEmptyState
                         } else {
@@ -30,6 +33,16 @@ public struct ShopScreen: View {
                                 freeCoinsAdSection
                             }
                         }
+                        // Rendered unconditionally. These used to live inside
+                        // `premiumPassSection`, which is gated on products loading — so a
+                        // network failure removed the Privacy Policy and Terms links from
+                        // the entire app except the one-time onboarding paywall.
+                        PolicyLinks(
+                            privacyPolicyURL: theme.copy.privacyPolicyURL,
+                            termsOfUseURL: theme.copy.termsOfUseURL
+                        )
+                        .frame(maxWidth: .infinity)
+                        .padding(.top, 8)
                     }
                     .padding()
                 }
@@ -39,6 +52,26 @@ public struct ShopScreen: View {
             .toolbarBackground(theme.surfaceColor, for: .navigationBar)
             #endif
             .task { await viewModel.loadProducts() }
+            .overlay(alignment: .top) {
+                if let message = viewModel.message {
+                    HStack(spacing: 8) {
+                        Image(systemName: message.isError ? "exclamationmark.circle.fill" : "clock.fill")
+                            .foregroundStyle(message.isError ? .orange : theme.goldAccentColor)
+                            .accessibilityHidden(true)
+                        Text(message.text)
+                            .font(Typography.subheadline)
+                            .foregroundStyle(theme.textPrimaryColor)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
+                    .background(theme.surfaceElevatedColor, in: RoundedRectangle(cornerRadius: 14))
+                    .shadow(color: .black.opacity(0.25), radius: 8, y: 4)
+                    .padding(.horizontal, 20)
+                    .transition(.move(edge: .top).combined(with: .opacity))
+                    .accessibilityLabel(message.text)
+                }
+            }
         }
     }
 
@@ -62,11 +95,6 @@ public struct ShopScreen: View {
                         viewModel.purchase(monthly)
                     }
                 }
-                PolicyLinks(
-                    privacyPolicyURL: theme.copy.privacyPolicyURL,
-                    termsOfUseURL: theme.copy.termsOfUseURL
-                )
-                .frame(maxWidth: .infinity)
             }
         }
     }
@@ -136,6 +164,37 @@ public struct ShopScreen: View {
             .background(theme.surfaceColor)
             .clipShape(.rect(cornerRadius: 14))
         }
+    }
+
+    /// Shown when `Product.products(for:)` threw — the common transient case (offline,
+    /// App Store outage). Distinct from "the store returned nothing", and retryable
+    /// without relaunching the app.
+    private func storeUnavailableState(_ reason: String) -> some View {
+        VStack(spacing: 16) {
+            Image(systemName: "wifi.exclamationmark")
+                .font(.system(size: 44))
+                .foregroundStyle(theme.textSecondaryColor)
+                .accessibilityHidden(true)
+            Text("The store isn't available right now")
+                .font(Typography.headline)
+                .foregroundStyle(theme.textPrimaryColor)
+                .multilineTextAlignment(.center)
+            Text(reason)
+                .font(Typography.caption)
+                .foregroundStyle(theme.textSecondaryColor)
+                .multilineTextAlignment(.center)
+            Button {
+                Task { await viewModel.loadProducts() }
+            } label: {
+                Text("Try Again")
+                    .font(Typography.subheadline.weight(.semibold))
+                    .padding(.horizontal, 24)
+                    .frame(minHeight: 44)
+            }
+            .buttonStyle(.borderedProminent)
+        }
+        .padding(.top, 40)
+        .padding(.horizontal, 24)
     }
 
     private var sandboxEmptyState: some View {
@@ -236,139 +295,166 @@ private struct ProductRow: View {
 @Observable
 @MainActor
 final class ShopViewModel {
-    var isLoading = false
+    enum LoadState: Equatable {
+        case idle
+        case loading
+        /// Products fetched successfully. `isEmpty` distinguishes "none configured" from a failure.
+        case loaded
+        /// Fetch threw — network, App Store outage, products not yet approved. Retryable.
+        case failed(String)
+    }
+
+    private(set) var loadState: LoadState = .idle
     var premiumPass: Product?         // monthly subscription
     var premiumPassAnnual: Product?   // annual subscription
     var coinPacks: [Product] = []
     var removeAds: Product?
     var lifetimePack: Product?
     var rewardLabels: [String: String] = [:]
-    private(set) var activeProductIDs: Set<String> = []
     private(set) var freeCoinsAdAvailable = true
-    private(set) var freeCoinsAdSubtitle = "Earn a small amount of gold"
+    private(set) var freeCoinsAdSubtitle = ""
+    private(set) var message: IdleGameViewModel.TransientMessage?
 
     private var gameID = ""
-    private var cachedIAP: ThemeIAPProducts?
+    private var resolver: RewardResolver?
+    private var primaryCurrency = "gold"
     private var freeCoinsAdCooldownKey: String { "freeCoinsAdLastDate_\(gameID)" }
     private static let freeCoinsAdCooldown: TimeInterval = 3600 // 1 hour
+    /// Rewarded-ad payout, as a fraction of the current level's advance requirement.
+    private static let freeCoinsAdFraction = Decimal(string: "0.005")!
 
-    @ObservationIgnored private var updatesTask: Task<Void, Never>?
+    @ObservationIgnored private var messageTask: Task<Void, Never>?
 
-    deinit { updatesTask?.cancel() }
+    deinit { messageTask?.cancel() }
 
-    var hasNoProducts: Bool { premiumPass == nil && premiumPassAnnual == nil && coinPacks.isEmpty && removeAds == nil && lifetimePack == nil }
+    var isLoading: Bool { loadState == .loading }
 
+    /// True only when the store genuinely returned nothing — not when the fetch failed.
+    var hasNoProducts: Bool {
+        loadState == .loaded && premiumPass == nil && premiumPassAnnual == nil
+            && coinPacks.isEmpty && removeAds == nil && lifetimePack == nil
+    }
+
+    var loadErrorMessage: String? {
+        if case .failed(let reason) = loadState { return reason }
+        return nil
+    }
+
+    /// Entitlements come from the shared store so the badge here can never disagree with
+    /// whether ads are actually suppressed.
     func isOwned(_ product: Product) -> Bool {
-        activeProductIDs.contains(product.id)
+        EntitlementStore.shared.owns(product.id)
     }
 
     func loadProducts() async {
-        isLoading = true
-        defer { isLoading = false }
         guard let theme = await GameEngine.shared.currentTheme else { return }
+        loadState = .loading
+
         let iap = theme.iapProducts
         gameID = theme.gameID
-        cachedIAP = iap
+        primaryCurrency = theme.primaryCurrency
+        resolver = RewardResolver(iap: iap, primaryCurrency: theme.primaryCurrency)
+
         let allIDs = [iap.starterPack, iap.removeAds, iap.premiumPass,
                       iap.premiumPassAnnual, iap.coins1000, iap.coins5000,
                       iap.coins15000, iap.coins30000, iap.coins75000, iap.lifetimePack]
             .compactMap { $0 }
+
         do {
             let products = try await Product.products(for: Set(allIDs))
             premiumPass       = products.first { $0.id == iap.premiumPass }
             premiumPassAnnual = products.first { $0.id == iap.premiumPassAnnual }
-            removeAds    = products.first { $0.id == iap.removeAds }
-            lifetimePack = products.first { $0.id == iap.lifetimePack }
-            coinPacks    = products
+            removeAds         = products.first { $0.id == iap.removeAds }
+            lifetimePack      = products.first { $0.id == iap.lifetimePack }
+            coinPacks         = products
                 .filter { [iap.coins1000, iap.coins5000, iap.coins15000,
                            iap.coins30000, iap.coins75000, iap.starterPack].contains($0.id) }
-                .sorted  { $0.price < $1.price }
-            for product in products where packFraction(for: product.id) != nil {
-                let amount = await scaledReward(for: product.id)
-                rewardLabels[product.id] = "= \(amount.idleFormatted()) gold"
-            }
-        } catch { }
+                .sorted { $0.price < $1.price }
 
-        await refreshEntitlements()
-        startObservingTransactionUpdates()
+            await refreshRewardLabels(products: products)
+            loadState = .loaded
+        } catch {
+            // This used to be an empty `catch {}`, so a player in airplane mode was shown a
+            // developer-facing "In-app purchases are not configured for this environment"
+            // dead end with no retry.
+            loadState = .failed(error.localizedDescription)
+        }
+
+        await EntitlementStore.shared.refresh()
         refreshFreeCoinsAdState()
     }
 
-    private func refreshEntitlements() async {
-        var owned = Set<String>()
-        for await result in Transaction.currentEntitlements {
-            guard let transaction = try? result.payloadValue else { continue }
-            owned.insert(transaction.productID)
+    private func refreshRewardLabels(products: [Product]) async {
+        guard let resolver,
+              let state = await GameEngine.shared.currentState,
+              let theme = await GameEngine.shared.currentTheme else { return }
+        let level = theme.level(id: state.currentLevelID)
+        var labels: [String: String] = [:]
+        for product in products {
+            let reward = resolver.reward(for: product.id, state: state, level: level)
+            let amount = reward[primaryCurrency]
+            guard amount > 0 else { continue }
+            labels[product.id] = "= \(amount.idleFormatted())"
         }
-        activeProductIDs = owned
+        rewardLabels = labels
     }
 
-    private func startObservingTransactionUpdates() {
-        updatesTask?.cancel()
-        updatesTask = Task { [weak self] in
-            for await result in Transaction.updates {
-                guard let transaction = try? result.payloadValue else { continue }
-                await transaction.finish()
-                await self?.refreshEntitlements()
+    // MARK: - Purchasing
+
+    func purchase(_ product: Product) {
+        Task {
+            let outcome = await PurchaseCoordinator.shared.purchase(product)
+            switch outcome {
+            case .success(let granted):
+                let amount = granted[primaryCurrency]
+                if amount > 0 {
+                    NotificationCenter.default.post(
+                        name: .iapRewardReceived, object: nil,
+                        userInfo: [primaryCurrency: amount]
+                    )
+                }
+                await refreshRewardLabels(products: [product])
+            case .cancelled:
+                break
+            case .pending:
+                // Ask to Buy / parental approval. Previously indistinguishable from a dead
+                // button, so children tapped Buy repeatedly with no acknowledgement at all.
+                present(String(localized: "Waiting for approval. You'll get your purchase once it's approved."), isError: false)
+            case .failed(let reason):
+                present(reason, isError: true)
             }
         }
     }
 
-    // Resolve the reward fraction for a product using the active theme's IAP product IDs.
-    // This is theme-agnostic: it works for any game by matching semantic slot, not hardcoded ID.
-    private func packFraction(for productID: String) -> Double? {
-        guard let iap = cachedIAP else { return nil }
-        switch productID {
-        case iap.starterPack:    return 0.015
-        case iap.coins1000:      return 0.010
-        case iap.coins5000:      return 0.050
-        case iap.coins15000:     return 0.150
-        case iap.coins30000:     return 0.300
-        case iap.coins75000:     return 0.750
-        case iap.lifetimePack:   return 0.100
-        default:                 return nil
-        }
-    }
-
-    func scaledReward(for productID: String) async -> Decimal {
-        guard let fraction = packFraction(for: productID) else { return 0 }
-        guard let state = await GameEngine.shared.currentState,
-              let theme = await GameEngine.shared.currentTheme,
-              let level = theme.level(id: state.currentLevelID) else {
-            return roundToSignificantFigures(Decimal(fraction) * 50_000, figures: 3)
-        }
-        let req = level.advanceRequirement["gold"]
-        guard req > 0 else {
-            // Fallback: use a sensible Stone Age baseline (50K req × fraction)
-            return roundToSignificantFigures(Decimal(fraction) * 50_000, figures: 3)
-        }
-        return roundToSignificantFigures(req * Decimal(fraction), figures: 3)
-    }
-
-    private func roundToSignificantFigures(_ value: Decimal, figures: Int) -> Decimal {
-        guard value > 0 else { return 0 }
-        let d = NSDecimalNumber(decimal: value).doubleValue
-        let magnitude = pow(10.0, floor(log10(d)) - Double(figures - 1))
-        return Decimal(round(d / magnitude) * magnitude)
-    }
+    // MARK: - Rewarded Ads
 
     func watchAdForCoins(adService: any AdService) async {
         guard freeCoinsAdAvailable else { return }
-        freeCoinsAdAvailable = false
         let reward = try? await adService.showRewardedAd(placement: .freeCoins)
-        if reward != nil {
-            let coins = await scaledReward(forFraction: 0.005)
-            await GameEngine.shared.awardResources(ResourceBundle(["gold": coins]))
-            NotificationCenter.default.post(
-                name: .iapRewardReceived,
-                object: nil,
-                userInfo: ["gold": coins]
-            )
-            UserDefaults.standard.set(Date(), forKey: freeCoinsAdCooldownKey)
-            refreshFreeCoinsAdState()
-        } else {
-            freeCoinsAdAvailable = true
+        guard reward != nil else {
+            // Ad no-fill is routine — offline, no regional inventory, frequency cap. Silence
+            // here read as a broken button, and players tapped it repeatedly.
+            present(String(localized: "No ad is available right now. Please try again shortly."), isError: true)
+            return
         }
+        guard let resolver,
+              let state = await GameEngine.shared.currentState,
+              let theme = await GameEngine.shared.currentTheme else { return }
+
+        let bundle = resolver.adReward(
+            fraction: Self.freeCoinsAdFraction,
+            level: theme.level(id: state.currentLevelID)
+        )
+        guard bundle != .zero else { return }
+
+        await GameEngine.shared.awardResources(bundle)
+        NotificationCenter.default.post(
+            name: .iapRewardReceived, object: nil,
+            userInfo: [primaryCurrency: bundle[primaryCurrency]]
+        )
+        NotificationCenter.default.post(name: .engineStateShouldPersist, object: nil)
+        UserDefaults.standard.set(Date(), forKey: freeCoinsAdCooldownKey)
+        refreshFreeCoinsAdState()
     }
 
     private func refreshFreeCoinsAdState() {
@@ -376,44 +462,22 @@ final class ShopViewModel {
         if let last, Date().timeIntervalSince(last) < Self.freeCoinsAdCooldown {
             freeCoinsAdAvailable = false
             let remaining = Int((Self.freeCoinsAdCooldown - Date().timeIntervalSince(last)) / 60)
-            freeCoinsAdSubtitle = "Available in \(remaining)m"
+            freeCoinsAdSubtitle = String(localized: "Available in \(remaining)m")
         } else {
             freeCoinsAdAvailable = true
-            freeCoinsAdSubtitle = "Earn a small amount of gold"
+            freeCoinsAdSubtitle = String(localized: "Watch a short ad for a bonus")
         }
     }
 
-    private func scaledReward(forFraction fraction: Double) async -> Decimal {
-        guard let state = await GameEngine.shared.currentState,
-              let theme = await GameEngine.shared.currentTheme,
-              let level = theme.level(id: state.currentLevelID) else {
-            return roundToSignificantFigures(Decimal(fraction) * 50_000, figures: 3)
-        }
-        let req = level.advanceRequirement["gold"]
-        guard req > 0 else {
-            return roundToSignificantFigures(Decimal(fraction) * 50_000, figures: 3)
-        }
-        return roundToSignificantFigures(req * Decimal(fraction), figures: 3)
-    }
+    // MARK: - Messages
 
-    func purchase(_ product: Product) {
-        Task {
-            guard let result = try? await product.purchase(),
-                  case .success(let verification) = result,
-                  let transaction = try? verification.payloadValue else { return }
-            await transaction.finish()
-            let coins = await scaledReward(for: product.id)
-            if coins > 0 {
-                await GameEngine.shared.awardResources(ResourceBundle(["gold": coins]))
-                NotificationCenter.default.post(
-                    name: .iapRewardReceived,
-                    object: nil,
-                    userInfo: ["gold": coins]
-                )
-            }
-            // Refresh immediately so the "Active" badge appears without waiting for the
-            // background Transaction.updates observer to fire.
-            await refreshEntitlements()
+    private func present(_ text: String, isError: Bool) {
+        messageTask?.cancel()
+        withAnimation { message = IdleGameViewModel.TransientMessage(text: text, isError: isError) }
+        messageTask = Task { [weak self] in
+            try? await Task.sleep(for: .seconds(3))
+            guard !Task.isCancelled else { return }
+            withAnimation { self?.message = nil }
         }
     }
 }
@@ -422,4 +486,7 @@ final class ShopViewModel {
 
 public extension Notification.Name {
     static let iapRewardReceived = Notification.Name("IdleEngine.iapRewardReceived")
+    /// Posted after any grant the player earned or paid for, so the root view persists
+    /// immediately instead of waiting up to 30 seconds for the next autosave.
+    static let engineStateShouldPersist = Notification.Name("IdleEngine.engineStateShouldPersist")
 }

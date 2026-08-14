@@ -3,13 +3,35 @@ import type { GameConfig } from '@/config/types'
 
 const BASE_URL = 'https://idle-studio.vercel.app'
 
+/** Studio-wide 1.91:1 share card — also the fallback for games with no artwork yet. */
+const STUDIO_OG_IMAGE = {
+  url: `${BASE_URL}/og-image.jpg`,
+  width: 1200,
+  height: 630,
+  alt: 'Idle Studio',
+}
+
+/**
+ * Share artwork only ships alongside a released game, so unreleased titles fall
+ * back to the studio card rather than pointing scrapers at a 404.
+ */
 function ogImage(game: GameConfig) {
+  if (game.status !== 'live') return STUDIO_OG_IMAGE
   return {
-    url: `${BASE_URL}/assets/${game.id}/${game.appIconAsset}.png`,
-    width: 1024,
-    height: 1024,
+    url: `${BASE_URL}/assets/${game.id}/og-card.jpg`,
+    width: 1200,
+    height: 630,
     alt: game.displayName,
   }
+}
+
+/** Trim to a whole word so meta descriptions never break mid-word. */
+function truncate(text: string, max: number) {
+  if (text.length <= max) return text
+  const clipped = text.slice(0, max - 1)
+  const lastSpace = clipped.lastIndexOf(' ')
+  const body = lastSpace > 0 ? clipped.slice(0, lastSpace) : clipped
+  return `${body.replace(/[\s.,;:—–-]+$/, '')}…`
 }
 
 export function generateGameMetadata(game: GameConfig): Metadata {
@@ -18,7 +40,7 @@ export function generateGameMetadata(game: GameConfig): Metadata {
 
   return {
     title: `${game.displayName} — Idle Studio`,
-    description: game.description.slice(0, 160),
+    description: truncate(game.description, 160),
     alternates: {
       canonical: url,
     },
@@ -103,7 +125,7 @@ export function gameJsonLd(game: GameConfig) {
     name: game.displayName,
     description: game.description,
     url: `${BASE_URL}/games/${game.id}/`,
-    image: `${BASE_URL}/assets/${game.id}/${game.appIconAsset}.png`,
+    image: ogImage(game).url,
     applicationCategory: 'Game',
     operatingSystem: 'iOS',
     offers: {

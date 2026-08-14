@@ -2,7 +2,10 @@ require "yaml"
 
 config = YAML.load_file(File.join(__dir__, "../../config/games.yml"))
 
-git_url(config["studio"]["match_repo"])
+# The certificate repo URL is env-first — config/games.yml is public and must not
+# carry it. The Fastfile fails loudly (require_match_configured!) when it is
+# unset, so an empty value here never silently degrades signing.
+git_url(ENV["MATCH_GIT_URL"].to_s.strip.empty? ? config["studio"]["match_repo"].to_s : ENV["MATCH_GIT_URL"])
 storage_mode("git")
 type("appstore")
 readonly(ENV["CI"] ? true : false)

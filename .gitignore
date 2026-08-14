@@ -1,4 +1,7 @@
 # Xcode
+# Bare `**/xcuserdata/` — the *.xcodeproj/ prefixed patterns below miss nested
+# cases such as *.xcodeproj/project.xcworkspace/xcuserdata/
+**/xcuserdata/
 *.xcodeproj/xcuserdata/
 *.xcworkspace/xcuserdata/
 *.xcworkspace/xcshareddata/
@@ -14,13 +17,19 @@ build/
 .build/
 .swiftpm/
 
-# Secrets — never commit these
+# Secrets — never commit these. THIS REPOSITORY IS PUBLIC.
 GoogleService-Info.plist
 *.p8
 *.p12
 *.mobileprovision
 Secrets.swift
 secrets.json
+.env
+.env.*
+!.env.example
+# Local Claude Code permissions/settings — machine-specific, may contain paths.
+# Previously only covered by the developer's personal global gitignore.
+.claude/settings.local.json
 
 # macOS
 .DS_Store
@@ -36,10 +45,15 @@ Podfile.lock
 Carthage/Build/
 
 # Fastlane
-fastlane/report.xml
-fastlane/Preview.html
-fastlane/screenshots/**/*.png
-fastlane/test_output
+# Leading `**/` so these match tools/release/fastlane/... too — the un-prefixed
+# patterns only ever matched a top-level fastlane/ directory, which is why
+# report.xml (ASC key id + issuer id) and Preview.html (reviewer phone number)
+# were committed to a public repo.
+**/fastlane/report.xml
+**/fastlane/Preview.html
+**/fastlane/screenshots/**/*.png
+**/fastlane/test_output
+**/fastlane/README.md.bak
 
 # IDE
 .idea/
@@ -61,8 +75,14 @@ tools/release/.venv/
 /tmp/idle-studio-builds/
 reports/
 
+# Python
+__pycache__/
+*.py[cod]
+
 # Website
 website/node_modules/
 website/.next/
 website/out/
 website/.env.local
+website/tsconfig.tsbuildinfo
+*.tsbuildinfo

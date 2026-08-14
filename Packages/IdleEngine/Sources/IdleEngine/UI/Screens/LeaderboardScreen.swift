@@ -43,7 +43,7 @@ public struct LeaderboardScreen: View {
             #if os(iOS)
             .toolbarBackground(theme.surfaceColor, for: .navigationBar)
             #endif
-            #if DEBUG
+            #if DEBUG && os(iOS)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(viewModel.isHidingLocalScore ? "Show My Score" : "Hide My Score") {

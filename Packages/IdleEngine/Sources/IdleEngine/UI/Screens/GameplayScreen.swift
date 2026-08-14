@@ -20,14 +20,52 @@ public final class GameplayViewModel {
     public private(set) var unitCounts: [String: Int] = [:]
     /// Pre-computed canAfford flag per upgrade ID.
     public private(set) var upgradeAffordability: [String: Bool] = [:]
+    /// Shared x1 / x10 / MAX selection for the whole unit list.
+    public private(set) var buyQuantity: BuyQuantity = .one
+    /// Resolved MAX quantity per unit ID. Computed only while MAX is selected — the binary
+    /// search is not free, and the sentinel must never reach `purchaseUnit`.
+    public private(set) var maxAffordable: [String: Int] = [:]
 
     var skipSuccessMessage: String? = nil
+    /// Surfaces engine errors that used to be discarded by `try?`.
+    var actionMessage: IdleGameViewModel.TransientMessage?
 
-    @ObservationIgnored nonisolated(unsafe) private var streamTask: Task<Void, Never>?
+    @ObservationIgnored private var streamTask: Task<Void, Never>?
+    @ObservationIgnored private var messageTask: Task<Void, Never>?
     private var theme: (any ThemePackage)?
+    /// The theme's currency key. Hardcoding `"gold"` here silently broke progress display
+    /// and the tap reward for any theme that names its currency anything else.
+    private var primaryCurrency: String { theme?.primaryCurrency ?? "gold" }
 
     public init() {}
-    deinit { streamTask?.cancel() }
+    deinit {
+        streamTask?.cancel()
+        messageTask?.cancel()
+    }
+
+    /// Runs an engine action and reports failure to the player.
+    ///
+    /// Seven player actions were `try?`, so a rejected purchase, an unmet era requirement,
+    /// or an already-running construction all produced a button that visibly did nothing.
+    private func run(_ action: @escaping () async throws -> Void) {
+        Task {
+            do {
+                try await action()
+            } catch {
+                present(error.localizedDescription)
+            }
+        }
+    }
+
+    private func present(_ text: String) {
+        messageTask?.cancel()
+        withAnimation { actionMessage = IdleGameViewModel.TransientMessage(text: text, isError: true) }
+        messageTask = Task { [weak self] in
+            try? await Task.sleep(for: .seconds(3))
+            guard !Task.isCancelled else { return }
+            withAnimation { self?.actionMessage = nil }
+        }
+    }
 
     func start() {
         streamTask?.cancel()
@@ -35,7 +73,7 @@ public final class GameplayViewModel {
             let loadedTheme = await GameEngine.shared.currentTheme
             self?.theme = loadedTheme
             self?.updateCurrentUnits()
-            for await newState in GameEngine.shared.stateStream() {
+            for await newState in await GameEngine.shared.stateStream() {
                 guard let self else { break }
                 if newState != state { state = newState }
                 updateCurrentUnits()
@@ -49,15 +87,36 @@ public final class GameplayViewModel {
     }
 
     func purchase(unitID: String, quantity: Int) {
-        Task { try? await GameEngine.shared.purchaseUnit(id: unitID, quantity: quantity) }
+        run { try await GameEngine.shared.purchaseUnit(id: unitID, quantity: quantity) }
+    }
+
+    func setBuyQuantity(_ quantity: BuyQuantity) {
+        guard quantity != buyQuantity else { return }
+        buyQuantity = quantity
+        if quantity != .max { maxAffordable = [:] }
+        updateMaxAffordable()
+    }
+
+    /// Asks the engine for the largest affordable batch of each visible unit.
+    private func updateMaxAffordable() {
+        guard buyQuantity == .max else { return }
+        let ids = currentUnits.map(\.id)
+        Task { [weak self] in
+            var resolved: [String: Int] = [:]
+            for id in ids {
+                resolved[id] = await GameEngine.shared.maxAffordable(unitID: id)
+            }
+            guard let self, resolved != self.maxAffordable else { return }
+            self.maxAffordable = resolved
+        }
     }
 
     func purchaseEraUpgrade(id: String) {
-        Task { try? await GameEngine.shared.purchaseEraUpgrade(id: id) }
+        run { try await GameEngine.shared.purchaseEraUpgrade(id: id) }
     }
 
     func advanceLevel() {
-        Task { try? await GameEngine.shared.advanceLevel() }
+        run { try await GameEngine.shared.advanceLevel() }
     }
 
     var currentMilestones: [ThemeMilestone] {
@@ -89,11 +148,58 @@ public final class GameplayViewModel {
     }
 
     func startMilestone(id: String) {
-        Task { try? await GameEngine.shared.startMilestone(id: id) }
+        run { try await GameEngine.shared.startMilestone(id: id) }
     }
 
     func skipMilestoneConstruction(id: String) {
-        Task { try? await GameEngine.shared.completeMilestone(id: id) }
+        run { try await GameEngine.shared.completeMilestone(id: id) }
+    }
+
+    /// Whether the theme allows this milestone to be skipped with a rewarded ad.
+    func canSkipWithAd(_ milestone: ThemeMilestone) -> Bool {
+        milestone.canSkipWithAd
+    }
+
+    /// Coin cost the theme sets for skipping this milestone outright. 0 means not purchasable.
+    func skipCostCoins(_ milestone: ThemeMilestone) -> Int {
+        milestone.skipCostCoins
+    }
+
+    /// Whether the player can currently afford the coin skip for `milestone`.
+    func canAffordCoinSkip(_ milestone: ThemeMilestone) -> Bool {
+        let cost = skipCostCoins(milestone)
+        guard cost > 0 else { return false }
+        return state.resources[primaryCurrency] >= Decimal(cost)
+    }
+
+    /// Spends the theme's `skipCostCoins` to finish construction immediately.
+    ///
+    /// This is the sink the coin packs were designed around and it was never implemented —
+    /// which is why the free ad path was strictly better than paying. It also gives players
+    /// who bought ad removal a way to skip at all.
+    func skipMilestoneWithCoins(_ milestone: ThemeMilestone) {
+        let cost = Decimal(skipCostCoins(milestone))
+        guard cost > 0 else { return }
+        run { [primaryCurrency] in
+            guard let current = await GameEngine.shared.currentState,
+                  current.resources[primaryCurrency] >= cost else {
+                throw EngineError.insufficientResources
+            }
+            await GameEngine.shared.awardResources(ResourceBundle([primaryCurrency: -cost]))
+            try await GameEngine.shared.completeMilestone(id: milestone.id)
+            NotificationCenter.default.post(name: .engineStateShouldPersist, object: nil)
+        }
+        withAnimation(.spring(response: 0.3)) { skipSuccessMessage = milestone.displayName }
+        Task { [weak self] in
+            try? await Task.sleep(for: .seconds(2.5))
+            withAnimation { self?.skipSuccessMessage = nil }
+        }
+    }
+
+    /// Ad no-fill is routine — offline, no regional inventory, frequency cap. Silence here
+    /// read as a broken button and players tapped it repeatedly.
+    func reportAdUnavailable() {
+        present(String(localized: "No ad is available right now. Please try again shortly."))
     }
 
     var isLastLevel: Bool {
@@ -108,14 +214,14 @@ public final class GameplayViewModel {
 
     var eraGoldProgress: Double {
         guard let level = currentLevel else { return 0 }
-        let required = level.advanceRequirement["gold"]
+        let required = level.advanceRequirement[primaryCurrency]
         guard required > 0 else { return 1.0 }
-        let ratio = state.resources["gold"] / required
+        let ratio = state.resources[primaryCurrency] / required
         return min(1.0, (ratio as NSDecimalNumber).doubleValue)
     }
 
     var eraGoldRequirement: Decimal {
-        currentLevel?.advanceRequirement["gold"] ?? 0
+        currentLevel?.advanceRequirement[primaryCurrency] ?? 0
     }
 
     var canPrestige: Bool {
@@ -135,11 +241,11 @@ public final class GameplayViewModel {
     }
 
     func prestige() {
-        Task { try? await GameEngine.shared.prestige() }
+        run { try await GameEngine.shared.prestige() }
     }
 
     func tap() {
-        Task { try? await GameEngine.shared.manualTap() }
+        run { try await GameEngine.shared.manualTap() }
     }
 
     private func updateCurrentUnits() {
@@ -159,8 +265,16 @@ public final class GameplayViewModel {
     /// Each assignment is guarded by equality so @Observable only fires when values truly change.
     private func updateCachedValues() {
         // Production rate — only changes when units are purchased or upgrades bought.
-        let newRate = EconomyCalculator.productionRate(state: state, units: currentUnits, eraUpgrades: currentEraUpgrades)
-        if newRate != productionRate { productionRate = newRate }
+        //
+        // Sourced from the engine, which computes over EVERY unit the player owns and
+        // applies milestone bonuses. This used to compute over `currentUnits` — the current
+        // level's five units only — so from era 2 onward the displayed "/s" figure was
+        // strictly lower than actual income, and the gap widened every era.
+        Task { [weak self] in
+            let engineRate = await GameEngine.shared.productionRate()
+            guard let self, engineRate != self.productionRate else { return }
+            self.productionRate = engineRate
+        }
 
         // Cost multiplier — only changes when upgrades are purchased.
         let newMult = EconomyCalculator.eraCostMultiplier(purchasedIDs: state.purchasedUpgradeIDs, upgrades: currentEraUpgrades)
@@ -174,6 +288,8 @@ public final class GameplayViewModel {
         // Unit counts — changes only when a unit is purchased.
         if state.unitCounts != unitCounts { unitCounts = state.unitCounts }
 
+        updateMaxAffordable()
+
         // Unit affordability and costs — changes when gold crosses a cost threshold.
         var newAffordability: [String: Bool] = [:]
         var newCosts: [String: Decimal] = [:]
@@ -181,7 +297,7 @@ public final class GameplayViewModel {
             let count = state.unitCount(id: unit.id)
             let cost = EconomyCalculator.unitCost(unit: unit, currentCount: count, discountMultiplier: newMult)
             newAffordability[unit.id] = state.resources.canAfford(cost)
-            newCosts[unit.id] = cost["gold"]
+            newCosts[unit.id] = cost[primaryCurrency]
         }
         if newAffordability != unitAffordability { unitAffordability = newAffordability }
         if newCosts != unitCosts { unitCosts = newCosts }
@@ -204,6 +320,7 @@ public struct GameplayScreen: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.adService) private var adService
     @State private var particles = ParticleSystem()
+    @State private var contentSize: CGSize = .zero
     @State private var tapScale: CGFloat = 1.0
     @State private var tapGlow: Double = 0
     @State private var tapBounceTask: Task<Void, Never>?
@@ -270,6 +387,10 @@ public struct GameplayScreen: View {
                             eraUpgradesSection
                         }
 
+                        if !viewModel.currentUnits.isEmpty {
+                            buyQuantityPicker
+                        }
+
                         // Units — use pre-computed ViewModel dicts so EconomyCalculator is
                         // never called inside the view body. .equatable() short-circuits
                         // UnitCard.body when inputs haven't changed (most ticks).
@@ -279,6 +400,8 @@ public struct GameplayScreen: View {
                                 ownedCount: viewModel.unitCounts[unit.id] ?? 0,
                                 canAfford: viewModel.unitAffordability[unit.id] ?? false,
                                 discountMultiplier: viewModel.eraCostMultiplier,
+                                buyQuantity: viewModel.buyQuantity,
+                                maxAffordable: viewModel.maxAffordable[unit.id] ?? 0,
                                 onPurchase: { qty in viewModel.purchase(unitID: unit.id, quantity: qty) }
                             )
                             .equatable()
@@ -296,6 +419,31 @@ public struct GameplayScreen: View {
             // Floating particles overlay
             ForEach(particles.particles) { p in
                 FloatingParticle(text: p.text, color: p.color, origin: p.origin)
+            }
+
+            // Engine action errors — insufficient resources, unmet requirements, a
+            // construction already running. These were all `try?` before, so the button
+            // simply did nothing and players concluded the game was broken.
+            if let message = viewModel.actionMessage {
+                VStack {
+                    HStack(spacing: 8) {
+                        Image(systemName: "exclamationmark.circle.fill")
+                            .foregroundStyle(.orange)
+                            .accessibilityHidden(true)
+                        Text(message.text)
+                            .font(Typography.subheadline)
+                            .foregroundStyle(theme.textPrimaryColor)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 10)
+                    .background(theme.surfaceElevatedColor, in: Capsule())
+                    .shadow(color: .black.opacity(0.25), radius: 8, y: 4)
+                    .transition(.move(edge: .top).combined(with: .opacity))
+                    .padding(.top, 8)
+                    .accessibilityLabel(message.text)
+                    Spacer()
+                }
             }
 
             // Skip milestone success toast
@@ -318,9 +466,21 @@ public struct GameplayScreen: View {
                 }
             }
         }
+        .background {
+            // Tracks the real window width. `UIScreen.main.bounds` — which this replaces —
+            // is deprecated and reports the physical screen, so under Split View, Slide Over,
+            // or Stage Manager the IAP celebration spawned outside the visible window and a
+            // player who had just paid saw nothing.
+            GeometryReader { proxy in
+                Color.clear
+                    .onAppear { contentSize = proxy.size }
+                    .onChange(of: proxy.size) { _, newValue in contentSize = newValue }
+            }
+        }
         .animation(.spring(response: 0.3), value: viewModel.skipSuccessMessage)
+        .animation(.spring(response: 0.3), value: viewModel.actionMessage)
         .onReceive(NotificationCenter.default.publisher(for: .iapRewardReceived)) { note in
-            let coins = note.userInfo?["gold"] as? Decimal ?? 0
+            let coins = note.userInfo?[theme.primaryCurrency] as? Decimal ?? 0
             if !reduceMotion { triggerCoinRain(amount: coins) }
         }
         .sheet(isPresented: $showPrestigeSheet) {
@@ -359,7 +519,7 @@ public struct GameplayScreen: View {
             HStack(spacing: 16) {
                 // Gold requirement
                 Label {
-                    Text("\(viewModel.state.resources["gold"].idleFormatted()) / \(viewModel.eraGoldRequirement.idleFormatted())")
+                    Text("\(viewModel.state.resources[theme.primaryCurrency].idleFormatted()) / \(viewModel.eraGoldRequirement.idleFormatted())")
                         .font(Typography.caption.monospacedDigit())
                         .foregroundStyle(goldProgress >= 1.0 ? accent : theme.textSecondaryColor)
                 } icon: {
@@ -413,19 +573,54 @@ public struct GameplayScreen: View {
                     }
                     .foregroundStyle(theme.goldAccentColor)
 
-                    if !adService.adsRemoved {
+                    // The theme's `canSkipWithAd` flag is now honoured. It was declared,
+                    // validated (ad-skippable milestones must stay under an hour), and never
+                    // read — so a single 30-second ad skipped any wonder, including the
+                    // 20-hour construction that gates prestige. Designed wait time across the
+                    // game is 57.5 hours; it collapsed to eight ads.
+                    //
+                    // Players who PAID for ad removal were also locked out entirely, since
+                    // the whole control was gated on `!adsRemoved` and it is the only way to
+                    // shorten construction. A paying customer was hard-blocked for up to 20
+                    // hours while a free player skipped with an ad.
+                    if viewModel.skipCostCoins(wonder) > 0 {
+                        Spacer()
+                        Button {
+                            viewModel.skipMilestoneWithCoins(wonder)
+                        } label: {
+                            HStack(spacing: 4) {
+                                Image(systemName: theme.primaryCurrencyIcon)
+                                Text("Skip for \(viewModel.skipCostCoins(wonder))")
+                            }
+                            .font(Typography.caption.weight(.semibold))
+                            .padding(.horizontal, 12)
+                            .frame(minHeight: 44)
+                            .background(theme.surfaceElevatedColor)
+                            .foregroundStyle(
+                                viewModel.canAffordCoinSkip(wonder)
+                                    ? theme.textPrimaryColor : theme.textSecondaryColor
+                            )
+                            .clipShape(.capsule)
+                        }
+                        .disabled(!viewModel.canAffordCoinSkip(wonder))
+                        .accessibilityLabel(Text("Skip construction for \(viewModel.skipCostCoins(wonder))"))
+                    }
+
+                    if viewModel.canSkipWithAd(wonder) && !adService.adsRemoved {
                         Spacer()
                         Button {
                             Task {
                                 let reward = try? await adService.showRewardedAd(placement: .skipMilestone)
-                                if reward != nil {
-                                    viewModel.skipMilestoneConstruction(id: wonder.id)
-                                    withAnimation(.spring(response: 0.3)) {
-                                        viewModel.skipSuccessMessage = wonder.displayName
-                                    }
-                                    try? await Task.sleep(for: .seconds(2.5))
-                                    withAnimation { viewModel.skipSuccessMessage = nil }
+                                guard reward != nil else {
+                                    viewModel.reportAdUnavailable()
+                                    return
                                 }
+                                viewModel.skipMilestoneConstruction(id: wonder.id)
+                                withAnimation(.spring(response: 0.3)) {
+                                    viewModel.skipSuccessMessage = wonder.displayName
+                                }
+                                try? await Task.sleep(for: .seconds(2.5))
+                                withAnimation { viewModel.skipSuccessMessage = nil }
                             }
                         } label: {
                             HStack(spacing: 4) {
@@ -433,8 +628,8 @@ public struct GameplayScreen: View {
                                 Text("Skip")
                             }
                             .font(Typography.caption.weight(.semibold))
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 4)
+                            .padding(.horizontal, 12)
+                            .frame(minHeight: 44)
                             .background(theme.surfaceElevatedColor)
                             .foregroundStyle(theme.textPrimaryColor)
                             .clipShape(.capsule)
@@ -494,7 +689,7 @@ public struct GameplayScreen: View {
             .scaleEffect(tapScale)
             .contentShape(.rect)
             .onTapGesture { location in
-                let earned = max(1, viewModel.productionRate["gold"])
+                let earned = max(1, viewModel.productionRate[theme.primaryCurrency])
                 if !reduceMotion {
                     let tapPoint = CGPoint(
                         x: location.x,
@@ -607,18 +802,52 @@ public struct GameplayScreen: View {
         .accessibilityLabel("\(theme.copy.advanceVerb) to the next \(theme.copy.levelNoun)")
     }
 
+    /// x1 / x10 / MAX selector.
+    ///
+    /// `BuyQuantity` existed with all three cases and `UnitCard` rendered labels for them,
+    /// but the state was `@State private` and never mutated — no picker, no long-press, no
+    /// cycle — so bulk buy was unreachable dead code. It is table stakes in this genre and
+    /// the engine supported it the whole time.
+    private var buyQuantityPicker: some View {
+        HStack(spacing: 8) {
+            ForEach(BuyQuantity.allCases) { quantity in
+                Button {
+                    viewModel.setBuyQuantity(quantity)
+                } label: {
+                    Text(quantity.label)
+                        .font(Typography.caption.weight(.semibold))
+                        .padding(.horizontal, 14)
+                        .frame(minHeight: 44)
+                        .background(
+                            viewModel.buyQuantity == quantity
+                                ? theme.goldAccentColor : theme.surfaceElevatedColor
+                        )
+                        .foregroundStyle(
+                            viewModel.buyQuantity == quantity ? .black : theme.textSecondaryColor
+                        )
+                        .clipShape(.capsule)
+                }
+                .accessibilityLabel(Text("Buy \(quantity.label)"))
+                .accessibilityAddTraits(viewModel.buyQuantity == quantity ? [.isSelected] : [])
+            }
+            Spacer()
+        }
+    }
+
     private var currentLevel: ThemeLevel? {
         viewModel.currentLevel
     }
 
     private func triggerCoinRain(amount: Decimal) {
         let label = "+\(amount.idleFormatted())"
-        let screenWidth = UIScreen.main.bounds.width
-        for i in 0..<8 {
-            let x = screenWidth * CGFloat(i + 1) / 9.0
-            let y = CGFloat.random(in: 140...360)
-            DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.07) {
+        let width = contentSize.width > 0 ? contentSize.width : 390
+        let maxY = max(180, min(contentSize.height * 0.55, 360))
+        Task { @MainActor in
+            for i in 0..<8 {
+                let x = width * CGFloat(i + 1) / 9.0
+                let y = CGFloat.random(in: 140...maxY)
                 particles.emit(text: label, color: theme.goldAccentColor, at: CGPoint(x: x, y: y))
+                try? await Task.sleep(for: .milliseconds(70))
             }
         }
     }

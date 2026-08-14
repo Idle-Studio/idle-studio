@@ -147,7 +147,7 @@ final class SocialViewModel {
             studioPoints = state.studioPoints
         }
         Task { [weak self] in
-            for await state in GameEngine.shared.stateStream() {
+            for await state in await GameEngine.shared.stateStream() {
                 self?.studioPoints = state.studioPoints
             }
         }

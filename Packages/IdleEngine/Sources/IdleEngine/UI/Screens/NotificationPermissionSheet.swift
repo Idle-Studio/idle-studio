@@ -109,7 +109,9 @@ public struct NotificationPermissionSheet: View {
             }
             .padding(.bottom, 8)
         }
-        .presentationDetents([.medium, .large])
+        #if os(iOS)
+        .presentationDetents([.large])
+        #endif
         .presentationBackground(.ultraThinMaterial)
         .presentationDragIndicator(.visible)
     }

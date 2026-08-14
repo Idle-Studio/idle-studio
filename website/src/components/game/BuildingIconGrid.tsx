@@ -60,10 +60,11 @@ export function BuildingIconGrid({ game }: BuildingIconGridProps) {
                   src={assetPath(game.id, 'buildings', building.iconAsset)}
                   alt={building.displayName}
                   fill
+                  sizes="56px"
                   className="object-cover p-1"
                 />
               </div>
-              <p className="text-white/40 text-[10px] text-center font-sans leading-tight max-w-[60px]">
+              <p className="text-white/60 text-[10px] text-center font-sans leading-tight max-w-[60px]">
                 {building.displayName}
               </p>
             </motion.div>

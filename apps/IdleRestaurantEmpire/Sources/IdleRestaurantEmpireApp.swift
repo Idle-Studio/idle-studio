@@ -2,11 +2,12 @@ import SwiftUI
 import IdleEngine
 
 @main
+@MainActor
 struct IdleRestaurantEmpireApp: App {
-    // Remove-ads product ID must match idle-restaurant-empire.json iapProducts.removeAds
-    private let adService: any AdService = GoogleMobileAdsService(
-        removeAdsProductID: "com.idlestudio.idlerestaurant.remove_ads"
-    )
+    // Ad-free entitlement is resolved by `EntitlementStore` from the theme's own
+    // `iapProducts` — no product identifier is hardcoded here. See the note in
+    // IdleCivilizationsApp for why the injected-string version was removed.
+    private let adService: any AdService = GoogleMobileAdsService()
 
     var body: some Scene {
         WindowGroup {

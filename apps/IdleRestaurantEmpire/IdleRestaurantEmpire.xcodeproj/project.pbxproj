@@ -7,11 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		40DA837CBEE097B77045677D /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 64130EAB134BE3C202B85DAF /* GoogleMobileAds */; };
 		52209FC3AD65B2F2D0113E5F /* IdleEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 513B8865E50158A3B7541948 /* IdleEngine */; };
 		936ACC2A5EB75624CDD7CD68 /* IdleRestaurantEmpire.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 7420658A678E2B7AD70C5ED8 /* IdleRestaurantEmpire.storekit */; };
 		B37105AD90B5783C0C85A897 /* IdleRestaurantEmpireApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4BAD42D741C11D1A37A543 /* IdleRestaurantEmpireApp.swift */; };
 		C15DA8E106F29159C29303D2 /* GoogleMobileAdsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E85904A1FD27F63E379EAA /* GoogleMobileAdsService.swift */; };
 		E17AB0FB6EC937606CAF035A /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 331A8BF68EB62E701455C410 /* GoogleMobileAds */; };
+		EDDAA6CE15F37B7021399DE8 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 34F0C01828CE970A7573A460 /* PrivacyInfo.xcprivacy */; };
 		F0ED7DC773AF826259BC45BB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A7B5C8EC8C5BFB55FE20561 /* Assets.xcassets */; };
 		F9C0C3345AE1AFFFD6105D03 /* idle-restaurant-empire.json in Resources */ = {isa = PBXBuildFile; fileRef = 991AA6C223FE305346F31621 /* idle-restaurant-empire.json */; };
 /* End PBXBuildFile section */
@@ -19,6 +21,7 @@
 /* Begin PBXFileReference section */
 		0A7B5C8EC8C5BFB55FE20561 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1DA963B53739C17ECE759348 /* IdleEngine */ = {isa = PBXFileReference; lastKnownFileType = folder; name = IdleEngine; path = ../../Packages/IdleEngine; sourceTree = SOURCE_ROOT; };
+		34F0C01828CE970A7573A460 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		359E22DDC5A14978EE26C1A0 /* IdleRestaurantEmpire.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = IdleRestaurantEmpire.entitlements; sourceTree = "<group>"; };
 		4A8B25F8D82B6826525AF7EA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		7420658A678E2B7AD70C5ED8 /* IdleRestaurantEmpire.storekit */ = {isa = PBXFileReference; path = IdleRestaurantEmpire.storekit; sourceTree = "<group>"; };
@@ -35,6 +38,7 @@
 			files = (
 				52209FC3AD65B2F2D0113E5F /* IdleEngine in Frameworks */,
 				E17AB0FB6EC937606CAF035A /* GoogleMobileAds in Frameworks */,
+				40DA837CBEE097B77045677D /* GoogleMobileAds in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,6 +88,7 @@
 				359E22DDC5A14978EE26C1A0 /* IdleRestaurantEmpire.entitlements */,
 				7420658A678E2B7AD70C5ED8 /* IdleRestaurantEmpire.storekit */,
 				4A8B25F8D82B6826525AF7EA /* Info.plist */,
+				34F0C01828CE970A7573A460 /* PrivacyInfo.xcprivacy */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -107,6 +112,7 @@
 			packageProductDependencies = (
 				513B8865E50158A3B7541948 /* IdleEngine */,
 				331A8BF68EB62E701455C410 /* GoogleMobileAds */,
+				64130EAB134BE3C202B85DAF /* GoogleMobileAds */,
 			);
 			productName = IdleRestaurantEmpire;
 			productReference = BA6079374B5A7D61A6EE9077 /* IdleRestaurantEmpire.app */;
@@ -128,7 +134,6 @@
 				};
 			};
 			buildConfigurationList = 3AEA5AB59456BCFCBD8E9F40 /* Build configuration list for PBXProject "IdleRestaurantEmpire" */;
-			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -138,10 +143,12 @@
 			mainGroup = 9355EEF75C957DB90AEEC1A5;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				098C0A07542A1B3835A4EB3A /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+				A338FE3941A4CBE3583E02F7 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+				E6D0D93B47335530E821B587 /* XCRemoteSwiftPackageReference "swift-package-manager-google-user-messaging-platform" */,
 				759A26E3713DD56756D35D5B /* XCLocalSwiftPackageReference "../../Packages/IdleEngine" */,
 			);
 			preferredProjectObjectVersion = 77;
+			productRefGroup = 36E84914A70CB063D5C1FAB1 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -157,6 +164,7 @@
 			files = (
 				F0ED7DC773AF826259BC45BB /* Assets.xcassets in Resources */,
 				936ACC2A5EB75624CDD7CD68 /* IdleRestaurantEmpire.storekit in Resources */,
+				EDDAA6CE15F37B7021399DE8 /* PrivacyInfo.xcprivacy in Resources */,
 				F9C0C3345AE1AFFFD6105D03 /* idle-restaurant-empire.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -196,6 +204,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.idlestudio.idlerestaurant;
 				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -284,6 +293,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.idlestudio.idlerestaurant;
 				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -376,12 +386,20 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		098C0A07542A1B3835A4EB3A /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+		A338FE3941A4CBE3583E02F7 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads";
 			requirement = {
-				kind = upToNextMinorVersion;
+				kind = upToNextMajorVersion;
 				minimumVersion = 11.0.0;
+			};
+		};
+		E6D0D93B47335530E821B587 /* XCRemoteSwiftPackageReference "swift-package-manager-google-user-messaging-platform" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-user-messaging-platform";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -389,12 +407,17 @@
 /* Begin XCSwiftPackageProductDependency section */
 		331A8BF68EB62E701455C410 /* GoogleMobileAds */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 098C0A07542A1B3835A4EB3A /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			package = A338FE3941A4CBE3583E02F7 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
 			productName = GoogleMobileAds;
 		};
 		513B8865E50158A3B7541948 /* IdleEngine */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = IdleEngine;
+		};
+		64130EAB134BE3C202B85DAF /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E6D0D93B47335530E821B587 /* XCRemoteSwiftPackageReference "swift-package-manager-google-user-messaging-platform" */;
+			productName = GoogleMobileAds;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -1,10 +1,9 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ALL_GAMES, getGameConfig } from '@/config/games'
 import { generateTermsMetadata, breadcrumbJsonLd } from '@/lib/metadata'
-import { assetPath } from '@/lib/assetPath'
+import { GameAppIcon } from '@/components/ui/GameAppIcon'
 
 export async function generateStaticParams() {
   return ALL_GAMES.map(game => ({ slug: game.id }))
@@ -22,7 +21,6 @@ export default async function TermsPage({ params }: { params: Promise<{ slug: st
   const game = getGameConfig(slug)
   if (!game) notFound()
 
-  const iconSrc = assetPath(game.id, 'root', game.appIconAsset)
   const lastUpdated = new Date(game.termsLastUpdated).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -42,12 +40,10 @@ export default async function TermsPage({ params }: { params: Promise<{ slug: st
       <div className="border-b border-white/10 py-6 px-6">
         <div className="max-w-3xl mx-auto flex items-center justify-between">
           <Link href={`/games/${game.id}`} className="flex items-center gap-3">
-            <div className="relative w-10 h-10 rounded-xl overflow-hidden">
-              <Image src={iconSrc} alt={game.displayName} fill className="object-cover" />
-            </div>
+            <GameAppIcon game={game} />
             <span className="font-serif text-white font-bold">{game.displayName}</span>
           </Link>
-          <Link href="/" className="text-white/40 hover:text-white text-sm transition-colors font-sans">
+          <Link href="/" className="text-white/60 hover:text-white text-sm transition-colors font-sans">
             Idle Studio
           </Link>
         </div>
@@ -55,7 +51,7 @@ export default async function TermsPage({ params }: { params: Promise<{ slug: st
 
       <article className="max-w-3xl mx-auto px-6 py-20">
         <h1 className="font-serif text-4xl md:text-5xl font-bold text-white mb-3">Terms of Use</h1>
-        <p className="text-white/40 text-sm font-sans mb-16">
+        <p className="text-white/60 text-sm font-sans mb-16">
           {game.displayName} · Last updated {lastUpdated}
         </p>
 

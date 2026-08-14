@@ -27,7 +27,7 @@ export function DownloadCTA({ game }: DownloadCTAProps) {
     <section ref={containerRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {bgSrc && (
         <motion.div style={{ y: imgY }} className="absolute inset-[-10%]">
-          <Image src={bgSrc} alt={lastEra.displayName} fill className="object-cover" />
+          <Image src={bgSrc} alt={lastEra.displayName} fill sizes="100vw" className="object-cover" />
         </motion.div>
       )}
       <div
@@ -63,7 +63,7 @@ export function DownloadCTA({ game }: DownloadCTAProps) {
           {game.status === 'live' ? (
             <AppStoreButton url={game.appStoreUrl} size="lg" />
           ) : (
-            <div className="text-white/40 text-lg font-sans">Coming Soon</div>
+            <div className="text-white/60 text-lg font-sans">Coming Soon</div>
           )}
         </motion.div>
       </div>

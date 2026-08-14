@@ -53,7 +53,7 @@ private func validTheme(levelCount: Int = 4) -> MockThemePackage {
         gameID: "mock-game",
         displayName: "Mock Game",
         bundleID: "com.test.mock",
-        primaryCurrency: "Gold",
+        primaryCurrency: "gold",
         primaryCurrencyIcon: "coin",
         themeColors: ThemeColors(
             background: "#0D0D0F", surface: "#1A1A20", surfaceElevated: "#252530",
@@ -119,7 +119,7 @@ struct ThemeValidatorIdentityTests {
     func nonKebabGameID() {
         let broken = MockThemePackage(
             schemaVersion: "1.0", gameID: "My Game!", displayName: "G",
-            bundleID: "com.a.b", primaryCurrency: "Gold", primaryCurrencyIcon: "coin",
+            bundleID: "com.a.b", primaryCurrency: "gold", primaryCurrencyIcon: "coin",
             themeColors: validTheme().themeColors, levels: validTheme().levels,
             events: [], characters: [], iapProducts: validTheme().iapProducts,
             leaderboards: .empty, copy: .fixture
@@ -136,7 +136,7 @@ struct ThemeValidatorIdentityTests {
     func invalidBundleID() {
         let broken = MockThemePackage(
             schemaVersion: "1.0", gameID: "my-game", displayName: "G",
-            bundleID: "notabundleid", primaryCurrency: "Gold", primaryCurrencyIcon: "coin",
+            bundleID: "notabundleid", primaryCurrency: "gold", primaryCurrencyIcon: "coin",
             themeColors: validTheme().themeColors, levels: validTheme().levels,
             events: [], characters: [], iapProducts: validTheme().iapProducts,
             leaderboards: .empty, copy: .fixture

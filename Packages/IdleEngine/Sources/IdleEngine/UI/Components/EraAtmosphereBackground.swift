@@ -9,8 +9,9 @@ import SwiftUI
 ///   2. Dark readability gradient — always present
 ///   3. Ambient particles — Canvas + TimelineView, no SwiftUI view allocation
 ///
-/// Pure View — no `@State`, no `@Observable`. All particle animation is driven by
-/// deterministic math on `TimelineView` time so the render path has zero state mutations.
+/// All particle animation is driven by deterministic math on `TimelineView` time — the only
+/// state is the pause gating, which stops the render loop entirely when the view is off-screen,
+/// the scene is inactive, Low Power Mode is on, or Reduce Motion is enabled.
 public struct EraAtmosphereBackground: View {
 
     // MARK: - Inputs
@@ -19,6 +20,13 @@ public struct EraAtmosphereBackground: View {
     public let primaryColor: Color
     public let secondaryColor: Color
     public let totalUnitCount: Int
+
+    // MARK: - Pause gating
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var isVisible = false
+    @State private var isLowPower = ProcessInfo.processInfo.isLowPowerModeEnabled
 
     public init(
         artworkAsset: String,
@@ -44,6 +52,12 @@ public struct EraAtmosphereBackground: View {
         min(6 + totalUnitCount / 15, 40)
     }
 
+    /// The particle loop is the single most expensive thing on the gameplay screen.
+    /// Stop it whenever it can't be seen or shouldn't be running.
+    private var particlesPaused: Bool {
+        reduceMotion || isLowPower || scenePhase != .active || !isVisible
+    }
+
     // MARK: - Body
 
     public var body: some View {
@@ -57,7 +71,7 @@ public struct EraAtmosphereBackground: View {
                     .clipped()
                     .blur(radius: 22)
                     .opacity(artworkOpacity)
-                    .animation(.easeInOut(duration: 1.8), value: artworkOpacity)
+                    .animation(reduceMotion ? nil : .easeInOut(duration: 1.8), value: artworkOpacity)
 
                 // Layer 2 — readability gradient
                 LinearGradient(
@@ -70,8 +84,9 @@ public struct EraAtmosphereBackground: View {
                     endPoint: .bottom
                 )
 
-                // Layer 3 — ambient particles
-                TimelineView(.animation(minimumInterval: 1.0 / 30.0, paused: false)) { context in
+                // Layer 3 — ambient particles. 20fps is indistinguishable from 30 for a
+                // slow ambient drift and cuts the frame budget by a third.
+                TimelineView(.animation(minimumInterval: 1.0 / 20.0, paused: particlesPaused)) { context in
                     Canvas { ctx, size in
                         drawParticles(
                             count: particleCount,
@@ -86,11 +101,25 @@ public struct EraAtmosphereBackground: View {
         }
         .ignoresSafeArea()
         .accessibilityHidden(true)
+        .onAppear { isVisible = true }
+        .onDisappear { isVisible = false }
+        .onReceive(
+            NotificationCenter.default.publisher(for: .NSProcessInfoPowerStateDidChange)
+        ) { _ in
+            isLowPower = ProcessInfo.processInfo.isLowPowerModeEnabled
+        }
     }
 
     // MARK: - Particle rendering
 
-    /// Deterministic per-frame particle draw. No heap allocation beyond the GraphicsContext copy.
+    /// Number of alpha steps particles are quantised into. Alpha has to be folded into the
+    /// fill colour rather than set via `ctx.opacity`, because mutating the context forces one
+    /// `GraphicsContext` copy and one `fill` per particle. Quantising bounds the fill count at
+    /// `2 × alphaSteps` (8) regardless of particle count, instead of one per particle (40).
+    private static let alphaSteps = 4
+
+    /// Deterministic per-frame particle draw. Particles are accumulated into at most 8 batched
+    /// `Path`s (2 colours × 4 alpha steps) and flushed with one `fill` each.
     private func drawParticles(
         count: Int,
         context: GraphicsContext,
@@ -99,6 +128,11 @@ public struct EraAtmosphereBackground: View {
     ) {
         guard count > 0 else { return }
         let cycleSeconds = 14.0
+        let steps        = Self.alphaSteps
+        let maxAlpha     = 0.75
+
+        // Index = colorIndex * steps + alphaStep. Primary occupies 0..<steps, secondary the rest.
+        var batches = [Path](repeating: Path(), count: 2 * steps)
 
         for i in 0..<count {
             let normalizedSeed = Double(i) / Double(count)
@@ -115,7 +149,7 @@ public struct EraAtmosphereBackground: View {
             // Fade in at bottom (first 8%), fade out at top (last 15%)
             let fadeBottom = phased < 0.08 ? phased / 0.08 : 1.0
             let fadeTop    = phased > 0.85 ? (1.0 - phased) / 0.15 : 1.0
-            let alpha      = fadeBottom * fadeTop * 0.75
+            let alpha      = fadeBottom * fadeTop * maxAlpha
 
             guard alpha > 0.01 else { continue }
 
@@ -125,11 +159,29 @@ public struct EraAtmosphereBackground: View {
                               width: radius * 2, height: radius * 2)
 
             // 2:1 ratio primary:secondary
-            let color = i % 3 == 2 ? secondaryColor : primaryColor
+            let colorIndex = i % 3 == 2 ? 1 : 0
+            // Quantise into `steps` buckets — bucket k renders at alpha (k + 1) / steps.
+            let step = min(steps - 1, max(0, Int(alpha / maxAlpha * Double(steps) - 0.000_001)))
 
-            var ctx = context
-            ctx.opacity = alpha
-            ctx.fill(Path(ellipseIn: rect), with: .color(color))
+            batches[colorIndex * steps + step].addEllipse(in: rect)
         }
+
+        // Flush — one fill per non-empty batch.
+        for (index, path) in batches.enumerated() where !path.isEmpty {
+            let color = index < steps ? primaryColor : secondaryColor
+            let alpha = maxAlpha * Double(index % steps + 1) / Double(steps)
+            context.fill(path, with: .color(color.opacity(alpha)))
+        }
+    }
+}
+
+// MARK: - Equatable
+
+extension EraAtmosphereBackground: Equatable {
+    public nonisolated static func == (lhs: EraAtmosphereBackground, rhs: EraAtmosphereBackground) -> Bool {
+        lhs.artworkAsset == rhs.artworkAsset &&
+        lhs.primaryColor == rhs.primaryColor &&
+        lhs.secondaryColor == rhs.secondaryColor &&
+        lhs.totalUnitCount == rhs.totalUnitCount
     }
 }

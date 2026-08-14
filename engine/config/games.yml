@@ -1,18 +1,32 @@
 studio:
-  team_id: "TMXM5W4D89"
-  asc_issuer_id: "69a6de94-b56e-47e3-e053-5b8c7c11a4d1"
-  asc_key_id: "TMXM5W4D89"
-  # ASC private key path — set via env: export ASC_KEY_PATH=~/.appstoreconnect/private_keys/AuthKey_XXXXXX.p8
-  # Never commit the .p8 file.
+  # ── App Store Connect credentials ────────────────────────────────────────────
+  # THIS REPOSITORY IS PUBLIC. Never put account identifiers, keys or personal
+  # contact details in this file. Every value below is resolved from the
+  # environment at run time; the empty strings exist only so that consumers can
+  # read the key without a KeyError.
+  #
+  #   export APPLE_TEAM_ID=XXXXXXXXXX                                  → team_id
+  #   export ASC_KEY_ID=XXXXXXXXXX                                     → asc_key_id
+  #   export ASC_ISSUER_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx        → asc_issuer_id
+  #   export ASC_KEY_PATH=~/.appstoreconnect/private_keys/AuthKey_XXXXXXXXXX.p8
+  #
+  # Never commit the .p8 file. On CI these come from repository secrets.
+  team_id: ""        # env: APPLE_TEAM_ID
+  asc_issuer_id: ""  # env: ASC_ISSUER_ID
+  asc_key_id: ""     # env: ASC_KEY_ID
 
-  match_repo: "git@github.com:your-org/idle-studio-certs.git"  # Private repo for fastlane match
+  # Private repo holding the fastlane match certificate store.
+  # env: MATCH_GIT_URL. Leaving this empty makes signing lanes fail loudly —
+  # pass skip_match:true (or MATCH_SKIP=true) for unsigned local builds.
+  match_repo: ""     # env: MATCH_GIT_URL
   match_type: "appstore"
 
-  # App Store reviewer contact (used by fastlane deliver for review information)
+  # App Store reviewer contact (used by fastlane deliver for review information).
+  # The phone number is personal data — env only, never committed.
   reviewer_first_name: "Victor"
   reviewer_last_name: "Mihaita"
-  reviewer_phone: "+40726433942"
-  reviewer_email: "vmihai12@icloud.com"
+  reviewer_phone: ""                    # env: ASC_REVIEWER_PHONE
+  reviewer_email: "vmihai12@icloud.com" # public app support address
 
 games:
   idle-civilizations:

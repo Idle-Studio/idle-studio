@@ -10,26 +10,77 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   build-and-test:
     name: Build & Test
-    runs-on: macos-14          # Xcode 16 available on macos-14
+    runs-on: macos-15
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Select Xcode 16
-        run: sudo xcode-select -s /Applications/Xcode_16.0.app/Contents/Developer
+      # Xcode is selected by version range rather than a hardcoded
+      # /Applications/Xcode_16.0.app path, which breaks whenever the runner
+      # image rotates its installed Xcodes.
+      - name: Select Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Prepare log directory
+        run: mkdir -p ci-logs
 
       - name: Cache Swift Package dependencies
         uses: actions/cache@v4
         with:
-          path: |
-            ~/Library/Caches/org.swift.swiftpm
-            ~/.build
+          # Only the shared SwiftPM cache. The old `~/.build` entry never existed
+          # — SPM builds into <package>/.build, and caching that across runs
+          # invites stale-artifact failures.
+          path: ~/Library/Caches/org.swift.swiftpm
           key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
           restore-keys: ${{ runner.os }}-spm-
 
+      # ── Engine tests ────────────────────────────────────────────────────────
+      # Run via SPM directly. The previous `xcodebuild test` step targeted the
+      # IdleCivilizations scheme, whose <Testables> block is empty — it passed
+      # green having executed zero tests.
+      - name: Run Engine Unit Tests
+        continue-on-error: false
+        run: |
+          set -o pipefail
+          swift test \
+            --package-path Packages/IdleEngine \
+            --enable-code-coverage \
+            2>&1 | tee ci-logs/swift-test.log
+
+      - name: Engine Coverage Summary
+        # Informational — a coverage-tooling hiccup must not mask a green test run.
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          BIN_PATH="$(swift build --package-path Packages/IdleEngine --show-bin-path)"
+          PROFDATA="$BIN_PATH/codecov/default.profdata"
+          XCTEST="$(find "$BIN_PATH" -maxdepth 1 -name '*.xctest' | head -1)"
+
+          if [ ! -f "$PROFDATA" ] || [ -z "$XCTEST" ]; then
+            echo "No coverage data found (profdata=$PROFDATA xctest=$XCTEST)"
+            exit 0
+          fi
+
+          BINARY="$XCTEST/Contents/MacOS/$(basename "$XCTEST" .xctest)"
+          [ -f "$BINARY" ] || BINARY="$XCTEST"
+
+          echo "## Engine Coverage" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          xcrun llvm-cov report "$BINARY" \
+            -instr-profile "$PROFDATA" \
+            -ignore-filename-regex='(Tests|\.build|checkouts)/' \
+            | tee -a "$GITHUB_STEP_SUMMARY" | tee ci-logs/coverage.log
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+
+      # ── App build ───────────────────────────────────────────────────────────
       - name: Install XcodeGen
         run: brew install xcodegen
 
@@ -43,44 +94,124 @@ jobs:
             -project apps/IdleCivilizations/IdleCivilizations.xcodeproj \
             -scheme IdleCivilizations \
             -configuration Debug \
-            -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.0' \
+            -destination 'generic/platform=iOS Simulator' \
             build \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
-            | xcpretty
+            2>&1 | tee ci-logs/xcodebuild.log | xcpretty
 
-      - name: Run Engine Unit Tests
-        run: |
-          set -o pipefail
-          xcodebuild \
-            -project apps/IdleCivilizations/IdleCivilizations.xcodeproj \
-            -scheme IdleCivilizations \
-            -configuration Debug \
-            -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.0' \
-            test \
-            CODE_SIGN_IDENTITY="" \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO \
-            | xcpretty
+      # ── Static checks ───────────────────────────────────────────────────────
+      # An explicit Python avoids the runner image's externally-managed
+      # Homebrew Python (PEP 668), which rejects a plain `pip3 install`.
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
 
       - name: Install Python dependencies
-        run: pip3 install -r tools/release/scripts/requirements.txt
+        run: python3 -m pip install -r tools/release/scripts/requirements.txt
 
+      # TODO: replace with the Swift `ThemeValidator` CLI once it lands
+      # (engine/docs/THEME_PACKAGE.md defines the full contract). Until then this
+      # at least covers every game in config/games.yml instead of one hardcoded path.
+      #
+      # Malformed JSON always fails. A missing required key fails for games that
+      # exist in App Store Connect (app_id set) and warns for pre-release games,
+      # so an in-development theme cannot permanently red-line CI.
       - name: Validate Theme JSON
         run: |
           python3 - <<'EOF'
-          import json, sys
-          for path in ["games/idle-civilizations/idle-civilizations.json"]:
-              with open(path) as f:
-                  data = json.load(f)
-              required = ["schemaVersion", "gameID", "displayName", "bundleID",
-                          "levels", "leaderboards", "achievements"]
+          import json, sys, pathlib, yaml
+
+          root  = pathlib.Path(".")
+          games = yaml.safe_load(open(root / "config" / "games.yml"))["games"]
+          required = ["schemaVersion", "gameID", "displayName", "bundleID",
+                      "levels", "leaderboards", "achievements"]
+
+          failed = False
+          for game_id, cfg in games.items():
+              shipping = bool(str(cfg.get("app_id") or "").strip())
+              path = root / cfg["theme_json"]
+
+              if not path.exists():
+                  print(f"FAIL {game_id}: theme JSON missing at {path}")
+                  failed = True
+                  continue
+              try:
+                  data = json.loads(path.read_text())
+              except json.JSONDecodeError as exc:
+                  # Broken JSON is always a hard failure — nothing can load it.
+                  print(f"FAIL {game_id}: invalid JSON in {path}: {exc}")
+                  failed = True
+                  continue
+
+              levels = data.get("levels", [])
+              units  = sum(len(lvl.get("units", [])) for lvl in levels)
               missing = [k for k in required if k not in data]
-              if missing:
-                  print(f"FAIL {path}: missing keys {missing}")
-                  sys.exit(1)
-              level_count = len(data.get("levels", []))
-              unit_count  = sum(len(lvl.get("units", [])) for lvl in data.get("levels", []))
-              print(f"OK   {path}: {level_count} levels, {unit_count} units")
+
+              if not missing:
+                  print(f"OK   {game_id}: {len(levels)} levels, {units} units")
+              elif shipping:
+                  print(f"FAIL {game_id}: {path} missing keys {missing}")
+                  failed = True
+              else:
+                  print(f"WARN {game_id}: {path} missing keys {missing} "
+                        f"(pre-release, no app_id — must be fixed before shipping)")
+
+          sys.exit(1 if failed else 0)
           EOF
+
+      # Google's public test AdMob IDs must never reach a shipping binary — they
+      # serve test ads and earn nothing. Enforced for games that exist in App
+      # Store Connect (app_id set); pre-release games are reported as warnings so
+      # that a game still in development does not permanently red-line CI.
+      - name: No test AdMob IDs in shipping apps
+        run: |
+          python3 - <<'EOF'
+          import pathlib, sys, yaml
+
+          TEST_PUB_ID = "ca-app-pub-" + "3940256099942544"
+          root  = pathlib.Path(".")
+          games = yaml.safe_load(open(root / "config" / "games.yml"))["games"]
+
+          failed = False
+          for game_id, cfg in games.items():
+              app_dir  = (root / cfg["xcode_project"]).parent
+              shipping = bool(str(cfg.get("app_id") or "").strip())
+              hits = []
+
+              for path in list(app_dir.rglob("*.swift")) + list(app_dir.rglob("Info.plist")):
+                  for n, line in enumerate(path.read_text(errors="replace").splitlines(), 1):
+                      if TEST_PUB_ID not in line:
+                          continue
+                      if line.lstrip().startswith(("//", "*", "/*", "<!--")):
+                          continue   # commented-out reference is fine
+                      hits.append(f"{path}:{n}")
+
+              if not hits:
+                  print(f"OK   {game_id}: no test AdMob IDs")
+              elif shipping:
+                  failed = True
+                  print(f"FAIL {game_id} (app_id={cfg['app_id']}) ships test AdMob IDs:")
+                  for h in hits:
+                      print(f"       {h}")
+              else:
+                  print(f"WARN {game_id}: test AdMob IDs present, but no app_id set "
+                        f"(pre-release). Replace before creating the ASC record:")
+                  for h in hits:
+                      print(f"       {h}")
+
+          sys.exit(1 if failed else 0)
+          EOF
+
+      - name: Upload build logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-logs-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ci-logs/
+            ~/Library/Logs/gym/
+          retention-days: 7
+          if-no-files-found: ignore

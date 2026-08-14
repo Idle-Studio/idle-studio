@@ -50,6 +50,7 @@ export function EraScroller({ game }: EraScrollerProps) {
                 src={assetPath(game.id, 'eras', era.artworkAsset)}
                 alt={era.displayName}
                 fill
+                sizes="100vw"
                 className="object-cover"
               />
               <div

@@ -10,8 +10,11 @@ packages:
   IdleEngine:
     path: ../../Packages/IdleEngine
   GoogleMobileAds:
-    url: https://github.com/googleads/swift-package-manager-google-mobile-ads.git
-    minorVersion: 11.0.0
+    url: https://github.com/googleads/swift-package-manager-google-mobile-ads
+    from: 11.0.0
+  GoogleUserMessagingPlatform:
+    url: https://github.com/googleads/swift-package-manager-google-user-messaging-platform
+    from: 2.0.0
 
 targets:
   IdleRestaurantEmpire:
@@ -27,11 +30,14 @@ targets:
     dependencies:
       - package: IdleEngine
       - package: GoogleMobileAds
+      - package: GoogleUserMessagingPlatform
+        product: GoogleUserMessagingPlatform
         product: GoogleMobileAds
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.idlestudio.idlerestaurant
         SWIFT_VERSION: "5.9"
+        SWIFT_STRICT_CONCURRENCY: complete
         MARKETING_VERSION: "1.0"
         CURRENT_PROJECT_VERSION: "1"
         INFOPLIST_FILE: Resources/Info.plist

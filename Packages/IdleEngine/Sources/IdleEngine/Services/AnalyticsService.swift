@@ -32,6 +32,20 @@ public enum AnalyticsEvent: Sendable {
     // Studio cross-game
     case studioPointsEarned(amount: Int, source: String)
     case crossPromoTapped(targetGameID: String)
+
+    // Reliability
+    //
+    // These exist because a defect that destroyed every player's save produced no crash,
+    // no log, and no event — the only signal that ever reached the team was one customer
+    // email. Anything that can silently lose progress or money must emit here.
+    case persistenceUnavailable(reason: String)
+    case cloudSyncUnavailable(reason: String)
+    case saveFailed(reason: String)
+    case saveCorrupted(reason: String)
+    /// Canary: the player has completed onboarding, yet no save could be loaded.
+    /// This is a data-loss event by definition and should alert.
+    case progressLossDetected(reason: String)
+    case purchaseGrantFailed(productID: String, reason: String)
 }
 
 // MARK: - Protocol
@@ -58,5 +72,26 @@ public struct ConsoleAnalyticsService: AnalyticsService {
         #if DEBUG
         print("[Analytics] userProperty \(key)=\(value)")
         #endif
+    }
+}
+
+// MARK: - Shared Sink
+
+/// Process-wide analytics sink.
+///
+/// Engine internals (persistence, the purchase grant path) need to report reliability
+/// events from contexts that have no view hierarchy to inject a service through. The app
+/// target sets `shared` once at launch — wire it to Crashlytics/Sentry/Firebase there.
+public enum Analytics {
+    private static let lock = NSLock()
+    nonisolated(unsafe) private static var _shared: any AnalyticsService = ConsoleAnalyticsService()
+
+    public static var shared: any AnalyticsService {
+        get { lock.withLock { _shared } }
+        set { lock.withLock { _shared = newValue } }
+    }
+
+    public static func record(_ event: AnalyticsEvent) {
+        shared.record(event)
     }
 }

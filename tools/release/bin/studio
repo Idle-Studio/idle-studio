@@ -14,22 +14,46 @@ RELEASE_DIR="$REPO_ROOT/tools/release"
 SCRIPTS_DIR="$RELEASE_DIR/scripts"
 CONFIG="$REPO_ROOT/config/games.yml"
 
-# Prefer Homebrew Ruby over macOS system Ruby (system Ruby is read-only)
-export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
+# Prefer Homebrew Ruby over macOS system Ruby (system Ruby is read-only).
+# Located via `brew --prefix` so this works on Intel (/usr/local) as well as
+# Apple Silicon (/opt/homebrew), and is simply skipped where brew is absent.
+_brew_ruby="$(brew --prefix ruby 2>/dev/null || true)"
+if [[ -n "$_brew_ruby" && -d "$_brew_ruby/bin" ]]; then
+  export PATH="$_brew_ruby/bin:$PATH"
+fi
 
 # Use the project venv for Python scripts
 PYTHON="$RELEASE_DIR/.venv/bin/python3"
 
-# ── Auto-load ASC credentials from games.yml ───────────────────────────────────
-_asc_key_id=$(    "$PYTHON" -c "import yaml; c=yaml.safe_load(open('$CONFIG')); print(c['studio'].get('asc_key_id',''))" 2>/dev/null)
-_asc_issuer_id=$( "$PYTHON" -c "import yaml; c=yaml.safe_load(open('$CONFIG')); print(c['studio'].get('asc_issuer_id',''))" 2>/dev/null)
-export ASC_KEY_ID="${ASC_KEY_ID:-$_asc_key_id}"
-export ASC_ISSUER_ID="${ASC_ISSUER_ID:-$_asc_issuer_id}"
+# ── ASC credentials ────────────────────────────────────────────────────────────
+# These come from the environment. config/games.yml is public and no longer
+# carries them; it is still consulted so that a private fork can fill it in.
+_cfg_get() { "$PYTHON" -c "import yaml,sys; c=yaml.safe_load(open('$CONFIG')); print(c['studio'].get('$1','') or '')" 2>/dev/null || true; }
+
+export ASC_KEY_ID="${ASC_KEY_ID:-$(_cfg_get asc_key_id)}"
+export ASC_ISSUER_ID="${ASC_ISSUER_ID:-$(_cfg_get asc_issuer_id)}"
 # Default key path: ~/.appstoreconnect/private_keys/AuthKey_<KEY_ID>.p8
-if [[ -z "${ASC_KEY_PATH:-}" ]] && [[ -n "$ASC_KEY_ID" ]]; then
+if [[ -z "${ASC_KEY_PATH:-}" ]] && [[ -n "${ASC_KEY_ID:-}" ]]; then
   _default_key="$HOME/.appstoreconnect/private_keys/AuthKey_${ASC_KEY_ID}.p8"
   [[ -f "$_default_key" ]] && export ASC_KEY_PATH="$_default_key"
 fi
+
+# Fail early, with the variable names, rather than deep inside fastlane/altool.
+require_asc_creds() {
+  local missing=""
+  [[ -n "${ASC_KEY_ID:-}"    ]] || missing="$missing ASC_KEY_ID"
+  [[ -n "${ASC_ISSUER_ID:-}" ]] || missing="$missing ASC_ISSUER_ID"
+  [[ -n "${ASC_KEY_PATH:-}"  ]] || missing="$missing ASC_KEY_PATH"
+  if [[ -n "$missing" ]]; then
+    die "Missing App Store Connect credentials:$missing
+  These are not stored in config/games.yml — this repository is public.
+  Set them in your shell profile:
+    export ASC_KEY_ID=XXXXXXXXXX
+    export ASC_ISSUER_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    export ASC_KEY_PATH=\$HOME/.appstoreconnect/private_keys/AuthKey_XXXXXXXXXX.p8
+    export APPLE_TEAM_ID=XXXXXXXXXX"
+  fi
+}
 
 # ── Colour helpers ─────────────────────────────────────────────────────────────
 BOLD=$'\033[1m'; DIM=$'\033[2m'; CYAN=$'\033[36m'; GREEN=$'\033[32m'
@@ -127,6 +151,7 @@ print()
 }
 
 cmd_signing() {
+  require_asc_creds
   info "Syncing certificates for $GAME..."
   run_lane setup_signing
   success "Certificates synced."
@@ -139,6 +164,7 @@ cmd_build() {
 }
 
 cmd_beta() {
+  require_asc_creds
   [[ -z "$NOTE" ]] && die "Required: --note 'your changelog'"
   info "Building and uploading $GAME to TestFlight${SKIP_MATCH:+ (auto-signing)}..."
   run_lane beta "skip_match:$SKIP_MATCH" "changelog:$NOTE"
@@ -146,24 +172,35 @@ cmd_beta() {
 }
 
 cmd_distribute() {
+  require_asc_creds
   info "Distributing $GAME to external TestFlight groups..."
   run_lane distribute_beta
   success "Distributed to external beta groups."
 }
 
 cmd_metadata() {
+  require_asc_creds
   info "Uploading metadata for $GAME..."
   run_lane upload_metadata
   success "Metadata uploaded."
 }
 
 cmd_screenshots() {
+  local generator="$REPO_ROOT/tools/generate_screenshots.py"
+  if [[ ! -f "$generator" ]]; then
+    die "Screenshot generation is not implemented yet.
+  Expected generator at: $generator
+  Screenshots are currently produced by hand (see the app-store-screenshots
+  skill in .claude/skills/) and dropped into metadata/$GAME/screenshots/.
+  Once they are in place, upload them with: studio upload-screenshots"
+  fi
   info "Generating screenshots for $GAME via HTML+Playwright..."
-  "$PYTHON" "$REPO_ROOT/tools/generate_screenshots.py" --game "$GAME"
+  "$PYTHON" "$generator" --game "$GAME"
   success "Screenshots saved to metadata/$GAME/screenshots/"
 }
 
 cmd_upload_screenshots() {
+  require_asc_creds
   info "Uploading screenshots for $GAME to App Store Connect..."
   "$PYTHON" "$SCRIPTS_DIR/upload_screenshots.py" --game "$GAME"
   success "Screenshots uploaded."
@@ -175,11 +212,13 @@ cmd_verify_icon() {
 }
 
 cmd_sync_iap() {
+  require_asc_creds
   info "Syncing IAP products for $GAME${DRY_RUN:+ (dry run)}..."
   "$PYTHON" "$SCRIPTS_DIR/sync_iap.py" --game "$GAME" $DRY_RUN
 }
 
 cmd_sync_gc() {
+  require_asc_creds
   info "Syncing Game Center for $GAME${DRY_RUN:+ (dry run)}..."
   "$PYTHON" "$SCRIPTS_DIR/sync_gamecenter.py" --game "$GAME" $DRY_RUN
 }
@@ -190,27 +229,31 @@ cmd_sync_all() {
 }
 
 cmd_submit() {
+  require_asc_creds
   info "Submitting $GAME for App Store review..."
   run_lane submit
   success "Submitted for review."
 }
 
 cmd_release() {
+  require_asc_creds
   [[ -z "$NOTE" ]] && die "Required: --note 'your changelog'"
   warn "Starting full release pipeline for $GAME..."
   warn "This will: build → upload to TestFlight → push metadata → submit for review."
   echo ""
   read -rp "Continue? [y/N] " confirm
   [[ "$confirm" =~ ^[Yy]$ ]] || { echo "Aborted."; exit 0; }
-  run_lane release "changelog:$NOTE"
+  run_lane release "skip_match:$SKIP_MATCH" "changelog:$NOTE"
   success "Release pipeline complete."
 }
 
 cmd_status() {
+  require_asc_creds
   "$PYTHON" "$SCRIPTS_DIR/check_review_status.py" --game "$GAME"
 }
 
 cmd_reports() {
+  require_asc_creds
   "$PYTHON" "$SCRIPTS_DIR/fetch_reports.py" --game "$GAME" --days "$DAYS"
 }
 

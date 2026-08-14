@@ -61,13 +61,16 @@ function LeaderCard({
   const [flipped, setFlipped] = useState(false)
 
   return (
-    <motion.div
+    <motion.button
+      type="button"
+      aria-pressed={flipped}
+      aria-label={`${leader.displayName}, ${leader.era}. ${leader.keyBonus}`}
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
       onClick={() => setFlipped((f) => !f)}
-      className="relative w-56 h-72 flex-shrink-0 cursor-pointer"
+      className="relative block w-56 h-72 flex-shrink-0 cursor-pointer text-left"
       style={{ perspective: 1000 }}
     >
       <motion.div
@@ -85,6 +88,7 @@ function LeaderCard({
               src={assetPath(game.id, 'leaders', leader.portraitAsset)}
               alt={leader.displayName}
               fill
+              sizes="224px"
               className="object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
@@ -108,9 +112,9 @@ function LeaderCard({
           <p className="font-semibold text-base font-sans" style={{ color: game.accentColor }}>
             {leader.keyBonus}
           </p>
-          <p className="text-white/30 text-xs mt-6 font-sans">Tap to flip back</p>
+          <p className="text-white/60 text-xs mt-6 font-sans">Tap to flip back</p>
         </div>
       </motion.div>
-    </motion.div>
+    </motion.button>
   )
 }

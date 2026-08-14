@@ -10,6 +10,7 @@ import UIKit
 public struct SettingsScreen: View {
     @Environment(\.theme) private var theme
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.adService) private var adService
     @State private var viewModel = SettingsViewModel()
     public init() {}
 
@@ -37,6 +38,22 @@ public struct SettingsScreen: View {
             .task { await viewModel.load() }
             .onChange(of: scenePhase) { _, phase in
                 if phase == .active { Task { await viewModel.load() } }
+            }
+            #if os(iOS)
+            .manageSubscriptionsSheet(isPresented: $viewModel.showManageSubscriptions)
+            #endif
+            .alert("Delete your saved game?", isPresented: $viewModel.showDeleteConfirmation) {
+                Button("Cancel", role: .cancel) {}
+                Button("Delete Everything", role: .destructive) {
+                    Task { await viewModel.deleteAllData() }
+                }
+            } message: {
+                Text("This permanently erases your progress on this device and in iCloud. Purchases are not affected and can be restored. This cannot be undone.")
+            }
+            .sheet(isPresented: $viewModel.showGameCenterSignIn) {
+                if let controller = viewModel.gameCenterViewController {
+                    GameCenterAuthView(controller: controller)
+                }
             }
         }
     }
@@ -93,34 +110,124 @@ public struct SettingsScreen: View {
                             .foregroundStyle(theme.textSecondaryColor)
                         Spacer()
                         ProgressView().tint(theme.textSecondaryColor)
-                    case .done:
-                        Label("Purchases Restored", systemImage: "checkmark.circle.fill")
-                            .foregroundStyle(.green)
+                    // The old implementation swallowed the error with `try?` and then
+                    // unconditionally showed a green "Purchases Restored" checkmark — so a
+                    // failed sync, and having nothing to restore, both reported success.
+                    case .restored(let count):
+                        Label(
+                            count > 0
+                                ? "\(count) purchase\(count == 1 ? "" : "s") restored"
+                                : "No purchases found",
+                            systemImage: count > 0 ? "checkmark.circle.fill" : "info.circle"
+                        )
+                        .foregroundStyle(count > 0 ? .green : theme.textSecondaryColor)
+                    case .failed(let reason):
+                        Label(reason, systemImage: "exclamationmark.circle.fill")
+                            .foregroundStyle(.orange)
                     }
                 }
+                .frame(minHeight: 44)
             }
             .disabled(viewModel.restoreStatus == .restoring)
+            .accessibilityLabel(Text("Restore purchases"))
 
-            Button {
-                viewModel.signInWithGameCenter()
-            } label: {
-                Label("Game Center", systemImage: "gamecontroller.fill")
-                    .foregroundStyle(theme.textPrimaryColor)
+            if viewModel.showsManageSubscriptions {
+                Button {
+                    viewModel.showManageSubscriptions = true
+                } label: {
+                    Label("Manage Subscription", systemImage: "creditcard")
+                        .foregroundStyle(theme.textPrimaryColor)
+                        .frame(minHeight: 44)
+                }
+            }
+
+            if !viewModel.isGameCenterAuthenticated {
+                Button {
+                    viewModel.signInWithGameCenter()
+                } label: {
+                    Label("Sign in to Game Center", systemImage: "gamecontroller.fill")
+                        .foregroundStyle(theme.textPrimaryColor)
+                        .frame(minHeight: 44)
+                }
+            } else {
+                HStack {
+                    Label("Game Center", systemImage: "gamecontroller.fill")
+                        .foregroundStyle(theme.textPrimaryColor)
+                    Spacer()
+                    Text(viewModel.gameCenterPlayerName)
+                        .font(Typography.caption)
+                        .foregroundStyle(theme.textSecondaryColor)
+                }
+                .frame(minHeight: 44)
+            }
+
+            // Google requires a re-entry point wherever the consent form was shown.
+            if adService.isPrivacyOptionsRequired {
+                Button {
+                    Task { await adService.presentPrivacyOptions() }
+                } label: {
+                    Label("Ad Privacy Options", systemImage: "hand.raised.fill")
+                        .foregroundStyle(theme.textPrimaryColor)
+                        .frame(minHeight: 44)
+                }
             }
         }
         .listRowBackground(theme.surfaceColor)
     }
 
+    /// Legal links, a support path, and data deletion.
+    ///
+    /// This section previously contained only a version number. App Store Guidelines 3.1.2
+    /// and 5.1.1(i) both require a functional Privacy Policy link reachable *inside* the app
+    /// for anything selling subscriptions; the only place these rendered was the one-time
+    /// onboarding paywall and a Shop section gated on products loading. There was also no
+    /// in-app support path of any kind and no way to delete synced data (GDPR Art. 17).
     private var aboutSection: some View {
         Section {
+            if let url = viewModel.privacyPolicyURL {
+                Link(destination: url) {
+                    Label("Privacy Policy", systemImage: "lock.shield")
+                        .foregroundStyle(theme.textPrimaryColor)
+                        .frame(minHeight: 44)
+                }
+            }
+            if let url = viewModel.termsOfUseURL {
+                Link(destination: url) {
+                    Label("Terms of Use", systemImage: "doc.text")
+                        .foregroundStyle(theme.textPrimaryColor)
+                        .frame(minHeight: 44)
+                }
+            }
+            if let url = viewModel.supportURL {
+                Link(destination: url) {
+                    Label("Contact Support", systemImage: "envelope")
+                        .foregroundStyle(theme.textPrimaryColor)
+                        .frame(minHeight: 44)
+                }
+            }
+
+            Button(role: .destructive) {
+                viewModel.showDeleteConfirmation = true
+            } label: {
+                Label("Delete My Data", systemImage: "trash")
+                    .foregroundStyle(.red)
+                    .frame(minHeight: 44)
+            }
+
             HStack {
                 Label("Version", systemImage: "info.circle")
                     .foregroundStyle(theme.textPrimaryColor)
                 Spacer()
-                Text(viewModel.appVersion)
+                Text(viewModel.versionDisplay)
                     .font(Typography.caption)
                     .foregroundStyle(theme.textSecondaryColor)
+                    .textSelection(.enabled)
             }
+            .frame(minHeight: 44)
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(Text("App version \(viewModel.versionDisplay)"))
+        } header: {
+            sectionHeader("About")
         }
         .listRowBackground(theme.surfaceColor)
     }
@@ -177,9 +284,29 @@ final class SettingsViewModel {
     var soundEnabled = true
     var hapticsEnabled = true
     var appVersion = ""
+    var buildNumber = ""
     var restoreStatus: RestoreStatus = .idle
+    var showManageSubscriptions = false
+    var showDeleteConfirmation = false
+    var showGameCenterSignIn = false
+    var isGameCenterAuthenticated = false
+    var gameCenterPlayerName = ""
+    var showsManageSubscriptions = false
+    private(set) var privacyPolicyURL: URL?
+    private(set) var termsOfUseURL: URL?
+    private(set) var supportURL: URL?
+    @ObservationIgnored private(set) var gameCenterViewController: UIViewControllerBox?
 
-    enum RestoreStatus: Equatable { case idle, restoring, done }
+    /// Shown in About and pre-filled into the support email, so a bug report arrives with
+    /// the build already identified.
+    var versionDisplay: String { buildNumber.isEmpty ? appVersion : "\(appVersion) (\(buildNumber))" }
+
+    enum RestoreStatus: Equatable {
+        case idle
+        case restoring
+        case restored(count: Int)
+        case failed(String)
+    }
 
     #if targetEnvironment(simulator)
     var devFastForwardEnabled = GameEngine.devFastForwardEnabled
@@ -190,6 +317,18 @@ final class SettingsViewModel {
 
     func load() async {
         appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+        buildNumber = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? ""
+
+        if let theme = await GameEngine.shared.currentTheme {
+            privacyPolicyURL = URL(string: theme.copy.privacyPolicyURL)
+            termsOfUseURL = URL(string: theme.copy.termsOfUseURL)
+            supportURL = Self.supportLink(theme: theme, version: versionDisplay)
+            showsManageSubscriptions =
+                theme.iapProducts.premiumPass != nil || theme.iapProducts.premiumPassAnnual != nil
+        }
+
+        isGameCenterAuthenticated = GKLocalPlayer.local.isAuthenticated
+        gameCenterPlayerName = GKLocalPlayer.local.displayName
         // Only override defaults if the key has been explicitly set before.
         if UserDefaults.standard.object(forKey: "sound_enabled") != nil {
             soundEnabled = UserDefaults.standard.bool(forKey: "sound_enabled")
@@ -246,11 +385,43 @@ final class SettingsViewModel {
     func restorePurchases() {
         Task {
             restoreStatus = .restoring
-            try? await AppStore.sync()
-            restoreStatus = .done
-            try? await Task.sleep(for: .seconds(3))
+            switch await PurchaseCoordinator.shared.restorePurchases() {
+            case .success(let count):
+                restoreStatus = .restored(count: count)
+            case .failure(let error):
+                restoreStatus = .failed(error.localizedDescription)
+            }
+            try? await Task.sleep(for: .seconds(4))
             restoreStatus = .idle
         }
+    }
+
+    /// Permanently erases local and iCloud game data. Backs GDPR Art. 17 ("right to erasure")
+    /// with something the player can actually do themselves.
+    func deleteAllData() async {
+        guard let theme = await GameEngine.shared.currentTheme else { return }
+        do {
+            let service = try SwiftDataPersistenceService()
+            try await service.deleteAll(gameID: theme.gameID)
+            UserDefaults.standard.removeObject(forKey: "onboarding_completed_\(theme.gameID)")
+            UserDefaults.standard.removeObject(forKey: "lastActiveDate")
+            UserDefaults.standard.removeObject(forKey: "granted_transaction_ids_\(theme.gameID)")
+        } catch {
+            Analytics.record(.saveFailed(reason: "delete failed: \(error)"))
+        }
+    }
+
+    /// A mailto: link pre-populated with the build identifier, so support requests arrive
+    /// with the version already attached.
+    private static func supportLink(theme: any ThemePackage, version: String) -> URL? {
+        guard let raw = theme.copy.supportURL, !raw.isEmpty else { return nil }
+        guard raw.hasPrefix("mailto:") else { return URL(string: raw) }
+        var components = URLComponents(string: raw)
+        let subject = "\(theme.displayName) support (v\(version))"
+        var items = components?.queryItems ?? []
+        items.append(URLQueryItem(name: "subject", value: subject))
+        components?.queryItems = items
+        return components?.url
     }
 
     #if DEBUG
@@ -263,20 +434,57 @@ final class SettingsViewModel {
     }
     #endif
 
+    /// Presents Game Center's sign-in flow.
+    ///
+    /// This used to assign an `authenticateHandler` that posted `.gameCenterAuthRequired`
+    /// with the view controller — and nothing anywhere observed that notification. The
+    /// controller went into the void, the button did nothing, and there was no path in the
+    /// entire app to sign in, so the Leaderboard tab stayed permanently empty.
     func signInWithGameCenter() {
-        GKLocalPlayer.local.authenticateHandler = { viewController, error in
-            guard error == nil else { return }
-            if viewController != nil {
-                // A view controller needs to be presented — post a notification
-                // so the root view can pick it up and present it.
-                NotificationCenter.default.post(
-                    name: .gameCenterAuthRequired,
-                    object: viewController
-                )
+        GKLocalPlayer.local.authenticateHandler = { [weak self] viewController, _ in
+            Task { @MainActor in
+                guard let self else { return }
+                if let viewController {
+                    self.gameCenterViewController = UIViewControllerBox(controller: viewController)
+                    self.showGameCenterSignIn = true
+                } else {
+                    self.showGameCenterSignIn = false
+                    self.isGameCenterAuthenticated = GKLocalPlayer.local.isAuthenticated
+                    self.gameCenterPlayerName = GKLocalPlayer.local.displayName
+                }
             }
         }
     }
 }
+
+// MARK: - Game Center Presentation
+
+#if os(iOS)
+/// Wrapper so the authentication controller can be carried in `@Observable` state.
+@MainActor
+final class UIViewControllerBox {
+    let controller: UIViewController
+    init(controller: UIViewController) { self.controller = controller }
+}
+
+/// Presents Game Center's sign-in controller inside a SwiftUI sheet.
+struct GameCenterAuthView: UIViewControllerRepresentable {
+    let controller: UIViewControllerBox
+
+    func makeUIViewController(context: Context) -> UIViewController { controller.controller }
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
+}
+#else
+@MainActor
+final class UIViewControllerBox {
+    init(controller: Any) {}
+}
+
+struct GameCenterAuthView: View {
+    let controller: UIViewControllerBox
+    var body: some View { EmptyView() }
+}
+#endif
 
 // MARK: - Notification Names
 

@@ -2,29 +2,24 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import Image from 'next/image'
 import Link from 'next/link'
 import type { GameConfig } from '@/config/types'
-import { assetPath } from '@/lib/assetPath'
+import { GameAppIcon } from '@/components/ui/GameAppIcon'
 
 interface SupportPageClientProps {
   game: GameConfig
 }
 
 export function SupportPageClient({ game }: SupportPageClientProps) {
-  const iconSrc = assetPath(game.id, 'root', game.appIconAsset)
-
   return (
     <main className="min-h-screen" style={{ backgroundColor: game.backgroundColor }}>
       <div className="border-b border-white/10 py-6 px-6">
         <div className="max-w-3xl mx-auto flex items-center justify-between">
           <Link href={`/games/${game.id}`} className="flex items-center gap-3">
-            <div className="relative w-10 h-10 rounded-xl overflow-hidden">
-              <Image src={iconSrc} alt={game.displayName} fill className="object-cover" />
-            </div>
+            <GameAppIcon game={game} />
             <span className="font-serif text-white font-bold">{game.displayName}</span>
           </Link>
-          <Link href="/" className="text-white/40 hover:text-white text-sm transition-colors font-sans">
+          <Link href="/" className="text-white/60 hover:text-white text-sm transition-colors font-sans">
             Idle Studio
           </Link>
         </div>
@@ -52,7 +47,7 @@ export function SupportPageClient({ game }: SupportPageClientProps) {
           </div>
           <div>
             <p className="text-white font-semibold font-sans">{game.supportEmail}</p>
-            <p className="text-white/40 text-sm font-sans">We typically respond within 1 business day</p>
+            <p className="text-white/60 text-sm font-sans">We typically respond within 1 business day</p>
           </div>
           <svg className="w-5 h-5 text-white/20 ml-auto transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -64,7 +59,7 @@ export function SupportPageClient({ game }: SupportPageClientProps) {
             <h2 className="font-serif text-2xl font-bold text-white mb-8">Frequently Asked Questions</h2>
             <div className="space-y-3">
               {game.supportFAQ.map((item, i) => (
-                <FAQItem key={i} question={item.question} answer={item.answer} accentColor={game.accentColor} />
+                <FAQItem key={i} question={item.question} answer={item.answer} />
               ))}
             </div>
           </>
@@ -74,12 +69,14 @@ export function SupportPageClient({ game }: SupportPageClientProps) {
   )
 }
 
-function FAQItem({ question, answer, accentColor }: { question: string; answer: string; accentColor: string }) {
+function FAQItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false)
   return (
     <div className="rounded-2xl border border-white/10 overflow-hidden">
       <button
+        type="button"
         onClick={() => setOpen(o => !o)}
+        aria-expanded={open}
         className="w-full flex items-center justify-between p-6 text-left bg-white/[0.03] hover:bg-white/[0.06] transition-colors"
       >
         <span className="font-sans text-white font-medium pr-4">{question}</span>

@@ -1,8 +1,11 @@
 require "yaml"
 require "json"
+require "fileutils"
+require "shellwords"
 
-REPO_ROOT   = File.expand_path("../../..", __dir__)
-CONFIG_PATH = File.join(REPO_ROOT, "config/games.yml")
+REPO_ROOT    = File.expand_path("../../..", __dir__)
+CONFIG_PATH  = File.join(REPO_ROOT, "config/games.yml")
+DEFAULT_GAME = "idle-civilizations"
 
 # ── Helper ─────────────────────────────────────────────────────────────────────
 
@@ -13,17 +16,129 @@ def load_game(game_id)
   game.merge("studio" => all["studio"], "id" => game_id)
 end
 
+# Single place where the target game is resolved, so a forgotten --game flag can
+# only ever fall back in one well-documented way instead of nine.
+def resolve_game(options)
+  game_id = (options[:game] || ENV["GAME"]).to_s.strip
+  game_id = DEFAULT_GAME if game_id.empty?
+  load_game(game_id)
+end
+
+# For destructive lanes: no default, no ENV fallback — the operator must name
+# the game explicitly so a stray invocation cannot hit the wrong app.
+def resolve_game!(options, lane_name)
+  game_id = options[:game].to_s.strip
+  if game_id.empty?
+    UI.user_error!(
+      "#{lane_name} refuses to run without an explicit game.\n" \
+      "This lane is destructive and has no default target.\n" \
+      "Run:  bundle exec fastlane ios #{lane_name} game:<game-id>"
+    )
+  end
+  load_game(game_id)
+end
+
 def repo(relative)
   File.join(REPO_ROOT, relative)
 end
 
+def venv_python
+  repo("tools/release/.venv/bin/python3")
+end
+
+# Resolve a required credential. ENV always wins; config/games.yml is only a
+# fallback for private forks. There are deliberately no baked-in defaults —
+# this repository is public, so a placeholder would be worse than a hard failure.
+def require_setting(env_name, description, config_value = nil)
+  value = ENV[env_name].to_s.strip
+  value = config_value.to_s.strip if value.empty?
+  return value unless value.empty?
+
+  UI.user_error!(
+    "Missing #{description}.\n" \
+    "Set it in your environment:  export #{env_name}=...\n" \
+    "(Not stored in config/games.yml — this repository is public.)"
+  )
+end
+
+def apple_team_id(game)
+  require_setting("APPLE_TEAM_ID", "Apple Developer team ID", game["studio"]["team_id"])
+end
+
+def asc_key_id(game)
+  require_setting("ASC_KEY_ID", "App Store Connect API key ID", game["studio"]["asc_key_id"])
+end
+
+def asc_issuer_id(game)
+  require_setting("ASC_ISSUER_ID", "App Store Connect API issuer ID", game["studio"]["asc_issuer_id"])
+end
+
+def asc_key_path
+  require_setting("ASC_KEY_PATH", "path to the App Store Connect .p8 private key")
+end
+
 def asc_api_key(game)
   {
-    key_id:      ENV.fetch("ASC_KEY_ID",     game["studio"]["asc_key_id"]),
-    issuer_id:   ENV.fetch("ASC_ISSUER_ID",  game["studio"]["asc_issuer_id"]),
-    filepath:    ENV.fetch("ASC_KEY_PATH"),
-    in_house:    false
+    key_id:    asc_key_id(game),
+    issuer_id: asc_issuer_id(game),
+    filepath:  asc_key_path,
+    in_house:  false
   }
+end
+
+# fastlane match git URL, or "" when match is not configured.
+# The historical "your-org" placeholder counts as not configured.
+def match_git_url(game)
+  url = ENV["MATCH_GIT_URL"].to_s.strip
+  url = game["studio"]["match_repo"].to_s.strip if url.empty?
+  url.include?("your-org") ? "" : url
+end
+
+def require_match_configured!(game)
+  return unless match_git_url(game).empty?
+
+  UI.user_error!(
+    "Code signing is not configured: no fastlane match certificate repository.\n" \
+    "\n" \
+    "Fix one of the following:\n" \
+    "  1. Create the private certs repo and set it:\n" \
+    "       export MATCH_GIT_URL=git@github.com:<org>/idle-studio-certs.git\n" \
+    "     (or fill in studio.match_repo in config/games.yml on a private fork)\n" \
+    "  2. For an unsigned/automatic-signing local build, opt out explicitly:\n" \
+    "       make build SKIP_MATCH=true      /  studio build --skip-match\n" \
+    "       fastlane ios build skip_match:true\n" \
+    "\n" \
+    "This used to fall back to Xcode automatic signing silently, which cannot\n" \
+    "work on CI or a fresh machine."
+  )
+end
+
+# altool only discovers private keys in ~/.appstoreconnect/private_keys and
+# ~/.private_keys, so ASC_KEY_PATH (which may point anywhere) is staged into the
+# first of those for the duration of the upload and removed again afterwards.
+def with_asc_key_discoverable(key_path, key_id)
+  source = File.expand_path(key_path)
+  UI.user_error!("ASC private key not found at #{source} (ASC_KEY_PATH)") unless File.exist?(source)
+
+  dir    = File.expand_path("~/.appstoreconnect/private_keys")
+  staged = File.join(dir, "AuthKey_#{key_id}.p8")
+
+  # A key with this ID is already where altool looks — use it as-is and, above
+  # all, do not delete somebody else's key on the way out.
+  if File.exist?(staged)
+    UI.message("Using existing ASC key at #{staged}")
+    return yield
+  end
+
+  FileUtils.mkdir_p(dir)
+  FileUtils.cp(source, staged)
+  FileUtils.chmod(0o600, staged)
+  UI.message("Staged ASC key → #{staged} (removed after upload)")
+  begin
+    yield
+  ensure
+    FileUtils.rm_f(staged)
+  end
 end
 
 def ipa_path(game_id)
@@ -38,24 +153,28 @@ platform :ios do
 
   desc "Sync certificates and provisioning profiles for GAME"
   lane :setup_signing do |options|
-    game = load_game(options[:game] || ENV.fetch("GAME", "idle-civilizations"))
+    game = resolve_game(options)
     ENV["GAME_BUNDLE_ID"] = game["bundle_id"]
+    require_match_configured!(game)
 
     match(
       type:          "appstore",
       app_identifier: game["bundle_id"],
-      team_id:       ENV.fetch("APPLE_TEAM_ID", game["studio"]["team_id"]),
-      git_url:       game["studio"]["match_repo"],
+      team_id:       apple_team_id(game),
+      git_url:       match_git_url(game),
       readonly:      ENV["CI"] ? true : false
     )
   end
 
   desc "Revoke and regenerate all certificates for GAME (emergency use only)"
   lane :nuke_signing do |options|
-    game = load_game(options[:game] || ENV.fetch("GAME", "idle-civilizations"))
+    # Destructive: revokes production certificates. Explicit game: required.
+    game = resolve_game!(options, "nuke_signing")
+    require_match_configured!(game)
+
     match_nuke(
       type:    "appstore",
-      team_id: ENV.fetch("APPLE_TEAM_ID", game["studio"]["team_id"])
+      team_id: apple_team_id(game)
     )
     setup_signing(game: game["id"])
   end
@@ -64,14 +183,14 @@ platform :ios do
 
   desc "Archive GAME and export an App Store .ipa"
   lane :build do |options|
-    game = load_game(options[:game] || ENV.fetch("GAME", "idle-civilizations"))
+    game = resolve_game(options)
     ENV["GAME_BUNDLE_ID"] = game["bundle_id"]
 
-    # skip_match: true → use Xcode automatic signing (local dev without a cert repo)
-    # Auto-detected when match_repo is still the default placeholder
+    # skip_match: true → use Xcode automatic signing (local dev without a cert repo).
+    # This must be requested explicitly. An unconfigured match_repo is NOT an
+    # implicit opt-out — that silently produced unsignable CI builds.
     skip_match = options.fetch(:skip_match, "false").to_s == "true" ||
-                 ENV["MATCH_SKIP"] == "true" ||
-                 game["studio"]["match_repo"].to_s.include?("your-org")
+                 ENV["MATCH_SKIP"] == "true"
 
     if skip_match
       UI.message("Skipping match — using Xcode automatic signing (CODE_SIGN_STYLE=Automatic)")
@@ -79,9 +198,20 @@ platform :ios do
       setup_signing(game: game["id"])
     end
 
-    # Build number = timestamp for guaranteed uniqueness across machines
+    # Build number = UTC timestamp, second resolution. Minute resolution allowed
+    # two builds started in the same minute to collide, which App Store Connect
+    # only rejects after a full archive + upload.
+    #
+    # WARNING — this value has three owners and they disagree:
+    #   1. this lane, which writes CURRENT_PROJECT_VERSION into the .xcodeproj
+    #   2. apps/<App>/project.yml, from which XcodeGen REGENERATES the .xcodeproj,
+    #      discarding whatever was written here
+    #   3. apps/<App>/Resources/Info.plist, which hardcodes CFBundleVersion
+    # CI runs `xcodegen generate` before building, so (1) is overwritten by (2),
+    # and (3) wins at packaging time if CFBundleVersion is not $(CURRENT_PROJECT_VERSION).
+    # Fixing that requires editing project.yml/Info.plist, which are owned elsewhere.
     increment_build_number(
-      build_number: Time.now.strftime("%Y%m%d%H%M"),
+      build_number: Time.now.utc.strftime("%Y%m%d%H%M%S"),
       xcodeproj:    repo(game["xcode_project"])
     )
 
@@ -106,31 +236,36 @@ platform :ios do
 
   desc "Build GAME and upload to TestFlight (internal testers only)"
   lane :beta do |options|
-    game      = load_game(options[:game] || ENV.fetch("GAME", "idle-civilizations"))
+    game      = resolve_game(options)
     changelog = options[:changelog] || ENV["CHANGELOG"] || "New build"
 
-    build(game: game["id"])
+    build(game: game["id"], skip_match: options.fetch(:skip_match, "false"))
 
     # Use xcrun altool directly — fastlane pilot copies the .p8 key to a temp
-    # directory which altool rejects on Xcode 15+. xcrun altool reads it in-place.
-    key_path = ENV.fetch("ASC_KEY_PATH")
-    key_id   = ENV.fetch("ASC_KEY_ID")
-    issuer   = ENV.fetch("ASC_ISSUER_ID")
+    # directory which altool rejects on Xcode 15+. xcrun altool reads it in-place,
+    # but only from its own search paths, so ASC_KEY_PATH is staged into one of
+    # them for the call and removed afterwards.
+    key_path = asc_key_path
+    key_id   = asc_key_id(game)
+    issuer   = asc_issuer_id(game)
     ipa      = ipa_path(game["id"])
 
-    sh("xcrun altool --upload-app --type ios --file #{ipa.shellescape} " \
-       "--apiKey #{key_id.shellescape} --apiIssuer #{issuer.shellescape}")
+    with_asc_key_discoverable(key_path, key_id) do
+      sh("xcrun altool --upload-app --type ios --file #{ipa.shellescape} " \
+         "--apiKey #{key_id.shellescape} --apiIssuer #{issuer.shellescape}")
+    end
+
+    UI.message("TestFlight changelog for this build: #{changelog}")
 
     # Mark encryption = None (no non-exempt encryption) on the uploaded build
     build_number = lane_context[SharedValues::BUILD_NUMBER]
-    venv_python = repo("tools/release/.venv/bin/python3")
     sh("#{venv_python.shellescape} #{repo('tools/release/scripts/set_encryption.py').shellescape} " \
        "--game #{game['id'].shellescape} --build #{build_number.to_s.shellescape}")
   end
 
   desc "Distribute latest processed TestFlight build to all external groups"
   lane :distribute_beta do |options|
-    game      = load_game(options[:game] || ENV.fetch("GAME", "idle-civilizations"))
+    game      = resolve_game(options)
     notes_file = repo("#{game["metadata_path"]}/#{game["primary_locale"]}/release_notes.txt")
     changelog  = options[:changelog] || ENV["CHANGELOG"] ||
                  (File.exist?(notes_file) ? File.read(notes_file) : "Bug fixes and improvements.")
@@ -150,8 +285,13 @@ platform :ios do
 
   desc "Upload App Store text metadata and screenshots for GAME from metadata/ folder"
   lane :upload_metadata do |options|
-    game             = load_game(options[:game] || ENV.fetch("GAME", "idle-civilizations"))
+    game             = resolve_game(options)
     skip_screenshots = options.fetch(:skip_screenshots, false)
+    reviewer_phone   = require_setting(
+      "ASC_REVIEWER_PHONE",
+      "App Store reviewer contact phone number",
+      game["studio"]["reviewer_phone"]
+    )
 
     deliver(
       app_identifier:      game["bundle_id"],
@@ -168,7 +308,7 @@ platform :ios do
       app_review_information: {
         first_name:    game["studio"]["reviewer_first_name"],
         last_name:     game["studio"]["reviewer_last_name"],
-        phone_number:  game["studio"]["reviewer_phone"],
+        phone_number:  reviewer_phone,
         email_address: game["studio"]["reviewer_email"],
       },
       submission_information: {
@@ -180,7 +320,7 @@ platform :ios do
 
   desc "Upload App Store screenshots for GAME"
   lane :upload_screenshots do |options|
-    game = load_game(options[:game] || ENV.fetch("GAME", "idle-civilizations"))
+    game = resolve_game(options)
 
     deliver(
       app_identifier:     game["bundle_id"],
@@ -197,34 +337,67 @@ platform :ios do
   end
 
   # ── IAP / Game Center (delegate to Python scripts) ────────────────────────────
+  #
+  # These run through tools/release/.venv, not bare `python3` — the scripts import
+  # PyJWT/cryptography/requests, which are only installed in that venv (`make setup`).
 
   desc "Sync IAP products from .storekit config → ASC for GAME"
   lane :sync_iap do |options|
-    game_id  = options[:game] || ENV.fetch("GAME", "idle-civilizations")
+    game_id  = resolve_game(options)["id"]
     dry_flag = options[:dry_run] ? "--dry-run" : ""
-    sh("python3 #{repo("tools/release/scripts/sync_iap.py")} --game #{game_id} #{dry_flag}")
+    sh("#{venv_python.shellescape} #{repo("tools/release/scripts/sync_iap.py").shellescape} --game #{game_id.shellescape} #{dry_flag}")
   end
 
   desc "Sync Game Center leaderboards/achievements from ThemePackage → ASC for GAME"
   lane :sync_gamecenter do |options|
-    game_id  = options[:game] || ENV.fetch("GAME", "idle-civilizations")
+    game_id  = resolve_game(options)["id"]
     dry_flag = options[:dry_run] ? "--dry-run" : ""
-    sh("python3 #{repo("tools/release/scripts/sync_gamecenter.py")} --game #{game_id} #{dry_flag}")
+    sh("#{venv_python.shellescape} #{repo("tools/release/scripts/sync_gamecenter.py").shellescape} --game #{game_id.shellescape} #{dry_flag}")
+  end
+
+  # ── Submission ────────────────────────────────────────────────────────────────
+
+  desc "Submit the prepared App Store version of GAME for review"
+  lane :submit do |options|
+    game = resolve_game(options)
+    args = ["--game", game["id"]]
+    args << "--dry-run"      if options[:dry_run]
+    args << "--auto-release" if options[:auto_release]
+
+    sh("#{venv_python.shellescape} #{repo('tools/release/scripts/submit_for_review.py').shellescape} #{args.shelljoin}")
+  end
+
+  desc "Full release for GAME: build → TestFlight → metadata → submit for review"
+  lane :release do |options|
+    game      = resolve_game(options)
+    changelog = options[:changelog] || ENV["CHANGELOG"]
+    if changelog.to_s.strip.empty?
+      UI.user_error!("A changelog is required. Pass changelog:\"...\" or set CHANGELOG=\"...\".")
+    end
+
+    UI.header("Releasing #{game["display_name"]} (#{game["id"]})")
+
+    # beta already runs the build lane, so this is build → upload → TestFlight.
+    beta(game: game["id"], changelog: changelog, skip_match: options.fetch(:skip_match, "false"))
+    upload_metadata(game: game["id"])
+    submit(game: game["id"], auto_release: options[:auto_release])
+
+    UI.success("Release pipeline finished for #{game["id"]}.")
   end
 
   # ── Reports / Status ──────────────────────────────────────────────────────────
 
   desc "Pull sales and download reports for GAME (--days N)"
   lane :fetch_reports do |options|
-    game_id = options[:game] || ENV.fetch("GAME", "idle-civilizations")
+    game_id = resolve_game(options)["id"]
     days    = options[:days] || 7
-    sh("python3 #{repo("tools/release/scripts/fetch_reports.py")} --game #{game_id} --days #{days}")
+    sh("#{venv_python.shellescape} #{repo("tools/release/scripts/fetch_reports.py").shellescape} --game #{game_id.shellescape} --days #{days.to_s.shellescape}")
   end
 
   desc "Check App Store review status for GAME"
   lane :review_status do |options|
-    game_id = options[:game] || ENV.fetch("GAME", "idle-civilizations")
-    sh("python3 #{repo("tools/release/scripts/check_review_status.py")} --game #{game_id}")
+    game_id = resolve_game(options)["id"]
+    sh("#{venv_python.shellescape} #{repo("tools/release/scripts/check_review_status.py").shellescape} --game #{game_id.shellescape}")
   end
 
 end

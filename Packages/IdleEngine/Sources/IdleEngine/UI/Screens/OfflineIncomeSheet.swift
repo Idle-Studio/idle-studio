@@ -98,7 +98,9 @@ public struct OfflineIncomeSheet: View {
         }
         .padding(.horizontal, 24)
         .padding(.vertical, 24)
-        .presentationDetents([.medium, .large])
+        #if os(iOS)
+        .presentationDetents([.large])
+        #endif
         .presentationDragIndicator(.visible)
         .presentationBackground(.ultraThinMaterial)
         .onAppear { appeared = true }

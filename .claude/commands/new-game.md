@@ -48,7 +48,7 @@ Examples:
    - A suggested vocabulary table (level/unit/milestone/character names)
    - 4–6 level stubs with placeholder names from the theme
    - Advance requirements following the balance curve
-   - Correct bundle ID pattern: `com.yourstudio.[game-id-without-dashes]`
+   - Correct bundle ID pattern: `com.idlestudio.[game-id-without-dashes]`
    - All copy stubs adapted to the theme vocabulary
 
 4. **Create `CLAUDE.md`** for the game with:

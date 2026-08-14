@@ -3,24 +3,25 @@ import SwiftUI
 /// Displays a `Decimal` value using idle formatting, animating smoothly between changes.
 /// Uses `contentTransition(.numericText())` for the iOS 17+ rolling-number effect.
 /// Respects the Reduce Motion accessibility setting — updates snap instantly when enabled.
+///
+/// The animation is keyed on the *formatted string*, not the raw `Decimal`. The engine ticks
+/// ~10×/sec but the displayed string changes far less often; animating on the `Decimal` started
+/// a fresh 0.35s spring every 100ms (four overlapping springs per roller, permanently) and
+/// frequently animated between two identical strings.
 public struct NumberRoller: View {
     public let value: Decimal
 
-    @State private var displayed: Decimal
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     public init(value: Decimal) {
         self.value = value
-        self._displayed = State(initialValue: value)
     }
 
     public var body: some View {
-        Text(displayed.idleFormatted())
+        let text = value.idleFormatted()
+        return Text(text)
             .contentTransition(reduceMotion ? .identity : .numericText(countsDown: false))
-            .animation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.85), value: displayed)
-            .onChange(of: value) { _, newValue in
-                displayed = newValue
-            }
+            .animation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.85), value: text)
     }
 }
 
@@ -30,20 +31,16 @@ public struct NumberRoller: View {
 public struct NumberRollerRate: View {
     public let value: Decimal
 
-    @State private var displayed: Decimal
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     public init(value: Decimal) {
         self.value = value
-        self._displayed = State(initialValue: value)
     }
 
     public var body: some View {
-        Text(displayed.idleRateFormatted())
+        let text = value.idleRateFormatted()
+        return Text(text)
             .contentTransition(reduceMotion ? .identity : .numericText(countsDown: false))
-            .animation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.85), value: displayed)
-            .onChange(of: value) { _, newValue in
-                displayed = newValue
-            }
+            .animation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.85), value: text)
     }
 }

@@ -1,6 +1,9 @@
 import SwiftUI
 import StoreKit
 import UserNotifications
+#if canImport(UIKit)
+import UIKit
+#endif
 
 // MARK: - IdleGameRoot
 
@@ -25,6 +28,7 @@ public struct IdleGameRoot: View {
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.adService) private var adService
     @Environment(\.requestReview) private var requestReview
+    @Environment(\.openURL) private var openURL
 
     public init(themeName: String, cloudKitContainerID: String? = nil) {
         self.themeName = themeName
@@ -33,84 +37,27 @@ public struct IdleGameRoot: View {
 
     public var body: some View {
         Group {
-            if let error = viewModel.loadError {
-                loadErrorView(error)
+            if let failure = viewModel.loadFailure {
+                loadErrorView(failure)
             } else if viewModel.isReady {
-                GameTabView()
-                    .environment(\.theme, viewModel.appTheme)
-                    .environment(\.adService, adService)
-                    .fullScreenCover(isPresented: $viewModel.showOnboarding) {
-                        OnboardingFlow(gameID: viewModel.gameID, onComplete: {
-                            viewModel.showOnboarding = false
-                        })
-                        .environment(\.theme, viewModel.appTheme)
-                    }
-                    .sheet(isPresented: $viewModel.showOfflineSheet, onDismiss: {
-                        viewModel.pendingOfflineResult = nil
-                        viewModel.offlineIncomeDoubled = false
-                    }) {
-                        if let result = viewModel.pendingOfflineResult {
-                            OfflineIncomeSheet(
-                                result: result,
-                                isDoubled: viewModel.offlineIncomeDoubled,
-                                onCollect: { viewModel.showOfflineSheet = false },
-                                onDoubleWithAd: (adService.adsRemoved || viewModel.offlineIncomeDoubled) ? nil : {
-                                    Task {
-                                        let reward = try? await adService.showRewardedAd(placement: .doubleOfflineIncome)
-                                        if reward != nil {
-                                            await GameEngine.shared.awardResources(result.earnedResources)
-                                            withAnimation { viewModel.offlineIncomeDoubled = true }
-                                        }
-                                    }
-                                }
-                            )
-                        }
-                    }
-#if os(iOS)
-                    .fullScreenCover(isPresented: $viewModel.showLevelAdvance) {
-                        LevelAdvanceScreen(completedLevelName: viewModel.completedLevelName) {
-                            viewModel.showLevelAdvance = false
-                            if !adService.adsRemoved {
-                                Task { try? await adService.showInterstitial(placement: .levelAdvance) }
-                            }
-                        }
-                        .environment(\.theme, viewModel.appTheme)
-                    }
-                    .fullScreenCover(isPresented: $viewModel.showPrestigeSuccess) {
-                        PrestigeSuccessScreen {
-                            viewModel.showPrestigeSuccess = false
-                        }
-                        .environment(\.theme, viewModel.appTheme)
-                    }
-#else
-                    .sheet(isPresented: $viewModel.showLevelAdvance) {
-                        LevelAdvanceScreen(completedLevelName: viewModel.completedLevelName) {
-                            viewModel.showLevelAdvance = false
-                            if !adService.adsRemoved {
-                                Task { try? await adService.showInterstitial(placement: .levelAdvance) }
-                            }
-                        }
-                        .environment(\.theme, viewModel.appTheme)
-                    }
-                    .sheet(isPresented: $viewModel.showPrestigeSuccess) {
-                        PrestigeSuccessScreen {
-                            viewModel.showPrestigeSuccess = false
-                        }
-                        .environment(\.theme, viewModel.appTheme)
-                    }
-#endif
-                    .sheet(isPresented: $viewModel.showNotificationPermission) {
-                        NotificationPermissionSheet(
-                            prestigeCount: viewModel.currentPrestigeCount
-                        ) { viewModel.showNotificationPermission = false }
-                        .environment(\.theme, viewModel.appTheme)
-                    }
+                readyBody
             } else {
                 loadingView
             }
         }
         .onChange(of: scenePhase) { _, phase in
-            if phase == .background { viewModel.appDidBackground() }
+            switch phase {
+            case .active:
+                viewModel.appDidBecomeActive()
+            case .inactive:
+                // Save here too. `.background` is not guaranteed to arrive before the process
+                // is suspended or killed, and `.inactive` fires first for every transition.
+                viewModel.appWillResignActive()
+            case .background:
+                viewModel.appDidBackground()
+            @unknown default:
+                break
+            }
         }
         .onChange(of: viewModel.showReviewRequest) { _, newValue in
             guard newValue else { return }
@@ -123,7 +70,91 @@ public struct IdleGameRoot: View {
         }
         .task {
             await viewModel.load(themeName: themeName, cloudKitContainerID: cloudKitContainerID)
+            // Consent → ATT → SDK init, in that order, and only now that the scene is active.
+            await adService.start()
             await preloadAds()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .engineStateShouldPersist)) { _ in
+            // Any grant the player earned or paid for persists immediately rather than
+            // waiting up to 30 seconds for the next autosave window.
+            Task { await viewModel.saveNow() }
+        }
+    }
+
+    // MARK: - Ready
+
+    @ViewBuilder
+    private var readyBody: some View {
+        GameTabView()
+            .environment(\.theme, viewModel.appTheme)
+            .environment(\.adService, adService)
+            .modifier(OnboardingPresenter(viewModel: viewModel))
+            .sheet(isPresented: $viewModel.showOfflineSheet, onDismiss: {
+                viewModel.pendingOfflineResult = nil
+                viewModel.offlineIncomeDoubled = false
+            }) {
+                if let result = viewModel.pendingOfflineResult {
+                    OfflineIncomeSheet(
+                        result: result,
+                        isDoubled: viewModel.offlineIncomeDoubled,
+                        onCollect: { viewModel.showOfflineSheet = false },
+                        onDoubleWithAd: (adService.adsRemoved || viewModel.offlineIncomeDoubled) ? nil : {
+                            Task {
+                                let reward = try? await adService.showRewardedAd(placement: .doubleOfflineIncome)
+                                guard reward != nil else {
+                                    viewModel.presentMessage(
+                                        String(localized: "No ad is available right now. Please try again shortly."),
+                                        isError: true
+                                    )
+                                    return
+                                }
+                                await GameEngine.shared.awardResources(result.earnedResources)
+                                // Persist immediately. Autosave is 30s away, and a grant lost
+                                // to a force-quit is indistinguishable from a broken reward.
+                                await viewModel.saveNow()
+                                withAnimation { viewModel.offlineIncomeDoubled = true }
+                            }
+                        }
+                    )
+                }
+            }
+            .modifier(
+                LevelAdvancePresenter(viewModel: viewModel, adService: adService)
+            )
+            .modifier(PrestigeSuccessPresenter(viewModel: viewModel))
+            .sheet(isPresented: $viewModel.showNotificationPermission) {
+                NotificationPermissionSheet(
+                    prestigeCount: viewModel.currentPrestigeCount
+                ) { viewModel.showNotificationPermission = false }
+                .environment(\.theme, viewModel.appTheme)
+            }
+            .overlay(alignment: .top) { messageBanner }
+    }
+
+    /// Single surface for engine and store errors.
+    ///
+    /// Every fallible action used to be `try?`, so a failed purchase, a declined payment, an
+    /// unavailable ad, and a rejected era advance were all indistinguishable from a dead
+    /// button. Players concluded the game was broken.
+    @ViewBuilder
+    private var messageBanner: some View {
+        if let message = viewModel.transientMessage {
+            HStack(spacing: 8) {
+                Image(systemName: message.isError ? "exclamationmark.circle.fill" : "checkmark.circle.fill")
+                    .foregroundStyle(message.isError ? .orange : .green)
+                Text(message.text)
+                    .font(Typography.subheadline)
+                    .foregroundStyle(viewModel.appTheme.textPrimaryColor)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            .background(viewModel.appTheme.surfaceElevatedColor, in: RoundedRectangle(cornerRadius: 14))
+            .shadow(color: .black.opacity(0.25), radius: 8, y: 4)
+            .padding(.horizontal, 20)
+            .transition(.move(edge: .top).combined(with: .opacity))
+            .accessibilityAddTraits(.isStaticText)
+            .accessibilityLabel(message.text)
         }
     }
 
@@ -146,26 +177,140 @@ public struct IdleGameRoot: View {
             AppTheme.placeholder.backgroundColor.ignoresSafeArea()
             ProgressView()
                 .tint(AppTheme.placeholder.goldAccentColor)
+                .accessibilityLabel(Text("Loading game"))
         }
     }
 
-    private func loadErrorView(_ message: String) -> some View {
+    private func loadErrorView(_ failure: IdleGameViewModel.LoadFailure) -> some View {
         ZStack {
             AppTheme.placeholder.backgroundColor.ignoresSafeArea()
-            VStack(spacing: 16) {
-                Image(systemName: "exclamationmark.triangle")
-                    .font(.largeTitle)
-                    .foregroundStyle(.red)
-                Text("Failed to load game")
-                    .font(Typography.title)
-                    .foregroundStyle(AppTheme.placeholder.textPrimaryColor)
-                Text(message)
-                    .font(Typography.caption)
-                    .foregroundStyle(AppTheme.placeholder.textSecondaryColor)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal)
+            ScrollView {
+                VStack(spacing: 16) {
+                    Image(systemName: "exclamationmark.triangle")
+                        .font(.largeTitle)
+                        .foregroundStyle(.orange)
+                        .accessibilityHidden(true)
+                    Text(failure.title)
+                        .font(Typography.title)
+                        .foregroundStyle(AppTheme.placeholder.textPrimaryColor)
+                        .multilineTextAlignment(.center)
+                    Text(failure.message)
+                        .font(Typography.body)
+                        .foregroundStyle(AppTheme.placeholder.textSecondaryColor)
+                        .multilineTextAlignment(.center)
+                    if let suggestion = failure.suggestion {
+                        Text(suggestion)
+                            .font(Typography.caption)
+                            .foregroundStyle(AppTheme.placeholder.textSecondaryColor)
+                            .multilineTextAlignment(.center)
+                    }
+
+                    VStack(spacing: 10) {
+                        Button {
+                            Task {
+                                await viewModel.load(
+                                    themeName: themeName, cloudKitContainerID: cloudKitContainerID
+                                )
+                            }
+                        } label: {
+                            Text("Try Again")
+                                .font(Typography.subheadline.weight(.semibold))
+                                .frame(maxWidth: .infinity, minHeight: 44)
+                        }
+                        .buttonStyle(.borderedProminent)
+
+                        // The one screen a player cannot reach Settings from — so the support
+                        // path has to live here too. Without it their only option is a cold
+                        // email, which is exactly how this class of bug reached us.
+                        if let supportURL = viewModel.supportURL {
+                            Button {
+                                openURL(supportURL)
+                            } label: {
+                                Text("Contact Support")
+                                    .font(Typography.subheadline)
+                                    .frame(maxWidth: .infinity, minHeight: 44)
+                            }
+                            .buttonStyle(.bordered)
+                        }
+                    }
+                    .padding(.top, 8)
+
+                    if failure.isRecoverableSave {
+                        Text(verbatim: failure.diagnosticDetail)
+                            .font(.system(.caption2, design: .monospaced))
+                            .foregroundStyle(AppTheme.placeholder.textSecondaryColor)
+                            .textSelection(.enabled)
+                            .padding(.top, 12)
+                    }
+                }
+                .padding(24)
+                .frame(maxWidth: 520)
             }
         }
+    }
+}
+
+// MARK: - Platform-Specific Presenters
+
+/// `fullScreenCover` is unavailable on macOS; these keep the call site readable.
+private struct OnboardingPresenter: ViewModifier {
+    @Bindable var viewModel: IdleGameViewModel
+
+    func body(content: Content) -> some View {
+        #if os(iOS)
+        content.fullScreenCover(isPresented: $viewModel.showOnboarding) { sheet }
+        #else
+        content.sheet(isPresented: $viewModel.showOnboarding) { sheet }
+        #endif
+    }
+
+    private var sheet: some View {
+        OnboardingFlow(gameID: viewModel.gameID, onComplete: {
+            viewModel.completeOnboarding()
+        })
+        .environment(\.theme, viewModel.appTheme)
+    }
+}
+
+private struct LevelAdvancePresenter: ViewModifier {
+    @Bindable var viewModel: IdleGameViewModel
+    let adService: any AdService
+
+    func body(content: Content) -> some View {
+        #if os(iOS)
+        content.fullScreenCover(isPresented: $viewModel.showLevelAdvance) { sheet }
+        #else
+        content.sheet(isPresented: $viewModel.showLevelAdvance) { sheet }
+        #endif
+    }
+
+    private var sheet: some View {
+        LevelAdvanceScreen(completedLevelName: viewModel.completedLevelName) {
+            viewModel.showLevelAdvance = false
+            if !adService.adsRemoved {
+                Task { try? await adService.showInterstitial(placement: .levelAdvance) }
+            }
+        }
+        .environment(\.theme, viewModel.appTheme)
+    }
+}
+
+private struct PrestigeSuccessPresenter: ViewModifier {
+    @Bindable var viewModel: IdleGameViewModel
+
+    func body(content: Content) -> some View {
+        #if os(iOS)
+        content.fullScreenCover(isPresented: $viewModel.showPrestigeSuccess) { sheet }
+        #else
+        content.sheet(isPresented: $viewModel.showPrestigeSuccess) { sheet }
+        #endif
+    }
+
+    private var sheet: some View {
+        PrestigeSuccessScreen {
+            viewModel.showPrestigeSuccess = false
+        }
+        .environment(\.theme, viewModel.appTheme)
     }
 }
 
@@ -183,21 +328,25 @@ private struct GameTabView: View {
                 .tag(0)
                 .task { gameplayViewModel.start() }
 
+            MilestonesScreen()
+                .tabItem { Label(theme.copy.milestoneNoun, systemImage: "building.columns.fill") }
+                .tag(1)
+
             ShopScreen()
                 .tabItem { Label(theme.copy.premiumPassName, systemImage: "cart.fill") }
-                .tag(1)
+                .tag(2)
 
             LeaderboardScreen()
                 .tabItem { Label(theme.copy.leaderboardTabLabel, systemImage: "trophy.fill") }
-                .tag(2)
+                .tag(3)
 
             AchievementsScreen()
                 .tabItem { Label(theme.copy.achievementsTabLabel, systemImage: "rosette") }
-                .tag(3)
+                .tag(4)
 
             SettingsScreen()
                 .tabItem { Label(theme.copy.settingsTabLabel, systemImage: "gear") }
-                .tag(4)
+                .tag(5)
         }
         .tint(theme.levelPrimaryColor(for: gameplayViewModel.state.currentLevelID))
         .onReceive(NotificationCenter.default.publisher(for: .iapRewardReceived)) { _ in
@@ -211,9 +360,28 @@ private struct GameTabView: View {
 @Observable
 @MainActor
 public final class IdleGameViewModel {
+
+    // MARK: Load Failure
+
+    public struct LoadFailure: Equatable, Sendable {
+        public let title: String
+        public let message: String
+        public let suggestion: String?
+        /// True when a real save exists on disk that we refused to overwrite.
+        public let isRecoverableSave: Bool
+        public let diagnosticDetail: String
+    }
+
+    public struct TransientMessage: Equatable, Sendable {
+        public let text: String
+        public let isError: Bool
+    }
+
     public private(set) var appTheme: AppTheme = .placeholder
     public private(set) var isReady = false
-    public private(set) var loadError: String?
+    public private(set) var loadFailure: LoadFailure?
+    public private(set) var transientMessage: TransientMessage?
+    public private(set) var supportURL: URL?
 
     var showOnboarding = false
     var showOfflineSheet = false
@@ -224,116 +392,305 @@ public final class IdleGameViewModel {
     var showPrestigeSuccess = false
     var showNotificationPermission = false
     var showReviewRequest = false
+
     private static let appVersion: String =
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
     private(set) var currentPrestigeCount = 0
 
-    @ObservationIgnored nonisolated(unsafe) private var streamTask: Task<Void, Never>?
-    @ObservationIgnored nonisolated(unsafe) private var transactionTask: Task<Void, Never>?
-    private var persistence: SwiftDataPersistenceService?
+    @ObservationIgnored private var streamTask: Task<Void, Never>?
+    @ObservationIgnored private var messageTask: Task<Void, Never>?
+    @ObservationIgnored private var persistence: SwiftDataPersistenceService?
+    @ObservationIgnored private var lastAutosave: Date = .distantPast
     private(set) var gameID = ""
     private var lastObservedLevelID = ""
     private var hasCancelledOnForeground = false
+    private var hasLoadedOnce = false
+
+    /// Wall-clock autosave interval. This used to be a count of stream elements, but the
+    /// stream drops elements under back-pressure, so the real interval silently stretched.
+    private static let autosaveInterval: TimeInterval = 30
 
     deinit {
         streamTask?.cancel()
-        transactionTask?.cancel()
+        messageTask?.cancel()
     }
+
+    // MARK: - Load
 
     func load(themeName: String, cloudKitContainerID: String? = nil) async {
+        loadFailure = nil
+
+        let theme: any ThemePackage
         do {
-            let theme = try ThemeLoader.load(named: themeName)
-            gameID = theme.gameID
-
-            // Load persistence service and any saved state.
-            let service = try? SwiftDataPersistenceService(cloudKitContainerID: cloudKitContainerID)
-            persistence = service
-            let savedState = try? await service?.load(gameID: gameID)
-
-            // ThemeValidator is called inside GameEngine.loadTheme
-            try await GameEngine.shared.loadTheme(theme, savedState: savedState)
-            appTheme = AppTheme(theme: theme)
-
-            // Determine onboarding state before making isReady=true so we can suppress
-            // conflicting modals before the view renders.
-            let onboardingKey = "onboarding_completed_\(gameID)"
-            let needsOnboarding = !UserDefaults.standard.bool(forKey: onboardingKey)
-
-            // Check for offline income using last-active timestamp saved on background.
-            // Skip when onboarding will be shown — a new user has no meaningful offline income,
-            // and presenting two modals simultaneously causes a continuous warning spam.
-            if !needsOnboarding {
-                let lastActive = UserDefaults.standard.object(forKey: "lastActiveDate") as? Date
-                if let date = lastActive {
-                    let result = try await GameEngine.shared.collectOfflineIncome(lastActiveDate: date)
-                    if result.earnedResources != .zero {
-                        // Premium pass subscribers receive 2× offline income.
-                        // Award the base amount a second time so the engine state is correct,
-                        // then set offlineIncomeDoubled so the sheet reflects it and hides the ad button.
-                        if let passID = theme.iapProducts.premiumPass,
-                           await LiveStoreKitService().isPremiumPassActive(productID: passID) {
-                            await GameEngine.shared.awardResources(result.earnedResources)
-                            offlineIncomeDoubled = true
-                        }
-                        pendingOfflineResult = result
-                        showOfflineSheet = true
-                    }
-                }
-            }
-
-            isReady = true
-
-            if needsOnboarding {
-                showOnboarding = true
-            }
-
-            // Start ambient audio for the initial era.
-            if let state = await GameEngine.shared.currentState,
-               let level = theme.level(id: state.currentLevelID),
-               let asset = level.soundAsset {
-                AudioService.shared.playAmbient(asset: asset)
-            }
-            startObservingStream()
-            startObservingTransactions()
+            theme = try ThemeLoader.load(named: themeName)
         } catch {
-            loadError = error.localizedDescription
+            loadFailure = LoadFailure(
+                title: String(localized: "Couldn't start the game"),
+                message: error.localizedDescription,
+                suggestion: (error as? LocalizedError)?.recoverySuggestion,
+                isRecoverableSave: false,
+                diagnosticDetail: "\(error)"
+            )
+            return
+        }
+
+        gameID = theme.gameID
+        supportURL = URL(string: theme.copy.supportURL ?? "")
+
+        // Open the store. A failure here is fatal to the session on purpose: the alternative
+        // is what shipped — a game that plays perfectly and silently discards every second
+        // of progress, with no error and no telemetry.
+        if persistence == nil {
+            do {
+                persistence = try SwiftDataPersistenceService(
+                    cloudKitContainerID: cloudKitContainerID,
+                    onCloudKitFailure: { error in
+                        Analytics.record(.cloudSyncUnavailable(reason: "\(error)"))
+                    }
+                )
+            } catch {
+                Analytics.record(.persistenceUnavailable(reason: "\(error)"))
+                loadFailure = LoadFailure(
+                    title: String(localized: "Can't access your saved game"),
+                    message: String(localized: "Your progress can't be saved on this device right now, so we've stopped before you lose any."),
+                    suggestion: String(localized: "Check that your device has free storage, then try again."),
+                    isRecoverableSave: false,
+                    diagnosticDetail: "\(error)"
+                )
+                return
+            }
+        }
+
+        // Load the save. `nil` means "genuinely new player"; a throw means a real save exists
+        // that we could not read, and starting fresh would let the 30-second autosave destroy
+        // it. Refuse instead.
+        var savedState: GameState?
+        do {
+            savedState = try await persistence?.load(gameID: gameID)
+        } catch {
+            Analytics.record(.saveCorrupted(reason: "\(error)"))
+            loadFailure = LoadFailure(
+                title: String(localized: "Your saved game couldn't be read"),
+                message: String(localized: "We found your save but couldn't open it. We have not overwritten it — your progress may still be recoverable, so please don't delete the app."),
+                suggestion: String(localized: "Contact support with the details below and we'll help."),
+                isRecoverableSave: true,
+                diagnosticDetail: "\(error)"
+            )
+            return
+        }
+
+        let onboardingKey = "onboarding_completed_\(gameID)"
+        // A restored CloudKit save means this is a returning player even when UserDefaults
+        // was wiped by a reinstall. Without this check, someone whose Space Age empire had
+        // just synced back was shown "Welcome, Great Leader" and the subscription paywall.
+        let hasRealProgress = (savedState?.totalLifetimeGold ?? 0) > 0
+        let needsOnboarding = !UserDefaults.standard.bool(forKey: onboardingKey) && !hasRealProgress
+        if hasRealProgress { UserDefaults.standard.set(true, forKey: onboardingKey) }
+
+        // Data-loss canary: onboarding is complete but nothing loaded. By definition someone
+        // lost progress. This is the alert that should have existed.
+        if savedState == nil && UserDefaults.standard.bool(forKey: onboardingKey) {
+            Analytics.record(.progressLossDetected(reason: "no save for onboarded player \(gameID)"))
+        }
+
+        do {
+            try await GameEngine.shared.loadTheme(theme, savedState: savedState)
+        } catch {
+            loadFailure = LoadFailure(
+                title: String(localized: "Couldn't start the game"),
+                message: error.localizedDescription,
+                suggestion: (error as? LocalizedError)?.recoverySuggestion,
+                isRecoverableSave: false,
+                diagnosticDetail: "\(error)"
+            )
+            return
+        }
+
+        appTheme = AppTheme(theme: theme)
+
+        // Single owner of `Transaction.updates` for the whole app. There used to be six
+        // independent iterators, three of which raced to `finish()` transactions that none
+        // of them granted — so any purchase arriving outside the direct buy flow (Ask to Buy,
+        // Family Sharing, interrupted-purchase recovery) was acknowledged and dropped.
+        PurchaseCoordinator.shared.configure(theme: theme) { [weak self] _ in
+            await self?.saveNow()
+        }
+
+        if !needsOnboarding {
+            await settleOfflineIncome(savedState: savedState, theme: theme)
+        }
+
+        isReady = true
+        if needsOnboarding { showOnboarding = true }
+
+        // Start ambient audio for the initial era.
+        if let state = await GameEngine.shared.currentState,
+           let level = theme.level(id: state.currentLevelID),
+           let asset = level.soundAsset {
+            AudioService.shared.playAmbient(asset: asset)
+        }
+
+        if !hasLoadedOnce {
+            hasLoadedOnce = true
+            startObservingStream()
         }
     }
 
-    /// Called when the app moves to the background. Saves state, records timestamp, and schedules notifications.
+    /// Credits time away and presents the reward sheet.
+    ///
+    /// Prefers the persisted `lastSaveDate` over the UserDefaults timestamp. The two are
+    /// independent clocks that desync whenever the app dies without a clean background
+    /// transition, and only `lastSaveDate` is atomic with the state it describes.
+    private func settleOfflineIncome(savedState: GameState?, theme: any ThemePackage) async {
+        let defaultsDate = UserDefaults.standard.object(forKey: "lastActiveDate") as? Date
+        guard let reference = savedState?.lastSaveDate ?? defaultsDate else { return }
+
+        let result: OfflineResult
+        do {
+            result = try await GameEngine.shared.collectOfflineIncome(lastActiveDate: reference)
+        } catch {
+            return
+        }
+        guard result.earnedResources != .zero else { return }
+
+        if await entitlements.hasPremiumPass(theme: theme) {
+            await GameEngine.shared.awardResources(result.earnedResources)
+            offlineIncomeDoubled = true
+        }
+        pendingOfflineResult = result
+        showOfflineSheet = true
+        await saveNow()
+    }
+
+    @ObservationIgnored private let entitlements = EntitlementStore.shared
+
+    // MARK: - Onboarding
+
+    func completeOnboarding() {
+        UserDefaults.standard.set(true, forKey: "onboarding_completed_\(gameID)")
+        showOnboarding = false
+        Task { await settleOfflineIncomeAfterOnboarding() }
+    }
+
+    private func settleOfflineIncomeAfterOnboarding() async {
+        guard let theme = await GameEngine.shared.currentTheme else { return }
+        await settleOfflineIncome(savedState: await GameEngine.shared.currentState, theme: theme)
+    }
+
+    // MARK: - Messages
+
+    func presentMessage(_ text: String, isError: Bool) {
+        messageTask?.cancel()
+        withAnimation { transientMessage = TransientMessage(text: text, isError: isError) }
+        messageTask = Task { [weak self] in
+            try? await Task.sleep(for: .seconds(3))
+            guard !Task.isCancelled else { return }
+            withAnimation { self?.transientMessage = nil }
+        }
+    }
+
+    // MARK: - Scene Phase
+
+    func appDidBecomeActive() {
+        Task {
+            // A subscription can lapse while the app is backgrounded. Without this the app
+            // would keep suppressing ads until the next cold launch.
+            await EntitlementStore.shared.refresh()
+            await GameEngine.shared.resumeTicking()
+            // Settle time away even when the process was never killed. iOS suspends the app
+            // so the tick loop produces nothing while backgrounded; without this the player
+            // lost the entire gap unless they happened to be evicted from memory.
+            if isReady, let theme = await GameEngine.shared.currentTheme {
+                await settleOfflineIncome(
+                    savedState: await GameEngine.shared.currentState, theme: theme
+                )
+            }
+        }
+    }
+
+    func appWillResignActive() {
+        Task { await saveNow() }
+    }
+
+    /// Called when the app moves to the background. Saves state, records timestamp, and
+    /// schedules notifications.
     func appDidBackground() {
-        UserDefaults.standard.set(Date(), forKey: "lastActiveDate")
         hasCancelledOnForeground = false
         Task {
-            await saveState()
-            await scheduleNotifications()
+            await withBackgroundTaskAssertion { [weak self] in
+                guard let self else { return }
+                await self.saveNow()
+                await GameEngine.shared.pauseTicking()
+                await self.scheduleNotifications()
+            }
         }
     }
+
+    /// Keeps the process alive long enough for the save to land.
+    ///
+    /// The save awaits a hop to the engine actor, a JSON encode, a fetch, and a SQLite write
+    /// that CloudKit may extend. Racing suspension with no assertion meant the write could
+    /// simply not complete.
+    private func withBackgroundTaskAssertion(_ work: @escaping @Sendable () async -> Void) async {
+        #if canImport(UIKit) && !os(watchOS)
+        let taskID = UIApplication.shared.beginBackgroundTask(withName: "SaveGameState")
+        await work()
+        if taskID != .invalid { UIApplication.shared.endBackgroundTask(taskID) }
+        #else
+        await work()
+        #endif
+    }
+
+    // MARK: - Persistence
+
+    /// Persists immediately. Call after any grant the player paid for — real money or an ad
+    /// view — rather than waiting for the next autosave window.
+    func saveNow() async {
+        guard let persistence, let state = await GameEngine.shared.currentState else { return }
+        do {
+            try await persistence.save(state: state, gameID: gameID)
+            lastAutosave = Date()
+            UserDefaults.standard.set(Date(), forKey: "lastActiveDate")
+        } catch {
+            Analytics.record(.saveFailed(reason: "\(error)"))
+            presentMessage(
+                String(localized: "Your progress couldn't be saved. Please check your storage."),
+                isError: true
+            )
+        }
+    }
+
+    /// Permanently erases this game's saved data. Backs the Settings "Delete My Data" row.
+    func deleteAllData() async throws {
+        guard let persistence else { return }
+        try await persistence.deleteAll(gameID: gameID)
+        UserDefaults.standard.removeObject(forKey: "onboarding_completed_\(gameID)")
+        UserDefaults.standard.removeObject(forKey: "lastActiveDate")
+    }
+
+    // MARK: - Leaderboards
 
     /// Computes a Game Center score that increments for ALL players at every stage.
     ///
     /// Formula: `totalPrestigeCount * 1_000_000 + goldProgress`
     /// where `goldProgress` is 0–999_999, representing how far through the ~3T gold
-    /// prestige threshold the player is. This means:
-    /// - Early players (0 prestiges): score grows 0 → 999,999 as they earn gold
-    /// - After 1st prestige: score jumps to 1,000,000+
-    /// - After Nth prestige: score is N × 1,000,000 + current run progress
-    /// The leaderboard is infinite — higher prestige always wins, but runs in progress
-    /// show visible, meaningful increments.
+    /// prestige threshold the player is.
     static func leaderboardScore(for state: GameState) -> Int {
-        // Normalize lifetime gold on a 0–999_999 scale against the ~3T prestige threshold.
-        // 3_000_000_000_000 / 3_000_000 = 1_000_000, so dividing by 3_000_000 maps
-        // 0…3T gold → 0…1_000_000 (capped at 999_999 so it never reaches the prestige bucket).
         let goldProgress = Int(
-            truncating: min(state.totalLifetimeGold / 3_000_000, Decimal(999_999)) as NSDecimalNumber
+            truncating: min(max(0, state.totalLifetimeGold / 3_000_000), Decimal(999_999)) as NSDecimalNumber
         )
         return state.totalPrestigeCount * 1_000_000 + goldProgress
     }
 
-    private func saveState() async {
-        guard let persistence,
-              let state = await GameEngine.shared.currentState else { return }
-        try? await persistence.save(state: state, gameID: gameID)
+    private func submitScores(for state: GameState, theme: any ThemePackage) async {
+        let svc = LiveGameCenterService()
+        let globalScore = Self.leaderboardScore(for: state)
+        try? await svc.submitScore(globalScore, to: theme.leaderboards.globalTokens)
+        if let countryID = theme.leaderboards.countryTokens {
+            try? await svc.submitScore(globalScore, to: countryID)
+        }
+        let capped = min(max(0, state.totalLifetimeGold), Decimal(Int.max))
+        try? await svc.submitScore((capped as NSDecimalNumber).intValue, to: theme.leaderboards.weeklyGold)
     }
 
     private func scheduleNotifications() async {
@@ -342,13 +699,11 @@ public final class IdleGameViewModel {
         let svc = LiveNotificationService()
         await svc.cancelAll()
 
-        // Offline income cap — 6 hours
         await svc.schedule(
             .offlineCap, copy: theme.copy,
-            fireIn: LiveNotificationService.quietHoursAdjusted(fireIn: 6 * 3600)
+            fireIn: LiveNotificationService.quietHoursAdjusted(fireIn: OfflineCalculator.maxCapSeconds)
         )
 
-        // Era advance ready — only if gold requirement is already met
         if let level = theme.level(id: state.currentLevelID),
            state.resources.canAfford(level.advanceRequirement),
            theme.nextLevel(after: state.currentLevelID) != nil {
@@ -358,55 +713,33 @@ public final class IdleGameViewModel {
             )
         }
 
-        // Wonder construction — fire when the countdown completes
-        if let endDate = state.milestoneConstructionEndDate,
-           state.inProgressMilestoneID != nil {
+        if let endDate = state.milestoneConstructionEndDate, state.inProgressMilestoneID != nil {
             let remaining = max(1, endDate.timeIntervalSinceNow + 2)
             await svc.schedule(.wonderComplete, copy: theme.copy, fireIn: remaining)
         }
 
-        // Submit weekly gold score to Game Center
-        let goldScore = (min(state.totalLifetimeGold, Decimal(Int.max)) as NSDecimalNumber).intValue
-        try? await LiveGameCenterService().submitScore(goldScore, to: theme.leaderboards.weeklyGold)
+        await submitScores(for: state, theme: theme)
     }
 
-    private func startObservingTransactions() {
-        transactionTask?.cancel()
-        transactionTask = Task { [weak self] in
-            for await verificationResult in Transaction.updates {
-                guard let transaction = try? verificationResult.payloadValue else { continue }
-                await transaction.finish()
-                // Re-award coins for any transaction that completed outside the purchase flow
-                // (subscription renewals, interrupted purchases, etc.)
-                // ShopViewModel handles coin grants for user-initiated purchases;
-                // this path handles edge cases like family purchases and StoreKit recovery.
-                _ = self
-            }
-        }
-    }
+    // MARK: - State Observation
 
     private func startObservingStream() {
         streamTask?.cancel()
         streamTask = Task { [weak self] in
-            var ticksSinceLastSave = 0
             var lastPrestigeCount = -1
             var lastCompletedMilestoneCount = -1
-            for await state in GameEngine.shared.stateStream() {
+
+            for await state in await GameEngine.shared.stateStream() {
                 guard let self else { break }
-                ticksSinceLastSave += 1
-                if ticksSinceLastSave >= 300 { // autosave every ~30 seconds
-                    ticksSinceLastSave = 0
-                    await self.saveState()
-                    // Submit leaderboard scores periodically so rankings stay fresh mid-session
+
+                if Date().timeIntervalSince(self.lastAutosave) >= Self.autosaveInterval {
+                    await self.saveNow()
                     if let theme = await GameEngine.shared.currentTheme {
-                        let svc = LiveGameCenterService()
-                        let globalScore = IdleGameViewModel.leaderboardScore(for: state)
-                        try? await svc.submitScore(globalScore, to: theme.leaderboards.globalTokens)
-                        if let countryID = theme.leaderboards.countryTokens {
-                            try? await svc.submitScore(globalScore, to: countryID)
+                        // Detached so a slow GameKit round-trip doesn't stall the loop and
+                        // cause the engine to drop states we still need to inspect below.
+                        Task.detached { [weak self] in
+                            await self?.submitScores(for: state, theme: theme)
                         }
-                        let goldScore = (min(state.totalLifetimeGold, Decimal(Int.max)) as NSDecimalNumber).intValue
-                        try? await svc.submitScore(goldScore, to: theme.leaderboards.weeklyGold)
                     }
                 }
 
@@ -429,19 +762,13 @@ public final class IdleGameViewModel {
                 if lastPrestigeCount >= 0 && state.totalPrestigeCount > lastPrestigeCount {
                     self.showPrestigeSuccess = true
                     HapticsService.notification(.success)
-                    Task {
-                        guard let theme = await GameEngine.shared.currentTheme else { return }
-                        let svc = LiveGameCenterService()
-                        let globalScore = Self.leaderboardScore(for: state)
-                        try? await svc.submitScore(globalScore, to: theme.leaderboards.globalTokens)
-                        if let countryID = theme.leaderboards.countryTokens {
-                            try? await svc.submitScore(globalScore, to: countryID)
+                    await self.saveNow()
+                    if let theme = await GameEngine.shared.currentTheme {
+                        Task.detached { [weak self] in
+                            await self?.submitScores(for: state, theme: theme)
                         }
-                        let goldScore = (min(state.totalLifetimeGold, Decimal(Int.max)) as NSDecimalNumber).intValue
-                        try? await svc.submitScore(goldScore, to: theme.leaderboards.weeklyGold)
                     }
 
-                    // Review request: 2nd prestige is the sweet spot — player is engaged and just had a big win
                     if state.totalPrestigeCount == 2 {
                         let key = "review_requested_v\(IdleGameViewModel.appVersion)"
                         if !UserDefaults.standard.bool(forKey: key) {
@@ -451,39 +778,52 @@ public final class IdleGameViewModel {
                     }
                 }
 
-                // Detect era advance (not prestige) — switch ambient track + haptic + maybe ask for notifications
-                let prevLevelID = self.lastObservedLevelID
-                if prevLevelID != "" &&
-                   state.currentLevelID != prevLevelID &&
+                // Detect era advance (not prestige) — celebration, ambient track, haptic
+                let previousLevelID = self.lastObservedLevelID
+                if !previousLevelID.isEmpty,
+                   state.currentLevelID != previousLevelID,
                    state.totalPrestigeCount == lastPrestigeCount {
                     HapticsService.notification(.success)
-                    if let theme = await GameEngine.shared.currentTheme,
-                       let level = theme.level(id: state.currentLevelID),
-                       let asset = level.soundAsset {
-                        AudioService.shared.playAmbient(asset: asset)
+
+                    // Present the celebration. `showLevelAdvance` was declared and never set,
+                    // so `LevelAdvanceScreen` — a finished, animated, Reduce-Motion-aware
+                    // screen — was unreachable, and the biggest beat in the game (roughly
+                    // eight times per run) produced only a haptic. It also gated the
+                    // `levelAdvance` interstitial, so that ad placement never filled.
+                    if let theme = await GameEngine.shared.currentTheme {
+                        self.completedLevelName =
+                            theme.level(id: previousLevelID)?.displayName ?? ""
+                        self.showLevelAdvance = true
+
+                        if let level = theme.level(id: state.currentLevelID),
+                           let asset = level.soundAsset {
+                            AudioService.shared.playAmbient(asset: asset)
+                        }
                     }
+                    await self.saveNow()
+
                     let key = "notif_asked_prestige_\(state.totalPrestigeCount)"
-                    let alreadyAsked = UserDefaults.standard.bool(forKey: key)
-                    if !alreadyAsked {
+                    if !UserDefaults.standard.bool(forKey: key) {
                         let settings = await UNUserNotificationCenter.current().notificationSettings()
                         if settings.authorizationStatus == .notDetermined {
+                            UserDefaults.standard.set(true, forKey: key)
                             self.showNotificationPermission = true
                         }
                     }
                 }
 
-                // Review request: first wonder built in run #1 is a high point for non-prestigers
+                // Review request: first milestone built in run #1 is a high point
                 if lastCompletedMilestoneCount >= 0 &&
-                   state.completedMilestoneIDs.count > lastCompletedMilestoneCount &&
-                   state.totalPrestigeCount == 0 {
+                    state.completedMilestoneIDs.count > lastCompletedMilestoneCount &&
+                    state.totalPrestigeCount == 0 {
                     let key = "review_requested_v\(IdleGameViewModel.appVersion)"
                     if !UserDefaults.standard.bool(forKey: key) {
                         UserDefaults.standard.set(true, forKey: key)
                         self.showReviewRequest = true
                     }
                 }
-                lastCompletedMilestoneCount = state.completedMilestoneIDs.count
 
+                lastCompletedMilestoneCount = state.completedMilestoneIDs.count
                 lastPrestigeCount = state.totalPrestigeCount
                 self.currentPrestigeCount = state.totalPrestigeCount
                 self.lastObservedLevelID = state.currentLevelID

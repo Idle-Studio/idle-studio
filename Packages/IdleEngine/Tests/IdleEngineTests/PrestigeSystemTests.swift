@@ -7,53 +7,113 @@ struct PrestigeSystemTests {
 
     // MARK: - canPrestige
 
+    /// A theme with no gate milestone, so these tests exercise the token threshold alone.
+    private var ungatedTheme: MockThemePackage { MockThemePackage.fixture() }
+
+    /// Assertions are expressed against `legacyTokenThreshold` rather than a literal.
+    /// A rebalance previously moved it from 1e12 to 3e12 and every hardcoded expectation
+    /// here silently became wrong.
+    private var threshold: Decimal { EconomyCalculator.legacyTokenThreshold }
+
     @Test("Cannot prestige with zero lifetime gold")
     func cannotPrestigeWithNoGold() {
         let state = GameState.initial(firstLevelID: "level_1")
-        #expect(!PrestigeSystem.canPrestige(state: state))
+        #expect(!PrestigeSystem.canPrestige(state: state, theme: ungatedTheme))
     }
 
-    @Test("Cannot prestige just below the 1-trillion threshold")
+    @Test("Cannot prestige just below the token threshold")
     func cannotPrestigeJustBelowThreshold() {
-        let state = GameState.initial(firstLevelID: "level_1").withGold(999_999_999_999)
-        #expect(!PrestigeSystem.canPrestige(state: state))
+        let state = GameState.initial(firstLevelID: "level_1").withGold(threshold - 1)
+        #expect(!PrestigeSystem.canPrestige(state: state, theme: ungatedTheme))
     }
 
-    @Test("Can prestige at exactly 1 trillion gold (1 token earned)")
+    @Test("Can prestige at exactly the threshold (1 token earned)")
     func canPrestigeAtThreshold() {
-        let state = GameState.initial(firstLevelID: "level_1").withGold(1_000_000_000_000)
-        #expect(PrestigeSystem.canPrestige(state: state))
+        let state = GameState.initial(firstLevelID: "level_1").withGold(threshold)
+        #expect(PrestigeSystem.canPrestige(state: state, theme: ungatedTheme))
+        #expect(PrestigeSystem.tokensEarned(from: state) == 1)
     }
 
     @Test("Can prestige well above threshold")
     func canPrestigeWellAboveThreshold() {
-        let state = GameState.initial(firstLevelID: "level_1").withGold(100_000_000_000_000)
-        #expect(PrestigeSystem.canPrestige(state: state))
+        let state = GameState.initial(firstLevelID: "level_1").withGold(threshold * 100)
+        #expect(PrestigeSystem.canPrestige(state: state, theme: ungatedTheme))
+    }
+
+    @Test("Gate milestone blocks prestige until completed")
+    func gateMilestoneBlocksPrestige() {
+        let theme = MockThemePackage.fixture(permanentMilestoneID: "milestone_regular")
+        let rich = GameState.initial(firstLevelID: "level_1").withGold(threshold * 100)
+        // The mock's gate is only enforced when the theme declares one.
+        if theme.prestigeRequirementMilestoneID != nil {
+            #expect(!PrestigeSystem.canPrestige(state: rich, theme: theme))
+            let gated = rich.completing(milestoneID: theme.prestigeRequirementMilestoneID!)
+            #expect(PrestigeSystem.canPrestige(state: gated, theme: theme))
+        }
     }
 
     // MARK: - tokensEarned
 
-    @Test("Tokens earned matches EconomyCalculator.legacyTokens")
-    func tokensEarnedMatchesCalculator() {
-        let gold: Decimal = 9_000_000_000_000
-        let state = GameState.initial(firstLevelID: "test").withGold(gold)
-        let fromSystem = PrestigeSystem.tokensEarned(from: state)
-        let fromCalc = EconomyCalculator.legacyTokens(totalGold: gold)
-        #expect(fromSystem == fromCalc)
-    }
-
     @Test("Tokens earned are 0 below threshold")
     func tokensEarnedBelowThreshold() {
-        let state = GameState.initial(firstLevelID: "test").withGold(500_000_000_000)
+        let state = GameState.initial(firstLevelID: "test").withGold(threshold / 2)
         #expect(PrestigeSystem.tokensEarned(from: state) == 0)
     }
 
-    @Test("Tokens earned scale with gold earned")
+    @Test("Tokens earned scale with the square root of lifetime earnings")
     func tokensEarnedScaling() {
-        let state4t = GameState.initial(firstLevelID: "test").withGold(4_000_000_000_000)
-        let state9t = GameState.initial(firstLevelID: "test").withGold(9_000_000_000_000)
-        #expect(PrestigeSystem.tokensEarned(from: state4t) == 2)
-        #expect(PrestigeSystem.tokensEarned(from: state9t) == 3)
+        let state4x = GameState.initial(firstLevelID: "test").withGold(threshold * 4)
+        let state9x = GameState.initial(firstLevelID: "test").withGold(threshold * 9)
+        #expect(PrestigeSystem.tokensEarned(from: state4x) == 2)
+        #expect(PrestigeSystem.tokensEarned(from: state9x) == 3)
+    }
+
+    // MARK: - Regression: the unbounded prestige farm
+
+    /// `tokensEarned` is a delta against tokens already granted, not the raw lifetime total.
+    ///
+    /// `totalLifetimeGold` never resets and the gate milestone is flagged permanent, so the
+    /// raw-total version left `canPrestige` true forever after the first reset and every
+    /// additional tap re-awarded the full amount — 1,000 taps compounded to roughly 5,881×
+    /// production and maxed every leaderboard.
+    @Test("A second prestige with no intervening earnings awards zero tokens")
+    func prestigeIsNotFarmable() {
+        let theme = ungatedTheme
+        let first = GameState.initial(firstLevelID: "level_1").withGold(threshold * 9)
+        #expect(PrestigeSystem.tokensEarned(from: first) == 3)
+
+        let afterFirst = first.applying(
+            prestige: PrestigeSystem.tokensEarned(from: first),
+            firstLevelID: "level_1",
+            keepingMilestoneIDs: []
+        )
+        #expect(afterFirst.prestigeTokens == 3)
+        #expect(PrestigeSystem.tokensEarned(from: afterFirst) == 0)
+        #expect(!PrestigeSystem.canPrestige(state: afterFirst, theme: theme))
+
+        // Repeated attempts must stay at zero.
+        var state = afterFirst
+        for _ in 0..<10 {
+            let earned = PrestigeSystem.tokensEarned(from: state)
+            #expect(earned == 0)
+            state = state.applying(
+                prestige: earned, firstLevelID: "level_1", keepingMilestoneIDs: []
+            )
+        }
+        #expect(state.prestigeTokens == 3)
+    }
+
+    @Test("Earning past the next threshold re-enables prestige for the delta only")
+    func prestigeResumesAfterMoreEarnings() {
+        let afterFirst = GameState.initial(firstLevelID: "level_1")
+            .withGold(threshold * 9)
+            .applying(prestige: 3, firstLevelID: "level_1", keepingMilestoneIDs: [])
+        #expect(PrestigeSystem.tokensEarned(from: afterFirst) == 0)
+
+        // Lifetime earnings now entitle the player to 5 tokens total; 3 are already held.
+        let grown = afterFirst.withGold(threshold * 25 - threshold * 9)
+        #expect(EconomyCalculator.legacyTokens(totalGold: grown.totalLifetimeGold) == 5)
+        #expect(PrestigeSystem.tokensEarned(from: grown) == 2)
     }
 
     // MARK: - persistentMilestoneIDs

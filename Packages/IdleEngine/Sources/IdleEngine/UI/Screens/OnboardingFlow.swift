@@ -161,13 +161,15 @@ final class OnboardingViewModel {
 
     func restorePurchases() async {
         isRestoring = true
-        try? await LiveStoreKitService().restorePurchases()
+        // Routed through the coordinator so the result reflects every ad-free and premium
+        // product. This used to call two single-product lookups — `premiumPass` and
+        // `removeAds` only — so a returning annual subscriber or Patron Pack owner restored
+        // successfully and was still shown the paywall.
+        _ = await PurchaseCoordinator.shared.restorePurchases()
         isRestoring = false
-        guard let theme = await GameEngine.shared.currentTheme else { return }
-        let svc = LiveStoreKitService()
-        let hasPass  = await svc.isPremiumPassActive(productID: theme.iapProducts.premiumPass ?? "")
-        let hasNoAds = await svc.isAdFreeActive(productID: theme.iapProducts.removeAds ?? "")
-        if hasPass || hasNoAds { markComplete() }
+        if EntitlementStore.shared.isAdFree || EntitlementStore.shared.hasPremiumPass {
+            markComplete()
+        }
     }
 
     func skipPaywall() {
@@ -438,6 +440,34 @@ private struct OnboardingPaywallPage: View {
                             .padding(.horizontal, 24)
                             .padding(.top, 16)
 
+                            // App Store Guideline 3.1.2 requires an auto-renew disclosure in
+                            // the binary, not only in the store listing. Nothing in the app
+                            // stated it anywhere.
+                            Text(Self.autoRenewDisclosure)
+                                .font(Typography.caption)
+                                .foregroundStyle(.white.opacity(0.55))
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal, 24)
+                                .padding(.top, 12)
+
+                            // `paywallSkipButton` ("Start for Free") is defined in every
+                            // theme JSON, decoded, and was rendered nowhere. The only exit
+                            // was a 14pt ✕ at 70% opacity on a modal that also sets
+                            // `.interactiveDismissDisabled()` — exactly the hard-paywall
+                            // pattern App Review flags.
+                            Button {
+                                vm.skipPaywall()
+                            } label: {
+                                Text(theme.copy.onboardingCopy.paywallSkipButton)
+                                    .font(Typography.headline)
+                                    .foregroundStyle(.white)
+                                    .frame(maxWidth: .infinity, minHeight: 50)
+                                    .background(.white.opacity(0.14), in: Capsule())
+                            }
+                            .disabled(vm.isPurchasing || vm.isRestoring)
+                            .padding(.horizontal, 24)
+                            .padding(.top, 14)
+
                             Button {
                                 Task { await vm.restorePurchases() }
                             } label: {
@@ -451,8 +481,8 @@ private struct OnboardingPaywallPage: View {
                                     }
                                 }
                                 .font(Typography.subheadline)
-                                .foregroundStyle(.white.opacity(0.5))
-                                .padding(.vertical, 10)
+                                .foregroundStyle(.white.opacity(0.7))
+                                .frame(minHeight: 44)
                             }
                             .disabled(vm.isPurchasing || vm.isRestoring)
                             .padding(.top, 4)
@@ -498,12 +528,13 @@ private struct OnboardingPaywallPage: View {
                 vm.skipPaywall()
             } label: {
                 Image(systemName: "xmark")
-                    .font(.system(size: 14, weight: .semibold))
-                    .padding(10)
-                    .background(.white.opacity(0.12))
+                    .font(.system(size: 16, weight: .semibold))
+                    .frame(width: 44, height: 44)
+                    .background(.white.opacity(0.18))
                     .clipShape(.circle)
-                    .foregroundStyle(.white.opacity(0.7))
+                    .foregroundStyle(.white)
             }
+            .accessibilityLabel(Text("Close and continue for free"))
             .disabled(vm.isPurchasing || vm.isRestoring)
             .padding(.top, 16)
             .padding(.trailing, 20)
@@ -515,6 +546,15 @@ private struct OnboardingPaywallPage: View {
 }
 
 // MARK: - ProductCard
+
+/// Auto-renew terms required in-binary by App Store Guideline 3.1.2.
+extension OnboardingPaywallPage {
+    static let autoRenewDisclosure = String(localized: """
+        Payment is charged to your Apple Account at confirmation of purchase. \
+        Subscriptions renew automatically unless cancelled at least 24 hours before the end \
+        of the current period. Manage or cancel anytime in your Apple Account settings.
+        """)
+}
 
 private struct ProductCard: View {
     let product: Product

@@ -121,7 +121,9 @@ public struct PrestigeSheet: View {
                 .padding(.horizontal, 24)
                 .padding(.bottom, 32)
         }
+        #if os(iOS)
         .presentationDetents([.large])
+        #endif
         .presentationDragIndicator(.visible)
         .presentationBackground(.ultraThinMaterial)
     }

@@ -105,6 +105,31 @@ public struct GameState: Sendable, Equatable, Codable {
         milestoneConstructionEndDate = try c.decodeIfPresent(Date.self, forKey: .milestoneConstructionEndDate)
     }
 
+    /// Sets are written as *sorted* arrays.
+    ///
+    /// `JSONEncoder.outputFormatting = [.sortedKeys]` orders object keys but not array
+    /// elements, and `Set` has no inherent order — so re-encoding unchanged state produced
+    /// different bytes every time. That makes saves undiffable, defeats byte comparison, and
+    /// makes CloudKit treat an untouched record as modified on every single write.
+    public func encode(to encoder: any Encoder) throws {
+        var c = encoder.container(keyedBy: CodingKeys.self)
+        try c.encode(currentLevelID, forKey: .currentLevelID)
+        try c.encode(resources, forKey: .resources)
+        try c.encode(unitCounts, forKey: .unitCounts)
+        try c.encode(completedMilestoneIDs.sorted(), forKey: .completedMilestoneIDs)
+        try c.encode(purchasedUpgradeIDs.sorted(), forKey: .purchasedUpgradeIDs)
+        try c.encode(prestigeTokens, forKey: .prestigeTokens)
+        try c.encode(totalPrestigeCount, forKey: .totalPrestigeCount)
+        try c.encode(totalLifetimeGold, forKey: .totalLifetimeGold)
+        try c.encode(sessionStartDate, forKey: .sessionStartDate)
+        try c.encode(lastSaveDate, forKey: .lastSaveDate)
+        try c.encode(studioPoints, forKey: .studioPoints)
+        try c.encode(earnedAchievementIDs.sorted(), forKey: .earnedAchievementIDs)
+        try c.encode(totalPlaySeconds, forKey: .totalPlaySeconds)
+        try c.encodeIfPresent(inProgressMilestoneID, forKey: .inProgressMilestoneID)
+        try c.encodeIfPresent(milestoneConstructionEndDate, forKey: .milestoneConstructionEndDate)
+    }
+
     // MARK: - CodingKeys
 
     private enum CodingKeys: String, CodingKey {
@@ -133,9 +158,46 @@ public struct GameState: Sendable, Equatable, Codable {
 
     // MARK: - Mutations (all return new instances)
 
-    /// Adds `production` to resources. Tracks lifetime gold separately.
-    public func applying(production: ResourceBundle) -> GameState {
+    /// Stamps `lastSaveDate`. Called by the persistence layer immediately before writing.
+    ///
+    /// `lastSaveDate` used to be re-stamped by every mutation including `applying(production:)`,
+    /// which runs on every tick. That made `newState != oldState` unconditionally true, so the
+    /// view models' equality guards could never succeed and `GameplayScreen.body` re-evaluated
+    /// 10×/second forever. The timestamp describes when state was persisted, so only the
+    /// persistence layer should set it.
+    public func markingSaved(at date: Date = Date()) -> GameState {
         GameState(
+            currentLevelID: currentLevelID,
+            resources: resources,
+            unitCounts: unitCounts,
+            completedMilestoneIDs: completedMilestoneIDs,
+            purchasedUpgradeIDs: purchasedUpgradeIDs,
+            prestigeTokens: prestigeTokens,
+            totalPrestigeCount: totalPrestigeCount,
+            totalLifetimeGold: totalLifetimeGold,
+            sessionStartDate: sessionStartDate,
+            lastSaveDate: date,
+            studioPoints: studioPoints,
+            earnedAchievementIDs: earnedAchievementIDs,
+            totalPlaySeconds: totalPlaySeconds,
+            inProgressMilestoneID: inProgressMilestoneID,
+            milestoneConstructionEndDate: milestoneConstructionEndDate
+        )
+    }
+
+    /// Adds `production` to resources. Tracks lifetime primary-currency earnings separately.
+    ///
+    /// - Parameter primaryCurrency: The theme's primary currency key (`theme.primaryCurrency`).
+    ///   Lifetime earnings of this resource feed the prestige token formula. This used to be
+    ///   the hardcoded literal `"gold"`, which silently froze prestige progression and the
+    ///   leaderboard score for any theme that named its currency anything else.
+    public func applying(production: ResourceBundle, primaryCurrency: String) -> GameState {
+        // Only credit lifetime earnings for genuine income. Negative production is reachable
+        // (a refunded cost, a clock-skew offline settlement) and must never reduce a lifetime
+        // total that prestige tokens and leaderboard rank are derived from.
+        let earned = production[primaryCurrency]
+        let lifetimeDelta = earned > 0 ? earned : 0
+        return GameState(
             currentLevelID: currentLevelID,
             resources: resources + production,
             unitCounts: unitCounts,
@@ -143,9 +205,9 @@ public struct GameState: Sendable, Equatable, Codable {
             purchasedUpgradeIDs: purchasedUpgradeIDs,
             prestigeTokens: prestigeTokens,
             totalPrestigeCount: totalPrestigeCount,
-            totalLifetimeGold: totalLifetimeGold + production["gold"],
+            totalLifetimeGold: totalLifetimeGold + lifetimeDelta,
             sessionStartDate: sessionStartDate,
-            lastSaveDate: Date(),
+            lastSaveDate: lastSaveDate,
             studioPoints: studioPoints,
             earnedAchievementIDs: earnedAchievementIDs,
             totalPlaySeconds: totalPlaySeconds,
@@ -155,7 +217,12 @@ public struct GameState: Sendable, Equatable, Codable {
     }
 
     /// Deducts `cost` and increments unit count.
+    ///
+    /// `quantity` must be positive; a non-positive value is a no-op. `GameEngine.purchaseUnit`
+    /// rejects it earlier, but a negative count here would poison every subsequent cost
+    /// calculation for that unit, so the invariant is enforced in both places.
     public func purchasing(unitID: String, quantity: Int, cost: ResourceBundle) -> GameState {
+        guard quantity > 0 else { return self }
         var newCounts = unitCounts
         newCounts[unitID] = (newCounts[unitID] ?? 0) + quantity
         return GameState(
@@ -168,7 +235,7 @@ public struct GameState: Sendable, Equatable, Codable {
             totalPrestigeCount: totalPrestigeCount,
             totalLifetimeGold: totalLifetimeGold,
             sessionStartDate: sessionStartDate,
-            lastSaveDate: Date(),
+            lastSaveDate: lastSaveDate,
             studioPoints: studioPoints,
             earnedAchievementIDs: earnedAchievementIDs,
             totalPlaySeconds: totalPlaySeconds,
@@ -191,7 +258,7 @@ public struct GameState: Sendable, Equatable, Codable {
             totalPrestigeCount: totalPrestigeCount,
             totalLifetimeGold: totalLifetimeGold,
             sessionStartDate: sessionStartDate,
-            lastSaveDate: Date(),
+            lastSaveDate: lastSaveDate,
             studioPoints: studioPoints,
             earnedAchievementIDs: earnedAchievementIDs,
             totalPlaySeconds: totalPlaySeconds,
@@ -214,7 +281,7 @@ public struct GameState: Sendable, Equatable, Codable {
             totalPrestigeCount: totalPrestigeCount,
             totalLifetimeGold: totalLifetimeGold,
             sessionStartDate: sessionStartDate,
-            lastSaveDate: Date(),
+            lastSaveDate: lastSaveDate,
             studioPoints: studioPoints + 25,
             earnedAchievementIDs: earnedAchievementIDs,
             totalPlaySeconds: totalPlaySeconds,
@@ -235,7 +302,7 @@ public struct GameState: Sendable, Equatable, Codable {
             totalPrestigeCount: totalPrestigeCount,
             totalLifetimeGold: totalLifetimeGold,
             sessionStartDate: sessionStartDate,
-            lastSaveDate: Date(),
+            lastSaveDate: lastSaveDate,
             studioPoints: studioPoints + 50,
             earnedAchievementIDs: earnedAchievementIDs,
             totalPlaySeconds: totalPlaySeconds,
@@ -258,7 +325,7 @@ public struct GameState: Sendable, Equatable, Codable {
             totalPrestigeCount: totalPrestigeCount + 1,
             totalLifetimeGold: totalLifetimeGold,
             sessionStartDate: Date(),
-            lastSaveDate: Date(),
+            lastSaveDate: lastSaveDate,
             studioPoints: studioPoints,
             earnedAchievementIDs: earnedAchievementIDs,
             totalPlaySeconds: totalPlaySeconds,
@@ -282,7 +349,7 @@ public struct GameState: Sendable, Equatable, Codable {
             totalPrestigeCount: totalPrestigeCount,
             totalLifetimeGold: totalLifetimeGold,
             sessionStartDate: sessionStartDate,
-            lastSaveDate: Date(),
+            lastSaveDate: lastSaveDate,
             studioPoints: studioPoints,
             earnedAchievementIDs: newIDs,
             totalPlaySeconds: totalPlaySeconds,
@@ -324,7 +391,7 @@ public struct GameState: Sendable, Equatable, Codable {
             totalPrestigeCount: totalPrestigeCount,
             totalLifetimeGold: totalLifetimeGold,
             sessionStartDate: sessionStartDate,
-            lastSaveDate: Date(),
+            lastSaveDate: lastSaveDate,
             studioPoints: studioPoints,
             earnedAchievementIDs: earnedAchievementIDs,
             totalPlaySeconds: totalPlaySeconds,

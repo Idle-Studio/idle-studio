@@ -114,7 +114,7 @@ extension MockThemePackage {
             gameID: "mock-game",
             displayName: "Mock Game",
             bundleID: "com.test.mock",
-            primaryCurrency: "Gold",
+            primaryCurrency: "gold",
             primaryCurrencyIcon: "coin",
             themeColors: .fixture,
             levels: [level1, level2],
@@ -187,7 +187,27 @@ extension ThemeCopy {
             enableButton: "Enable",
             laterButton: "Later"
         ),
-        onboarding: []
+        onboarding: [],
+        // Explicit paywall copy. The validator rejects a theme that declares a subscription
+        // while leaving `onboardingCopy` at the engine default, because that ships a real
+        // subscription behind placeholder marketing text.
+        onboardingCopy: ThemeCopy.OnboardingCopy(
+            welcomeTitle: "Welcome",
+            welcomeTagline: "A mock game for tests.",
+            beginButton: "Begin",
+            heroArtworkAsset: "artwork_level_1",
+            paywallTitle: "Go Premium",
+            paywallSubtitle: "Unlock everything.",
+            paywallBulletPoints: ["2× offline income"],
+            paywallSkipButton: "Start for Free",
+            paywallRestoreButton: "Restore Purchases",
+            paywallBestValueBadge: "Best Value",
+            paywallNoProductsMessage: "Store unavailable.",
+            paywallMonthlyLabel: "Monthly",
+            paywallAnnualLabel: "Annual"
+        ),
+        privacyPolicyURL: "https://idle-studio.example/privacy",
+        termsOfUseURL: "https://idle-studio.example/terms"
     )
 }
 
@@ -196,6 +216,11 @@ extension ThemeCopy {
 extension GameState {
     /// Convenience: start from initial and apply gold directly (skips production tick).
     func withGold(_ gold: Decimal) -> GameState {
-        applying(production: ResourceBundle(["gold": gold]))
+        applying(production: ResourceBundle(["gold": gold]), primaryCurrency: "gold")
+    }
+
+    /// Applies production using "gold" as the primary currency — the default for fixtures.
+    func applyingGold(_ bundle: ResourceBundle) -> GameState {
+        applying(production: bundle, primaryCurrency: "gold")
     }
 }

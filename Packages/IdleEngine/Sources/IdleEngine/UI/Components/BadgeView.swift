@@ -30,17 +30,19 @@ public struct BadgeView: View {
                 badgeCircle
                     .frame(width: 72, height: 72)
 
+                // No fixed height — two lines need ~68pt at accessibility text sizes and the
+                // title used to clip mid-word inside a 36pt box.
                 Text(achievement.displayName)
                     .font(Typography.caption.weight(.semibold))
                     .multilineTextAlignment(.center)
                     .lineLimit(2)
                     .foregroundStyle(isEarned ? Color.primary : Color.primary.opacity(0.4))
-                    .frame(width: 80, height: 36, alignment: .top)
+                    .frame(width: 80, alignment: .top)
             }
         }
         .buttonStyle(.plain)
         .accessibilityLabel("\(achievement.displayName), \(isEarned ? "earned" : "locked")")
-        .accessibilityHint("Double-tap to view details")
+        .accessibilityHint("Shows how this achievement is earned")
         .sheet(isPresented: $showDetail) {
             BadgeDetailSheet(achievement: achievement, isEarned: isEarned)
         }
@@ -96,6 +98,8 @@ struct BadgeDetailSheet: View {
     let achievement: ThemeAchievement
     let isEarned: Bool
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.theme) private var theme
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
 
     private var gradientColors: [Color] {
         achievement.badgeColors.prefix(2).map { Color(hex: $0) }
@@ -173,8 +177,18 @@ struct BadgeDetailSheet: View {
                     .foregroundStyle(Color.secondary)
                     .padding(.bottom, 24)
         }
-        .presentationDetents([.medium])
+        #if os(iOS)
+        .presentationDetents([.medium, .large])
+        #endif
         .presentationDragIndicator(.visible)
-        .presentationBackground(.ultraThinMaterial)
+        // Reduce Transparency swaps the blur for a system fill, but the foreground colors here
+        // were chosen against a blurred backdrop — use the opaque theme background instead.
+        .presentationBackground {
+            if reduceTransparency {
+                theme.backgroundColor
+            } else {
+                Rectangle().fill(.ultraThinMaterial)
+            }
+        }
     }
 }

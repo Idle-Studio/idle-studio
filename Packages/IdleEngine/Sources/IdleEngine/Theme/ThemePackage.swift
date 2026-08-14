@@ -522,12 +522,21 @@ public struct ThemeColors: Sendable, Equatable, Codable {
     public let textPrimary: String
     public let textSecondary: String
     public let goldAccent: String
+    /// Optional light-mode variant of `goldAccent`.
+    ///
+    /// When omitted, `AppTheme` darkens `goldAccent` until it clears WCAG AA against a white
+    /// surface. Supply this only when the derived colour isn't the shade you want — the
+    /// accent must never be used unadapted, because typical accent hues (#FFD700 scores
+    /// 1.40:1) are invisible on a light background, and this accent carries the primary
+    /// resource counter and every cost label.
+    public let goldAccentLight: String?
     /// One entry per level, applied to the UI when that level is active.
     public let levelColors: [ThemeLevelColor]
 
     public init(
         background: String, surface: String, surfaceElevated: String,
         textPrimary: String, textSecondary: String, goldAccent: String,
+        goldAccentLight: String? = nil,
         levelColors: [ThemeLevelColor]
     ) {
         self.background = background
@@ -536,6 +545,7 @@ public struct ThemeColors: Sendable, Equatable, Codable {
         self.textPrimary = textPrimary
         self.textSecondary = textSecondary
         self.goldAccent = goldAccent
+        self.goldAccentLight = goldAccentLight
         self.levelColors = levelColors
     }
 }
@@ -589,6 +599,10 @@ public struct ThemeCopy: Sendable, Equatable, Codable {
     public let onboardingCopy: OnboardingCopy
     public let privacyPolicyURL: String
     public let termsOfUseURL: String
+    /// Where players can reach a human. Surfaced in Settings and on the load-failure screen.
+    /// A `mailto:` URL is fine. Without this there is no in-app support path at all, and the
+    /// only route left to a player is a cold email to whatever address they can find.
+    public let supportURL: String?
 
     public init(
         unitNoun: String, unitNounPlural: String, levelNoun: String,
@@ -604,7 +618,8 @@ public struct ThemeCopy: Sendable, Equatable, Codable {
         notificationPermission: NotificationPermissionCopy, onboarding: [OnboardingStep],
         onboardingCopy: OnboardingCopy = .default,
         privacyPolicyURL: String = "",
-        termsOfUseURL: String = "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"
+        termsOfUseURL: String = "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/",
+        supportURL: String? = nil
     ) {
         self.unitNoun = unitNoun
         self.unitNounPlural = unitNounPlural
@@ -635,6 +650,7 @@ public struct ThemeCopy: Sendable, Equatable, Codable {
         self.onboardingCopy = onboardingCopy
         self.privacyPolicyURL = privacyPolicyURL
         self.termsOfUseURL = termsOfUseURL
+        self.supportURL = supportURL
     }
 
     public init(from decoder: any Decoder) throws {
@@ -669,6 +685,7 @@ public struct ThemeCopy: Sendable, Equatable, Codable {
         privacyPolicyURL = try c.decodeIfPresent(String.self, forKey: .privacyPolicyURL) ?? ""
         termsOfUseURL = try c.decodeIfPresent(String.self, forKey: .termsOfUseURL)
             ?? "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"
+        supportURL = try c.decodeIfPresent(String.self, forKey: .supportURL)
     }
 
     public struct OfflineSheetCopy: Sendable, Equatable, Codable {
@@ -932,6 +949,8 @@ extension JSONThemePackage: Codable {
             let textPrimary: String
             let textSecondary: String
             let goldAccent: String
+            /// Optional. `AppTheme` derives an AA-compliant light variant when absent.
+            let goldAccentLight: String?
         }
         let colors: Colors
         let levelColors: [ThemeLevelColor]
@@ -951,6 +970,7 @@ extension JSONThemePackage: Codable {
             background: ts.colors.background, surface: ts.colors.surface,
             surfaceElevated: ts.colors.surfaceElevated, textPrimary: ts.colors.textPrimary,
             textSecondary: ts.colors.textSecondary, goldAccent: ts.colors.goldAccent,
+            goldAccentLight: ts.colors.goldAccentLight,
             levelColors: ts.levelColors
         )
 
@@ -980,7 +1000,8 @@ extension JSONThemePackage: Codable {
                 surfaceElevated: themeColors.surfaceElevated,
                 textPrimary: themeColors.textPrimary,
                 textSecondary: themeColors.textSecondary,
-                goldAccent: themeColors.goldAccent
+                goldAccent: themeColors.goldAccent,
+                goldAccentLight: themeColors.goldAccentLight
             ),
             levelColors: themeColors.levelColors
         )

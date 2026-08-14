@@ -196,7 +196,7 @@ final class AchievementsViewModel {
         // Start observing state for live updates
         streamTask?.cancel()
         streamTask = Task { [weak self] in
-            for await state in GameEngine.shared.stateStream() {
+            for await state in await GameEngine.shared.stateStream() {
                 guard let self else { break }
                 // Guard assignments — @Observable fires on every set, even identical values.
                 // Without this guard the entire achievement grid re-renders 10×/sec.

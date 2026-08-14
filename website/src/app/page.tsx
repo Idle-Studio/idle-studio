@@ -54,7 +54,7 @@ export default function HomePage() {
                 ].map((stat) => (
                   <div key={stat.label} className="p-6 rounded-2xl border border-white/10 bg-white/[0.03]">
                     <p className="font-serif text-4xl font-bold text-white mb-1">{stat.number}</p>
-                    <p className="text-white/40 text-sm font-sans">{stat.label}</p>
+                    <p className="text-white/60 text-sm font-sans">{stat.label}</p>
                   </div>
                 ))}
               </div>

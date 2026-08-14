@@ -57,13 +57,14 @@ public struct MilestoneCard: View {
                 Button(action: onStart) {
                     Text(theme.copy.startMilestoneButton)
                         .font(Typography.subheadline.weight(.semibold))
-                        .frame(maxWidth: .infinity)
                         .padding(.vertical, 8)
+                        // 44pt is Apple's minimum tap target — this was ~33pt.
+                        .frame(maxWidth: .infinity, minHeight: 44)
                         .background(theme.goldAccentColor)
                         .foregroundStyle(.black)
                         .clipShape(.rect(cornerRadius: 10))
                 }
-                .accessibilityHint("Double-tap to begin construction")
+                .accessibilityHint("Starts construction of this \(theme.copy.milestoneNoun.lowercased())")
             }
         }
         .padding(14)
@@ -111,11 +112,11 @@ public struct MilestoneCard: View {
     private func requirementLabel(_ req: ResourceBundle) -> some View {
         HStack(spacing: 4) {
             Image(systemName: "lock.fill")
-            Text(req["gold"].idleFormatted())
+            Text(req[theme.primaryCurrency].idleFormatted())
         }
         .font(Typography.caption)
         .foregroundStyle(theme.textSecondaryColor)
-        .accessibilityLabel("Locked. Requires \(req["gold"].idleFormatted()) gold")
+        .accessibilityLabel("Locked. Requires \(req[theme.primaryCurrency].idleFormatted())")
     }
 
     @ViewBuilder

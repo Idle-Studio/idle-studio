@@ -48,8 +48,13 @@ function WonderCard({
   game: GameConfig
   index: number
 }) {
+  // Hover alone leaves the bonus unreachable on touch and by keyboard, so the
+  // card is a real button that also reveals on focus and on tap.
   const [hovered, setHovered] = useState(false)
-  const cardRef = useRef<HTMLDivElement>(null)
+  const [focused, setFocused] = useState(false)
+  const [tapped, setTapped] = useState(false)
+  const revealed = hovered || focused || tapped
+  const cardRef = useRef<HTMLButtonElement>(null)
   const { scrollYProgress } = useScroll({
     target: cardRef,
     offset: ['start end', 'end start'],
@@ -57,21 +62,34 @@ function WonderCard({
   const imgY = useTransform(scrollYProgress, [0, 1], ['-10%', '10%'])
 
   return (
-    <motion.div
+    <motion.button
       ref={cardRef}
+      type="button"
+      aria-expanded={revealed}
+      aria-label={`${wonder.displayName}, ${wonder.era}. ${wonder.bonus}`}
       initial={{ opacity: 0, scale: 0.92 }}
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.6, delay: index * 0.07 }}
       onHoverStart={() => setHovered(true)}
-      onHoverEnd={() => setHovered(false)}
-      className="relative aspect-[4/3] rounded-2xl overflow-hidden cursor-pointer border border-white/10"
+      onHoverEnd={() => {
+        setHovered(false)
+        setTapped(false)
+      }}
+      onFocus={() => setFocused(true)}
+      onBlur={() => {
+        setFocused(false)
+        setTapped(false)
+      }}
+      onClick={() => setTapped(t => !t)}
+      className="relative block w-full text-left aspect-[4/3] rounded-2xl overflow-hidden cursor-pointer border border-white/10"
     >
       <motion.div style={{ y: imgY }} className="absolute inset-[-10%]">
         <Image
           src={assetPath(game.id, 'wonders', wonder.artworkAsset)}
           alt={wonder.displayName}
           fill
+          sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
           className="object-cover"
         />
       </motion.div>
@@ -83,7 +101,7 @@ function WonderCard({
       </div>
 
       <AnimatePresence>
-        {hovered && (
+        {revealed && (
           <motion.div
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
@@ -102,6 +120,6 @@ function WonderCard({
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </motion.button>
   )
 }

@@ -13,8 +13,18 @@ public enum PrestigeSystem {
     // MARK: - Token Calculation
 
     /// Tokens that will be earned if the player prestiges right now.
+    ///
+    /// This is the *delta* between what the player's lifetime earnings entitle them to
+    /// and what they have already been granted — not the raw total.
+    ///
+    /// `totalLifetimeGold` deliberately never resets, and the theme's gate milestone is
+    /// flagged `isPermanentBonus` so it survives the reset too. Returning the raw total
+    /// therefore meant `canPrestige` stayed true forever after the first prestige, and
+    /// every subsequent tap re-awarded the full amount with no cooldown and no cost:
+    /// 1,000 taps compounded to roughly 5,881× production and maxed every leaderboard.
     public static func tokensEarned(from state: GameState) -> Decimal {
-        EconomyCalculator.legacyTokens(totalGold: state.totalLifetimeGold)
+        let entitled = EconomyCalculator.legacyTokens(totalGold: state.totalLifetimeGold)
+        return max(0, entitled - state.prestigeTokens)
     }
 
     // MARK: - Availability

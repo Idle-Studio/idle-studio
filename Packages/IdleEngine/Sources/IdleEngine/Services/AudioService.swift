@@ -12,8 +12,10 @@ import AVFoundation
     private init() {
         // .playback ignores the Ring/Silent switch — game music should always play
         // when the user has sound enabled in the app, regardless of system mute.
+        #if os(iOS) || os(tvOS) || os(watchOS)
         try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
         try? AVAudioSession.sharedInstance().setActive(true)
+        #endif
     }
 
     /// Start looping the named ambient track. Does nothing if already playing the same track.

@@ -1,0 +1,24 @@
+version: 2
+
+updates:
+  # Third-party actions run with repo credentials — keep them current, and
+  # grouped so this is one PR a month rather than one per action.
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]
+
+  - package-ecosystem: npm
+    directory: "/website"
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 5
+    groups:
+      # Routine patch/minor churn in one PR; majors stay separate so the
+      # breaking-change review is not buried.
+      website-minor:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]

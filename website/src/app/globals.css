@@ -23,3 +23,25 @@ body {
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: #0D0D0F; }
 ::-webkit-scrollbar-thumb { background: #2A2A2A; border-radius: 3px; }
+
+/* Visible keyboard focus on every interactive element, in the studio gold. */
+:focus-visible {
+  outline: 2px solid #C8A84B;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

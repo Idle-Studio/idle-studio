@@ -1,0 +1,18 @@
+# Idle Studio code owners.
+# Last matching pattern wins, so the most specific rules go last.
+
+* @Idle-Studio/maintainers
+
+# The shared engine is built once and consumed by every game — changes here
+# affect all titles, so they always need engine review.
+/Packages/IdleEngine/ @Idle-Studio/maintainers
+/engine/              @Idle-Studio/maintainers
+
+# Release automation and CI touch signing, credentials and App Store Connect.
+/.github/             @Idle-Studio/maintainers
+/Makefile             @Idle-Studio/maintainers
+/tools/release/       @Idle-Studio/maintainers
+
+# Anything that can leak credentials or personal data from this PUBLIC repo.
+/.gitignore                 @Idle-Studio/maintainers
+/engine/config/games.yml    @Idle-Studio/maintainers

@@ -54,7 +54,7 @@ func advanceLevel() { ... }
 ### Hardcoded Product IDs
 ```swift
 // ❌ VIOLATION
-let productID = "com.yourstudio.idleciv.civ_pass.monthly"
+let productID = "com.idlestudio.idleciv.civ_pass.monthly"
 
 // ✅ CORRECT
 let productID = theme.iapProducts.premiumPass
@@ -63,7 +63,7 @@ let productID = theme.iapProducts.premiumPass
 ### Hardcoded Leaderboard IDs
 ```swift
 // ❌ VIOLATION
-GKLeaderboard.loadEntries(for: ["com.yourstudio.idleciv.lb.weekly_gold"])
+GKLeaderboard.loadEntries(for: ["com.idlestudio.idleciv.lb.weekly_gold"])
 
 // ✅ CORRECT
 GKLeaderboard.loadEntries(for: [theme.leaderboards.weeklyGold])

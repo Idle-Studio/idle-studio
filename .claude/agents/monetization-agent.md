@@ -23,15 +23,15 @@ Every game must have these product IDs, following the pattern:
 com.[studio].[game-kebab-id-no-dashes].[product-type]
 
 Examples for "idle-restaurant-empire":
-  com.yourstudio.idlerestaurant.starter_pack
-  com.yourstudio.idlerestaurant.remove_ads
-  com.yourstudio.idlerestaurant.pass.monthly
-  com.yourstudio.idlerestaurant.pass.annual
-  com.yourstudio.idlerestaurant.coins.1000
-  com.yourstudio.idlerestaurant.coins.5000
-  com.yourstudio.idlerestaurant.coins.15000
-  com.yourstudio.idlerestaurant.patron_lifetime
-  com.yourstudio.idlerestaurant.bundle.street_food_cart  (one per level)
+  com.idlestudio.idlerestaurant.starter_pack
+  com.idlestudio.idlerestaurant.remove_ads
+  com.idlestudio.idlerestaurant.pass.monthly
+  com.idlestudio.idlerestaurant.pass.annual
+  com.idlestudio.idlerestaurant.coins.1000
+  com.idlestudio.idlerestaurant.coins.5000
+  com.idlestudio.idlerestaurant.coins.15000
+  com.idlestudio.idlerestaurant.patron_lifetime
+  com.idlestudio.idlerestaurant.bundle.street_food_cart  (one per level)
 ```
 
 ## The Non-Negotiable Rules (apply to ALL games)

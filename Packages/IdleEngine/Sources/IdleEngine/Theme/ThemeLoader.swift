@@ -1,7 +1,7 @@
 import Foundation
 
 /// Loads a `JSONThemePackage` from the app bundle by filename.
-/// Each game target ships its theme JSON file (e.g. `civilizations.json`) in its bundle.
+/// Each game target ships its theme JSON file (e.g. `idle-civilizations.json`) in its bundle.
 public enum ThemeLoader {
 
     /// Load and decode a theme from `[name].json` in the given bundle.

@@ -67,7 +67,7 @@ public struct EraUpgradeCard: View {
                     }
                     .disabled(!canAfford)
                     .accessibilityLabel("Buy \(upgrade.displayName)")
-                    .accessibilityHint("Double-tap to purchase this upgrade")
+                    .accessibilityHint("Purchases this permanent upgrade")
                 }
             }
         }

@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion'
 import { studioConfig } from '@/config/studio'
 
 export function StudioHero() {
@@ -9,6 +9,7 @@ export function StudioHero() {
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '20%'])
+  const prefersReducedMotion = useReducedMotion()
 
   const words = studioConfig.tagline.split(' ')
 
@@ -20,47 +21,28 @@ export function StudioHero() {
       />
 
       <motion.div style={{ opacity, y }} className="relative z-10 text-center px-6 max-w-5xl mx-auto">
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-gold-500 text-sm uppercase tracking-[0.3em] mb-8 font-sans"
-        >
+        {/* Above the fold: rendered visible in the static HTML so first paint
+            does not wait on hydration. */}
+        <p className="text-gold-500 text-sm uppercase tracking-[0.3em] mb-8 font-sans">
           {studioConfig.name}
-        </motion.p>
+        </p>
 
         <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl font-bold text-white leading-[1.05] mb-8">
           {words.map((word, i) => (
-            <motion.span
-              key={i}
-              initial={{ opacity: 0, y: 60 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.4 + i * 0.1, ease: [0.21, 0.47, 0.32, 0.98] }}
-              className="inline-block mr-[0.25em]"
-            >
+            <span key={i} className="inline-block mr-[0.25em]">
               {word}
-            </motion.span>
+            </span>
           ))}
         </h1>
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.9 }}
-          className="text-white/50 text-lg md:text-xl max-w-xl mx-auto leading-relaxed font-sans"
-        >
+        <p className="text-white/50 text-lg md:text-xl max-w-xl mx-auto leading-relaxed font-sans">
           {studioConfig.description}
-        </motion.p>
+        </p>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.4, duration: 0.8 }}
-          className="mt-16 flex justify-center"
-        >
+        <div className="mt-16 flex justify-center">
           <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
+            animate={prefersReducedMotion ? undefined : { y: [0, 10, 0] }}
+            transition={prefersReducedMotion ? undefined : { repeat: Infinity, duration: 2, ease: 'easeInOut' }}
             className="text-white/20 text-xs uppercase tracking-widest flex flex-col items-center gap-3"
           >
             <span>Scroll</span>
@@ -68,7 +50,7 @@ export function StudioHero() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
             </svg>
           </motion.div>
-        </motion.div>
+        </div>
       </motion.div>
     </section>
   )

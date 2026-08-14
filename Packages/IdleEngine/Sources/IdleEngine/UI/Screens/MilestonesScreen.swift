@@ -18,7 +18,7 @@ public final class MilestonesViewModel {
         streamTask = Task { [weak self] in
             let loadedTheme = await GameEngine.shared.currentTheme
             self?.theme = loadedTheme
-            for await newState in GameEngine.shared.stateStream() {
+            for await newState in await GameEngine.shared.stateStream() {
                 self?.state = newState
             }
         }
@@ -128,7 +128,9 @@ public struct MilestonesScreen: View {
                 }
             }
             .navigationTitle(theme.copy.milestoneNoun + "s")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.large)
+            #endif
         }
         .task { viewModel.start() }
     }

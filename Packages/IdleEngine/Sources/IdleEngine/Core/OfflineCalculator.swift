@@ -11,7 +11,7 @@ public enum OfflineCalculator {
     /// - Parameters:
     ///   - state: Game state at the moment the player left.
     ///   - units: All units from the active theme.
-    ///   - awayDuration: Actual seconds away. Capped at `maxCapSeconds`.
+    ///   - awayDuration: Actual seconds away. Clamped to `0...maxCapSeconds`.
     ///   - eraUpgrades: Upgrades for the current era (applied for production and offline bonuses).
     /// - Returns: An `OfflineResult` with the earned resources and cap info.
     public static func calculate(
@@ -20,7 +20,16 @@ public enum OfflineCalculator {
         awayDuration: TimeInterval,
         eraUpgrades: [ThemeEraUpgrade] = []
     ) -> OfflineResult {
-        let effectiveDuration = min(awayDuration, maxCapSeconds)
+        // Clamp BOTH ends. A negative duration is reachable in production — a device
+        // clock moved backwards, an NTP correction, or a `lastActiveDate` synced from a
+        // device running ahead. Without the lower bound the "earned" bundle is negative,
+        // `ResourceBundle -` has no floor at zero, and `applying(production:)` subtracts
+        // from lifetime currency, retroactively revoking prestige tokens and leaderboard
+        // score. A non-finite duration would trap in `Decimal(_: Double)`.
+        guard awayDuration.isFinite else {
+            return OfflineResult(earnedResources: .zero, effectiveDuration: 0, wasCapped: false)
+        }
+        let effectiveDuration = min(max(0, awayDuration), maxCapSeconds)
         let ratePerSecond = EconomyCalculator.productionRate(state: state, units: units, eraUpgrades: eraUpgrades)
         let offlineBonus = EconomyCalculator.eraOfflineMultiplier(purchasedIDs: state.purchasedUpgradeIDs, upgrades: eraUpgrades)
         let earned = ratePerSecond * Decimal(effectiveDuration) * offlineBonus

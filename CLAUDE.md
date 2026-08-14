@@ -66,7 +66,7 @@ Done when: a `ThemePackage` JSON can be loaded and the game is fully playable.
 
 ### Phase 2: Build Game #1 — Idle Civilizations (Month 3–4)
 Use the engine. Build only:
-- `civilizations.json` — the complete ThemePackage content
+- `idle-civilizations.json` — the complete ThemePackage content
 - Era artwork (8 scenes)
 - Building icons (~45 icons)
 - Wonder artwork (9 images)

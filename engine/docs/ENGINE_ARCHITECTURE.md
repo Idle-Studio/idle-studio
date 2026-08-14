@@ -210,7 +210,7 @@ struct LevelAdvanceScreen: View {
 
 | Asset / Config | Location | Example (Civ vs Restaurant) |
 |---------------|----------|-----------------------------|
-| Theme JSON | `games/[name]/[name].json` | `civilizations.json` vs `restaurant.json` |
+| Theme JSON | `games/[name]/[name].json` | `idle-civilizations.json` vs `idle-restaurant-empire.json` |
 | Level artwork | `Assets.xcassets/levels/` | Era panoramas vs cuisine kitchen scenes |
 | Unit icons | `Assets.xcassets/units/` | Campfire icon vs Pizza Oven icon |
 | Milestone artwork | `Assets.xcassets/milestones/` | Pyramid vs Michelin Star badge |

@@ -14,6 +14,9 @@ let package = Package(
         .target(
             name: "IdleEngine",
             path: "Sources/IdleEngine",
+            resources: [
+                .copy("PrivacyInfo.xcprivacy")
+            ],
             swiftSettings: [
                 .enableExperimentalFeature("StrictConcurrency")
             ]

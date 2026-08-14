@@ -11,10 +11,14 @@ public protocol StoreKitService: Sendable {
     func purchase(_ product: Product) async throws -> StoreKit.Transaction?
     /// Restore completed purchases (non-consumables and subscriptions).
     func restorePurchases() async throws
-    /// Whether the player has an active premium pass subscription.
-    func isPremiumPassActive(productID: String) async -> Bool
-    /// Whether ads have been removed.
-    func isAdFreeActive(productID: String) async -> Bool
+    /// Whether a specific product is currently entitled.
+    ///
+    /// - Important: this answers "does the player own *this exact product*", which is almost
+    ///   never the right question. Ad-free status comes from four different products and
+    ///   subscriptions resolve by group, so per-product checks are how three of the four paid
+    ///   ad-free offers ended up suppressing no ads at all. Use `EntitlementStore` for any
+    ///   entitlement decision; this remains for diagnostics only.
+    func isEntitled(productID: String) async -> Bool
     /// Async stream of transactions that complete (including from other devices via Family Sharing).
     var transactionUpdates: AsyncStream<StoreKit.Transaction> { get }
 }
@@ -61,11 +65,7 @@ public final class LiveStoreKitService: StoreKitService, @unchecked Sendable {
         try await AppStore.sync()
     }
 
-    public func isPremiumPassActive(productID: String) async -> Bool {
-        await isEntitlementActive(for: productID)
-    }
-
-    public func isAdFreeActive(productID: String) async -> Bool {
+    public func isEntitled(productID: String) async -> Bool {
         await isEntitlementActive(for: productID)
     }
 

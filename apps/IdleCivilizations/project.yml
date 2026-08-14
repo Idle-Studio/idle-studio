@@ -12,6 +12,9 @@ packages:
   GoogleMobileAds:
     url: https://github.com/googleads/swift-package-manager-google-mobile-ads
     from: 11.0.0
+  GoogleUserMessagingPlatform:
+    url: https://github.com/googleads/swift-package-manager-google-user-messaging-platform
+    from: 2.0.0
 
 targets:
   IdleCivilizations:
@@ -27,21 +30,22 @@ targets:
     dependencies:
       - package: IdleEngine
       - package: GoogleMobileAds
+      - package: GoogleUserMessagingPlatform
+        product: GoogleUserMessagingPlatform
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.idlestudio.idleciv
         SWIFT_VERSION: "5.9"
+        SWIFT_STRICT_CONCURRENCY: complete
         MARKETING_VERSION: "1.0"
         CURRENT_PROJECT_VERSION: "1"
-        GENERATE_INFOPLIST_FILE: YES
+        # An explicit Info.plist is used (Resources/Info.plist); do not synthesize
+        # one. The INFOPLIST_KEY_* build settings only apply when generating, and
+        # every value they set is already present in Resources/Info.plist.
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: Resources/Info.plist
         ASSETCATALOG_COMPILER_APPICON_NAME: IdleCivilizations
         ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS: YES
-        INFOPLIST_KEY_UILaunchScreen_Generation: YES
-        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
-        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown
-        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
-        INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO
-        INFOPLIST_KEY_CFBundleDisplayName: Idle Civilizations
         CODE_SIGN_STYLE: Automatic
         DEVELOPMENT_TEAM: JL84E9GK95
         ENABLE_PREVIEWS: YES
